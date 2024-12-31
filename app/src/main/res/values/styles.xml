@@ -1,0 +1,11 @@
+<resources>
+    <!-- Base application theme. -->
+    <style name="Theme.ComposeDex" parent="android:Theme.Material.Light.NoActionBar"/>
+
+    <style name="Theme.ComposeDex.Starting" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/teal_200</item>
+        <item name="postSplashScreenTheme">@style/Theme.ComposeDex</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_ball_red</item>
+        <item name="splashScreenIconSize">24dp</item>
+    </style>
+</resources>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer name="small_cut_corner_shape_percentage">5</integer>
+    <integer name="medium_cut_corner_shape_percentage">10</integer>
+    <integer name="default_cut_corner_shape_percentage">20</integer>
+</resources>
