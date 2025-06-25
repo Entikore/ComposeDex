@@ -88,7 +88,7 @@ class ArchitectureCheck {
             val hasSingleConstructor = declaration.constructors.size == 1
             val constructorParametersHavePrivateModifier = declaration.constructors.first().parameters.all {
                 it.modifiers.isEmpty() ||
-                    (it.hasValModifier && it.hasModifier(KoModifier.PRIVATE))
+                    (it.isVal && it.hasModifier(KoModifier.PRIVATE))
             }
             hasSingleConstructor && constructorParametersHavePrivateModifier
         }
