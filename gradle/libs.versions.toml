@@ -1,43 +1,44 @@
 [versions]
 
 # SDK versions
-compileSdk = "35"
-targetSdk = "35"
+compileSdk = "36"
+targetSdk = "36"
 minSdk = "24"
 
 # Dependency versions
-androidGradlePlugin = "8.10.1"
+androidGradlePlugin = "8.11.0"
 androidxComposeBom = "2025.06.01"
-androidxTestVersion = "1.6.1"
+androidxTest = "1.6.1"
+androidxTestRunner = "1.6.2"
 archTesting = "2.2.0"
-coil = "3.0.4"
+coil = "3.2.0"
 coreKtx = "1.16.0"
 coreSplash = "1.0.1"
-coroutineTest = "1.9.0"
+coroutineTest = "1.10.2"
 dataStore = "1.1.7"
-detekt = "1.23.7"
-detektCompose = "0.4.11"
+detekt = "1.23.8"
+detektCompose = "0.4.22"
 exoPlayer = "1.7.1"
-hiltAndroid = "2.53.1"
+hiltAndroid = "2.56.2"
 hiltNavigation = "1.2.0"
-hiltTest = "2.53.1"
-junit5Plugin = "1.10.2.0"
-junit5 = "5.11.3"
+hiltTest = "2.56.2"
+junit5Plugin = "1.13.0.0"
+junit5 = "5.13.2"
 junitVersion = "1.2.1"
-konsist = "0.15.1"
-kotlinAndroid = "2.1.0"
-ksp = "2.1.0-1.0.29"
-mockitoCore = "5.3.1"
-mockitoAndroid = "4.3.1"
-mockitoKotlin = "5.0.0"
+konsist = "0.17.3"
+kotlinAndroid = "2.2.0"
+ksp = "2.2.0-2.0.2"
+mockitoCore = "5.18.0"
+mockitoAndroid = "5.18.0"
+mockitoKotlin = "5.4.0"
 mockwebserver = "4.12.0"
-moshi = "1.15.1"
+moshi = "1.15.2"
 navigation = "2.9.0"
-retrofit = "2.11.0"
+retrofit = "3.0.0"
 room = "2.7.2"
 timber = "5.0.1"
 truth = "1.4.4"
-turbine = "1.2.0"
+turbine = "1.2.1"
 
 [libraries]
 androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "androidxComposeBom" }
@@ -57,7 +58,7 @@ androidx-navigation-test = { group = "androidx.navigation", name = "navigation-t
 androidx-room = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
 androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
 androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
-androidx-test-core = { group = "androidx.test", name = "core-ktx", version.ref = "androidxTestVersion" }
+androidx-test-core = { group = "androidx.test", name = "core-ktx", version.ref = "androidxTest" }
 
 coil = { group = "io.coil-kt.coil3", name = "coil", version.ref = "coil" }
 coil-compose = { group = "io.coil-kt.coil3", name = "coil-compose", version.ref = "coil" }
@@ -76,8 +77,8 @@ retrofit-converter-moshi = { group = "com.squareup.retrofit2", name = "converter
 timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "timber" }
 
 # Development Environment Dependencies
-androidx-test-runner = { group = "androidx.test", name = "runner", version.ref = "androidxTestVersion" }
-androidx-test-rules = { group = "androidx.test", name = "rules", version.ref = "androidxTestVersion" }
+androidx-test-runner = { group = "androidx.test", name = "runner", version.ref = "androidxTestRunner" }
+androidx-test-rules = { group = "androidx.test", name = "rules", version.ref = "androidxTest" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-arch-core = { group = "androidx.arch.core", name = "core-testing", version.ref = "archTesting" }
 
