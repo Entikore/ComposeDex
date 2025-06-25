@@ -54,11 +54,11 @@ class TypeLocalDataSource(
         }
     }
 
-    fun getTypeOverview(): Flow<TypeOverviewEntity> = typeDao.getOverview()
+    fun getTypeOverview(): Flow<TypeOverviewEntity?> = typeDao.getOverview()
 
     fun getAllTypes(): Flow<List<TypeEntity>> = typeDao.getAll()
 
-    fun getTypeByName(name: String): Flow<TypeEntity> = typeDao.getByName(name)
+    fun getTypeByName(name: String): Flow<TypeEntity?> = typeDao.getByName(name)
 
     fun getPokemonOfType(name: String): Flow<List<PokemonWithSpeciesTypesAndVarieties>> =
         typeDao.getPokemonWithType(name)

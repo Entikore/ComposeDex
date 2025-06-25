@@ -51,7 +51,7 @@ class OfflineFirstTypeRepository(
     override fun getTypes(): Flow<List<Type>> =
         localDataSource.getTypeOverview()
             .combine(localDataSource.getAllTypes()) { overview, types ->
-                if (types.isNotEmpty() && types.size == overview.names.size) {
+                if (types.isNotEmpty() && types.size == overview?.names?.size) {
                     types.map { it.asExternalModel() }
                 } else {
                     throw LocalDataException("Not all types in database")
@@ -92,7 +92,7 @@ class OfflineFirstTypeRepository(
             }
 
     override fun getTypeByName(name: String): Flow<Type> =
-        localDataSource.getTypeByName(name).map { it.asExternalModel() }
+        localDataSource.getTypeByName(name).map { it!!.asExternalModel() }
             .retryWhen { cause, attempt ->
                 if (cause is NullPointerException && attempt < RETRY_COUNT) {
                     Timber.d("Attempt $attempt of $RETRY_COUNT to fetch type $name, failed previously because: $cause")

@@ -98,11 +98,11 @@ class PokemonLocalDataSource(
 
     fun getPokemonWithSpeciesTypesAndVarietiesByName(
         name: String
-    ): Flow<PokemonWithSpeciesTypesAndVarieties> =
+    ): Flow<PokemonWithSpeciesTypesAndVarieties?> =
         pokemonDao.getWithSpeciesTypesAndVarietiesByName(name)
 
     fun getPokemonWithSpeciesTypesAndVarietiesById(
         id: Int
-    ): Flow<PokemonWithSpeciesTypesAndVarieties> =
+    ): Flow<PokemonWithSpeciesTypesAndVarieties?> =
         pokemonDao.getWithSpeciesTypesAndVarietiesById(id)
 }

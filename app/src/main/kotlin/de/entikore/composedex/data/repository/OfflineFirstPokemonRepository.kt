@@ -42,7 +42,7 @@ class OfflineFirstPokemonRepository(
 ) : PokemonRepository {
     override fun getPokemonByName(name: String): Flow<Pokemon> {
         return localDataSource.getPokemonWithSpeciesTypesAndVarietiesByName(name).map {
-            it.asExternalModel()
+            it!!.asExternalModel()
         }.retryWhen { cause, attempt ->
             if (cause is NullPointerException && attempt < RETRY_COUNT) {
                 Timber.d("Attempt $attempt of $RETRY_COUNT to fetch pokemon $name, failed previously because: $cause")
@@ -73,7 +73,7 @@ class OfflineFirstPokemonRepository(
 
     override fun getPokemonById(id: Int): Flow<Pokemon> {
         return localDataSource.getPokemonWithSpeciesTypesAndVarietiesById(id).map {
-            it.asExternalModel()
+            it!!.asExternalModel()
         }.retryWhen { cause, attempt ->
             if (cause is NullPointerException && attempt < RETRY_COUNT) {
                 Timber.d(

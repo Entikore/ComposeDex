@@ -123,7 +123,7 @@ interface PokemonDao : BaseDao<PokemonEntity> {
      */
     @Transaction
     @Query("SELECT * FROM pokemon WHERE pokemonId = :id")
-    fun getWithSpeciesTypesAndVarietiesById(id: Int): Flow<PokemonWithSpeciesTypesAndVarieties>
+    fun getWithSpeciesTypesAndVarietiesById(id: Int): Flow<PokemonWithSpeciesTypesAndVarieties?>
 
     /**
      * Load a [PokemonEntity] with the given name and all associated [SpeciesEntity], [TypeEntity]
@@ -135,7 +135,7 @@ interface PokemonDao : BaseDao<PokemonEntity> {
     @Query("SELECT * FROM pokemon WHERE pokemonName = :name")
     fun getWithSpeciesTypesAndVarietiesByName(
         name: String
-    ): Flow<PokemonWithSpeciesTypesAndVarieties>
+    ): Flow<PokemonWithSpeciesTypesAndVarieties?>
 
     /**
      * Load a [PokemonEntity] with the given name and all associated [SpeciesEntity], [TypeEntity]
