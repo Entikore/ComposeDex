@@ -1,6 +1,7 @@
 comments:
   AbsentOrWrongFileLicense:
     active: true
+    licenseTemplateIsRegex: true
     licenseTemplateFile: 'license-header.txt'
   EndOfSentenceFormat:
     active: true
