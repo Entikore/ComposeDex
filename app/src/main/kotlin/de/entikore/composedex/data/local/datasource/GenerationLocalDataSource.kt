@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Entikore
+ * Copyright 2025 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -56,13 +56,13 @@ class GenerationLocalDataSource(
         }
     }
 
-    fun getGenerationOverview(): Flow<GenerationOverviewEntity> = generationDao.getOverview()
+    fun getGenerationOverview(): Flow<GenerationOverviewEntity?> = generationDao.getOverview()
 
     fun getAllGenerations(): Flow<List<GenerationEntity>> = generationDao.getAll()
 
-    fun getGenerationByName(name: String): Flow<GenerationEntity> = generationDao.getByName(name)
+    fun getGenerationByName(name: String): Flow<GenerationEntity?> = generationDao.getByName(name)
 
-    fun getGenerationById(id: Int): Flow<GenerationEntity> = generationDao.getById(id)
+    fun getGenerationById(id: Int): Flow<GenerationEntity?> = generationDao.getById(id)
 
     fun getPokemonOfGenerationByName(name: String): Flow<List<PokemonWithSpeciesTypesAndVarieties>> =
         generationDao.getPokemonWithinGenerationByName(name)

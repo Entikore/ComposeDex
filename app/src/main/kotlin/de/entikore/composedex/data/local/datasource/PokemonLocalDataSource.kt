@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Entikore
+ * Copyright 2025 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -98,11 +98,11 @@ class PokemonLocalDataSource(
 
     fun getPokemonWithSpeciesTypesAndVarietiesByName(
         name: String
-    ): Flow<PokemonWithSpeciesTypesAndVarieties> =
+    ): Flow<PokemonWithSpeciesTypesAndVarieties?> =
         pokemonDao.getWithSpeciesTypesAndVarietiesByName(name)
 
     fun getPokemonWithSpeciesTypesAndVarietiesById(
         id: Int
-    ): Flow<PokemonWithSpeciesTypesAndVarieties> =
+    ): Flow<PokemonWithSpeciesTypesAndVarieties?> =
         pokemonDao.getWithSpeciesTypesAndVarietiesById(id)
 }

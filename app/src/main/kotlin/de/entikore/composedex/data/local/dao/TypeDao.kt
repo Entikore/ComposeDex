@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Entikore
+ * Copyright 2025 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,7 +37,7 @@ interface TypeDao : BaseDao<TypeEntity> {
 
     /** Load the [TypeOverviewEntity]. */
     @Query("SELECT * FROM type_overview WHERE id = 0")
-    fun getOverview(): Flow<TypeOverviewEntity>
+    fun getOverview(): Flow<TypeOverviewEntity?>
 
     /**
      * Insert a relation object between [TypeEntity] and [PokemonEntity] into the database.
@@ -66,7 +66,7 @@ interface TypeDao : BaseDao<TypeEntity> {
      * @param name of the type to load
      */
     @Query("SELECT * FROM type WHERE typeName = :name")
-    fun getByName(name: String): Flow<TypeEntity>
+    fun getByName(name: String): Flow<TypeEntity?>
 
     /**
      * Load all [PokemonWithSpeciesTypesAndVarieties] belonging to the [TypeEntity] with the

@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Entikore
+ * Copyright 2025 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,7 +37,7 @@ interface GenerationDao : BaseDao<GenerationEntity> {
 
     /** Load the [GenerationOverviewEntity]. */
     @Query("SELECT * FROM generation_overview WHERE id = 0")
-    fun getOverview(): Flow<GenerationOverviewEntity>
+    fun getOverview(): Flow<GenerationOverviewEntity?>
 
     /** Load all [GenerationEntity]. */
     @Transaction
@@ -51,7 +51,7 @@ interface GenerationDao : BaseDao<GenerationEntity> {
      */
     @Transaction
     @Query("SELECT * FROM generation WHERE generationName = :name")
-    fun getByName(name: String): Flow<GenerationEntity>
+    fun getByName(name: String): Flow<GenerationEntity?>
 
     /**
      * Load a [GenerationEntity] with the given id.
@@ -60,7 +60,7 @@ interface GenerationDao : BaseDao<GenerationEntity> {
      */
     @Transaction
     @Query("SELECT * FROM generation WHERE generationId = :id")
-    fun getById(id: Int): Flow<GenerationEntity>
+    fun getById(id: Int): Flow<GenerationEntity?>
 
     /**
      * Load all [PokemonWithSpeciesTypesAndVarieties] belonging to the [GenerationEntity] with the

@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Entikore
+ * Copyright 2025 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -54,11 +54,11 @@ class TypeLocalDataSource(
         }
     }
 
-    fun getTypeOverview(): Flow<TypeOverviewEntity> = typeDao.getOverview()
+    fun getTypeOverview(): Flow<TypeOverviewEntity?> = typeDao.getOverview()
 
     fun getAllTypes(): Flow<List<TypeEntity>> = typeDao.getAll()
 
-    fun getTypeByName(name: String): Flow<TypeEntity> = typeDao.getByName(name)
+    fun getTypeByName(name: String): Flow<TypeEntity?> = typeDao.getByName(name)
 
     fun getPokemonOfType(name: String): Flow<List<PokemonWithSpeciesTypesAndVarieties>> =
         typeDao.getPokemonWithType(name)

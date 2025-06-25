@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Entikore
+ * Copyright 2025 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -88,7 +88,7 @@ class ArchitectureCheck {
             val hasSingleConstructor = declaration.constructors.size == 1
             val constructorParametersHavePrivateModifier = declaration.constructors.first().parameters.all {
                 it.modifiers.isEmpty() ||
-                    (it.hasValModifier && it.hasModifier(KoModifier.PRIVATE))
+                    (it.isVal && it.hasModifier(KoModifier.PRIVATE))
             }
             hasSingleConstructor && constructorParametersHavePrivateModifier
         }

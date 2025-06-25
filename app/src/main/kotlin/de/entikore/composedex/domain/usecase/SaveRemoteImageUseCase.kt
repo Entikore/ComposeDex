@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Entikore
+ * Copyright 2025 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -66,10 +66,10 @@ class SaveRemoteImageUseCase @Inject constructor(
             try {
                 client.newCall(request).execute().use { response ->
                     if (!response.isSuccessful) {
-                        Timber.e("Unsuccessful response: ${response.code()} for $imageAddress")
+                        Timber.e("Unsuccessful response: ${response.code} for $imageAddress")
                         return@withContext null
                     }
-                    response.body()?.byteStream()?.use { inputStream ->
+                    response.body?.byteStream()?.use { inputStream ->
                         BitmapFactory.decodeStream(inputStream)
                     }
                 }

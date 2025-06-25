@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Entikore
+ * Copyright 2025 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -52,7 +52,7 @@ class OfflineFirstGenerationRepository(
     override fun getGenerations(): Flow<List<Generation>> =
         localDataSource.getGenerationOverview()
             .combine(localDataSource.getAllGenerations()) { overview, generations ->
-                if (generations.isNotEmpty() && generations.size == overview.names.size) {
+                if (generations.isNotEmpty() && generations.size == overview!!.names.size) {
                     generations.map { it.asExternalModel() }
                 } else {
                     throw LocalDataException("Not all generations in database")
@@ -96,7 +96,7 @@ class OfflineFirstGenerationRepository(
     override fun getGenerationByName(name: String): Flow<Generation> {
         return localDataSource
             .getGenerationByName(name)
-            .map { generationEntity -> generationEntity.asExternalModel() }
+            .map { generationEntity -> generationEntity!!.asExternalModel() }
             .retryWhen { cause, attempt ->
                 if (cause is NullPointerException && attempt < RETRY_COUNT) {
                     Timber.d(
@@ -119,7 +119,7 @@ class OfflineFirstGenerationRepository(
     override fun getGenerationById(id: Int): Flow<Generation> {
         return localDataSource
             .getGenerationById(id)
-            .map { generationEntity -> generationEntity.asExternalModel() }
+            .map { generationEntity -> generationEntity!!.asExternalModel() }
             .retryWhen { cause, attempt ->
                 if (cause is NullPointerException && attempt < RETRY_COUNT) {
                     Timber.d(

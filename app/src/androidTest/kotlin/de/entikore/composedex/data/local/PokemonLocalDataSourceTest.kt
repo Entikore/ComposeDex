@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Entikore
+ * Copyright 2025 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -91,7 +91,8 @@ class PokemonLocalDataSourceTest: LocalDataSourceTest() {
         database.pokemonDao()
             .getWithSpeciesTypesAndVarietiesByName(expectedEntity.pokemon.pokemonName).test {
                 val actualEntity = awaitItem()
-                assertThat(actualEntity.sortTypesForComparison())
+                assertThat(actualEntity).isNotNull()
+                assertThat(actualEntity!!.sortTypesForComparison())
                     .isEqualTo(expectedEntity.sortTypesForComparison())
             }
     }
@@ -179,12 +180,14 @@ class PokemonLocalDataSourceTest: LocalDataSourceTest() {
 
                 localDataSource.insertPokemonWithSpeciesTypesAndVarieties(expectedEntity)
                 val actualEntity = awaitItem()
-                assertThat(actualEntity.sortTypesForComparison()).isEqualTo(expectedEntity.sortTypesForComparison())
+                assertThat(actualEntity).isNotNull()
+                assertThat(actualEntity!!.sortTypesForComparison()).isEqualTo(expectedEntity.sortTypesForComparison())
                 assertThat(actualEntity.pokemon.isFavourite).isFalse()
 
                 database.pokemonDao().updateFavourite(FavouriteUpdate(expectedEntity.pokemon.pokemonId, true))
                 val favouriteEntity = awaitItem()
-                assertThat(favouriteEntity.pokemon.isFavourite).isTrue()
+                assertThat(favouriteEntity).isNotNull()
+                assertThat(favouriteEntity!!.pokemon.isFavourite).isTrue()
 
                 val expectedEntitySprite = "newSprite"
                 localDataSource.updatePokemonSprite(
@@ -192,7 +195,8 @@ class PokemonLocalDataSourceTest: LocalDataSourceTest() {
                     expectedEntitySprite
                 )
                 val spriteEntity = awaitItem()
-                assertThat(spriteEntity.pokemon.localSprite).isEqualTo(expectedEntitySprite)
+                assertThat(spriteEntity).isNotNull()
+                assertThat(spriteEntity!!.pokemon.localSprite).isEqualTo(expectedEntitySprite)
             }
     }
 
@@ -207,12 +211,14 @@ class PokemonLocalDataSourceTest: LocalDataSourceTest() {
 
                 localDataSource.insertPokemonWithSpeciesTypesAndVarieties(expectedEntity)
                 val actualEntity = awaitItem()
-                assertThat(actualEntity.sortTypesForComparison()).isEqualTo(expectedEntity.sortTypesForComparison())
+                assertThat(actualEntity).isNotNull()
+                assertThat(actualEntity!!.sortTypesForComparison()).isEqualTo(expectedEntity.sortTypesForComparison())
                 assertThat(actualEntity.pokemon.isFavourite).isFalse()
 
                 database.pokemonDao().updateFavourite(FavouriteUpdate(expectedEntity.pokemon.pokemonId, true))
                 val favouriteEntity = awaitItem()
-                assertThat(favouriteEntity.pokemon.isFavourite).isTrue()
+                assertThat(favouriteEntity).isNotNull()
+                assertThat(favouriteEntity!!.pokemon.isFavourite).isTrue()
 
                 val expectedEntitySprite = "newSprite"
                 localDataSource.updatePokemonSprite(
@@ -220,7 +226,8 @@ class PokemonLocalDataSourceTest: LocalDataSourceTest() {
                     expectedEntitySprite
                 )
                 val spriteEntity = awaitItem()
-                assertThat(spriteEntity.pokemon.localSprite).isEqualTo(expectedEntitySprite)
+                assertThat(spriteEntity).isNotNull()
+                assertThat(spriteEntity!!.pokemon.localSprite).isEqualTo(expectedEntitySprite)
             }
     }
 }

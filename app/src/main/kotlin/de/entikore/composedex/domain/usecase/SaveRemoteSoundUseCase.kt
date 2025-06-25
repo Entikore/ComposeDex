@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Entikore
+ * Copyright 2025 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -58,10 +58,10 @@ class SaveRemoteSoundUseCase @Inject constructor(
             try {
                 client.newCall(request).execute().use { response ->
                     if (!response.isSuccessful) {
-                        Timber.e("Unsuccessful response: ${response.code()} for $soundAddress")
+                        Timber.e("Unsuccessful response: ${response.code} for $soundAddress")
                         return@withContext null
                     }
-                    response.body()?.byteStream()?.use { inputStream ->
+                    response.body?.byteStream()?.use { inputStream ->
                         context.openFileOutput(dataName, Context.MODE_PRIVATE).use { outputStream ->
                             inputStream.copyTo(outputStream)
                         }

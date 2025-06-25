@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Entikore
+ * Copyright 2025 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -123,7 +123,7 @@ interface PokemonDao : BaseDao<PokemonEntity> {
      */
     @Transaction
     @Query("SELECT * FROM pokemon WHERE pokemonId = :id")
-    fun getWithSpeciesTypesAndVarietiesById(id: Int): Flow<PokemonWithSpeciesTypesAndVarieties>
+    fun getWithSpeciesTypesAndVarietiesById(id: Int): Flow<PokemonWithSpeciesTypesAndVarieties?>
 
     /**
      * Load a [PokemonEntity] with the given name and all associated [SpeciesEntity], [TypeEntity]
@@ -135,7 +135,7 @@ interface PokemonDao : BaseDao<PokemonEntity> {
     @Query("SELECT * FROM pokemon WHERE pokemonName = :name")
     fun getWithSpeciesTypesAndVarietiesByName(
         name: String
-    ): Flow<PokemonWithSpeciesTypesAndVarieties>
+    ): Flow<PokemonWithSpeciesTypesAndVarieties?>
 
     /**
      * Load a [PokemonEntity] with the given name and all associated [SpeciesEntity], [TypeEntity]
