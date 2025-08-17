@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Entikore
+ * Copyright 2025 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,9 @@
  */
 package de.entikore.composedex.ui.navigation
 
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.DrawerState
@@ -24,48 +27,51 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
+import androidx.navigation3.runtime.entry
+import androidx.navigation3.runtime.entryProvider
+import androidx.navigation3.runtime.rememberSavedStateNavEntryDecorator
+import androidx.navigation3.ui.NavDisplay
+import androidx.navigation3.ui.rememberSceneSetupNavEntryDecorator
 import de.entikore.composedex.R
-import de.entikore.composedex.ui.navigation.destination.Favourite
-import de.entikore.composedex.ui.navigation.destination.Generation
-import de.entikore.composedex.ui.navigation.destination.Pokemon
-import de.entikore.composedex.ui.navigation.destination.Settings
-import de.entikore.composedex.ui.navigation.destination.Type
+import de.entikore.composedex.ui.navigation.destination.ComposeDexDestination
+import de.entikore.composedex.ui.navigation.destination.FavouriteDestination
+import de.entikore.composedex.ui.navigation.destination.GenerationDestination
+import de.entikore.composedex.ui.navigation.destination.PokemonDestination
+import de.entikore.composedex.ui.navigation.destination.SettingsDestination
+import de.entikore.composedex.ui.navigation.destination.TypeDestination
 import de.entikore.composedex.ui.screen.favourite.FavouriteScreen
 import de.entikore.composedex.ui.screen.generation.GenerationScreen
 import de.entikore.composedex.ui.screen.pokemon.PokemonScreen
+import de.entikore.composedex.ui.screen.pokemon.PokemonViewModel
 import de.entikore.composedex.ui.screen.setting.SettingsScreen
 import de.entikore.composedex.ui.screen.type.TypeScreen
+import de.entikore.composedex.ui.screen.type.TypeViewModel
 
 @Composable
 fun DrawerNavHost(
-    navController: NavHostController,
     drawerState: DrawerState,
     snackBarHostState: SnackbarHostState,
     changeDrawerState: () -> Unit,
     showSnackbar: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val navActions: NavigationActions = remember(navController) {
-        NavigationActions(navController)
-    }
-    val currentNavBackStackEntry by navController.currentBackStackEntryAsState()
+    val backstack = remember { mutableStateListOf<ComposeDexDestination>(PokemonDestination()) }
+    val currentScreenObjectForNavDisplay: ComposeDexDestination? = backstack.lastOrNull()
 
     ModalNavigationDrawer(
         drawerContent = {
             ComposeDexDrawer(
-                currentlySelected = currentNavBackStackEntry,
+                currentlySelected = currentScreenObjectForNavDisplay,
                 onDestinationClick = { route ->
                     changeDrawerState()
-                    navController.navigate(route)
+                    backstack.add(route)
                 }
             )
         },
@@ -79,67 +85,107 @@ fun DrawerNavHost(
             containerColor = MaterialTheme.colorScheme.background,
             modifier = modifier.fillMaxSize()
         ) { padding ->
-            NavHost(navController = navController, startDestination = Pokemon.routeWithArgs) {
-                composable(
-                    route = Pokemon.routeWithArgs,
-                    arguments = Pokemon.arguments
-                ) {
-                    PokemonScreen(
-                        openDrawer = changeDrawerState,
-                        navigateToTypes = { type: String ->
-                            navActions.navigateToTypeScreen(type)
-                        },
-                        modifier = Modifier.fillMaxSize()
-                            .testTag(stringResource(R.string.test_tag_compose_dex_destination_pokemon))
-                            .padding(padding)
-                    )
-                }
-                composable(route = Favourite.route) {
-                    FavouriteScreen(
-                        navigateToPokemon = { pokemon: String ->
-                            navActions.navigateToPokemonScreen(pokemon)
-                        },
-                        openDrawer = changeDrawerState,
-                        modifier = Modifier.fillMaxSize().testTag(
-                            stringResource(R.string.test_tag_compose_dex_destination_favourite)
+
+            NavDisplay(
+                entryDecorators = listOf(
+                    // Add the default decorators for managing scenes and saving state
+                    rememberSceneSetupNavEntryDecorator(),
+                    rememberSavedStateNavEntryDecorator(),
+                    // Then add the view model store decorator
+                    rememberViewModelStoreNavEntryDecorator()
+                ),
+                backStack = backstack,
+                onBack = { backstack.removeLastOrNull() },
+                entryProvider = entryProvider {
+                    entry<PokemonDestination> { pokemonDestination ->
+                        PokemonScreen(
+                            openDrawer = changeDrawerState,
+                            navigateToTypes = { type: String ->
+                                backstack.add(TypeDestination(typeName = type))
+                            },
+                            viewModel = hiltViewModel<PokemonViewModel>().also {
+                                pokemonDestination.pokemonName?.let { name ->
+                                    it.lookUpPokemon(name)
+                                }
+                            },
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .testTag(stringResource(R.string.test_tag_compose_dex_destination_pokemon))
+                                .padding(padding)
                         )
-                    )
-                }
-                composable(route = Generation.route) {
-                    GenerationScreen(
-                        navigateToPokemon = { pokemon: String ->
-                            navActions.navigateToPokemonScreen(pokemon)
-                        },
-                        openDrawer = changeDrawerState,
-                        modifier = Modifier.fillMaxSize().testTag(
-                            stringResource(R.string.test_tag_compose_dex_destination_generation)
+                    }
+                    entry<FavouriteDestination> {
+                        FavouriteScreen(
+                            navigateToPokemon = { pokemon: String ->
+                                backstack.add(PokemonDestination(pokemonName = pokemon))
+                            },
+                            openDrawer = changeDrawerState,
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .testTag(
+                                    stringResource(R.string.test_tag_compose_dex_destination_favourite)
+                                )
                         )
-                    )
-                }
-                composable(
-                    route = Type.routeWithArgs,
-                    arguments = Type.arguments
-                ) {
-                    TypeScreen(
-                        navigateToPokemon = { pokemon: String ->
-                            navActions.navigateToPokemonScreen(pokemon)
-                        },
-                        openDrawer = changeDrawerState,
-                        modifier = Modifier.fillMaxSize().testTag(
-                            stringResource(R.string.test_tag_compose_dex_destination_type)
+                    }
+                    entry<GenerationDestination> {
+                        GenerationScreen(
+                            navigateToPokemon = { pokemon: String ->
+                                backstack.add(PokemonDestination(pokemonName = pokemon))
+                            },
+                            openDrawer = changeDrawerState,
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .testTag(
+                                    stringResource(R.string.test_tag_compose_dex_destination_generation)
+                                )
                         )
-                    )
-                }
-                composable(route = Settings.route) {
-                    SettingsScreen(
-                        openDrawer = changeDrawerState,
-                        showSnackbar = showSnackbar,
-                        modifier = Modifier.fillMaxSize().testTag(
-                            stringResource(R.string.test_tag_compose_dex_destination_settings)
+                    }
+                    entry<TypeDestination> { typeDestination ->
+                        TypeScreen(
+                            navigateToPokemon = { pokemon: String ->
+                                backstack.add(PokemonDestination(pokemonName = pokemon))
+                            },
+                            openDrawer = changeDrawerState,
+                            viewModel = hiltViewModel<TypeViewModel>().also {
+                                typeDestination.typeName?.let { name ->
+                                    it.fetchType(name)
+                                }
+                            },
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .testTag(
+                                    stringResource(R.string.test_tag_compose_dex_destination_type)
+                                )
                         )
-                    )
-                }
-            }
+                    }
+                    entry<SettingsDestination> {
+                        SettingsScreen(
+                            openDrawer = changeDrawerState,
+                            showSnackbar = showSnackbar,
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .testTag(
+                                    stringResource(R.string.test_tag_compose_dex_destination_settings)
+                                )
+                        )
+                    }
+                },
+                transitionSpec = {
+                    // Slide in from right when navigating forward
+                    slideInHorizontally(initialOffsetX = { it }) togetherWith
+                        slideOutHorizontally(targetOffsetX = { -it })
+                },
+                popTransitionSpec = {
+                    // Slide in from left when navigating back
+                    slideInHorizontally(initialOffsetX = { -it }) togetherWith
+                        slideOutHorizontally(targetOffsetX = { it })
+                },
+                predictivePopTransitionSpec = {
+                    // Slide in from left when navigating back
+                    slideInHorizontally(initialOffsetX = { -it }) togetherWith
+                        slideOutHorizontally(targetOffsetX = { it })
+                },
+            )
         }
     }
 }

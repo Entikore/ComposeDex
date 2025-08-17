@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Entikore
+ * Copyright 2025 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,26 +21,23 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
-import androidx.navigation.compose.ComposeNavigator
-import androidx.navigation.testing.TestNavHostController
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import de.entikore.composedex.ComposeDexAppState
 import de.entikore.composedex.MainActivity
 import de.entikore.composedex.R
-import de.entikore.composedex.ui.navigation.destination.ComposeDexDestination
-import de.entikore.composedex.ui.navigation.destination.Favourite
-import de.entikore.composedex.ui.navigation.destination.Generation
-import de.entikore.composedex.ui.navigation.destination.Pokemon
-import de.entikore.composedex.ui.navigation.destination.Settings
-import de.entikore.composedex.ui.navigation.destination.Type
 import de.entikore.composedex.onNodeWithTagStringId
 import de.entikore.composedex.ui.navigation.DrawerNavHost
+import de.entikore.composedex.ui.navigation.destination.ComposeDexDestination
+import de.entikore.composedex.ui.navigation.destination.FavouriteDestination
+import de.entikore.composedex.ui.navigation.destination.GenerationDestination
+import de.entikore.composedex.ui.navigation.destination.PokemonDestination
+import de.entikore.composedex.ui.navigation.destination.SettingsDestination
+import de.entikore.composedex.ui.navigation.destination.TypeDestination
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -54,23 +51,16 @@ class NavigationTest {
     @get:Rule(order = 1)
     val composeTestRule = createAndroidComposeRule<MainActivity>()
 
-    private lateinit var navController: TestNavHostController
-
     @Before
     fun setupNavGraph() {
         hiltRule.inject()
         composeTestRule.activity.setContent {
-            navController = TestNavHostController(LocalContext.current).apply {
-                navigatorProvider.addNavigator(ComposeNavigator())
-            }
             val appState = ComposeDexAppState(
                 snackbarHostState = remember { SnackbarHostState() },
-                navController = remember { navController },
                 scope = rememberCoroutineScope(),
                 drawerState = rememberDrawerState(DrawerValue.Closed)
             )
             DrawerNavHost(
-                navController = appState.navController,
                 drawerState = appState.drawerState,
                 snackBarHostState = appState.snackbarHostState,
                 changeDrawerState = appState::changeDrawerState,
@@ -88,28 +78,43 @@ class NavigationTest {
 
     @Test
     fun navGraph_clickOnDrawerPokemon_navigateToPokemonScreen() {
-        navigateToDrawerScreen(Favourite, R.string.test_tag_compose_dex_destination_favourite)
-        navigateToDrawerScreen(Pokemon, R.string.test_tag_compose_dex_destination_pokemon)
+        navigateToDrawerScreen(
+            FavouriteDestination(),
+            R.string.test_tag_compose_dex_destination_favourite
+        )
+        navigateToDrawerScreen(
+            PokemonDestination(),
+            R.string.test_tag_compose_dex_destination_pokemon
+        )
     }
 
     @Test
     fun navGraph_clickOnDrawerFavourite_navigateToFavouriteScreen() {
-        navigateToDrawerScreen(Favourite, R.string.test_tag_compose_dex_destination_favourite)
+        navigateToDrawerScreen(
+            FavouriteDestination(),
+            R.string.test_tag_compose_dex_destination_favourite
+        )
     }
 
     @Test
     fun navGraph_clickOnDrawerGeneration_navigateToGenerationScreen() {
-        navigateToDrawerScreen(Generation, R.string.test_tag_compose_dex_destination_generation)
+        navigateToDrawerScreen(
+            GenerationDestination(),
+            R.string.test_tag_compose_dex_destination_generation
+        )
     }
 
     @Test
     fun navGraph_clickOnDrawerType_navigateToTypeScreen() {
-        navigateToDrawerScreen(Type, R.string.test_tag_compose_dex_destination_type)
+        navigateToDrawerScreen(TypeDestination(), R.string.test_tag_compose_dex_destination_type)
     }
 
     @Test
     fun navGraph_clickOnDrawerSettings_navigateToSettingsScreen() {
-        navigateToDrawerScreen(Settings, R.string.test_tag_compose_dex_destination_settings)
+        navigateToDrawerScreen(
+            SettingsDestination(),
+            R.string.test_tag_compose_dex_destination_settings
+        )
     }
 
     private fun navigateToDrawerScreen(

@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Entikore
+ * Copyright 2025 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,8 +22,6 @@ import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -31,7 +29,6 @@ import kotlinx.coroutines.launch
  * Models state for the [MainActivity].
  */
 data class ComposeDexAppState(
-    val navController: NavHostController,
     val drawerState: DrawerState,
     private val scope: CoroutineScope,
     val snackbarHostState: SnackbarHostState
@@ -53,13 +50,11 @@ data class ComposeDexAppState(
 @Composable
 fun rememberComposeDexAppState(
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
-    navController: NavHostController = rememberNavController(),
     coroutineScope: CoroutineScope = rememberCoroutineScope(),
     drawerState: DrawerState = rememberDrawerState(DrawerValue.Closed)
-) = remember(snackbarHostState, navController, coroutineScope, drawerState) {
+) = remember(snackbarHostState, coroutineScope, drawerState) {
     ComposeDexAppState(
         snackbarHostState = snackbarHostState,
-        navController = navController,
         scope = coroutineScope,
         drawerState = drawerState
     )

@@ -27,13 +27,16 @@ junit5 = "5.13.2"
 junitVersion = "1.2.1"
 konsist = "0.17.3"
 kotlinAndroid = "2.2.0"
+kotlinSerialization = "2.1.21"
+kotlinxSerializationCore = "1.8.1"
 ksp = "2.2.0-2.0.2"
+lifecycleViewmodelNav3 = "1.0.0-alpha01"
 mockitoCore = "5.18.0"
 mockitoAndroid = "5.18.0"
 mockitoKotlin = "5.4.0"
 mockwebserver = "4.12.0"
 moshi = "1.15.2"
-navigation = "2.9.0"
+nav3Core = "1.0.0-alpha01"
 retrofit = "3.0.0"
 room = "2.7.2"
 timber = "5.0.1"
@@ -53,8 +56,9 @@ androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = 
 androidx-core-splash = { group = "androidx.core", name = "core-splashscreen", version.ref = "coreSplash" }
 androidx-datastore-preferences = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "dataStore" }
 androidx-hilt-navigation = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "hiltNavigation" }
-androidx-navigation = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigation" }
-androidx-navigation-test = { group = "androidx.navigation", name = "navigation-testing", version.ref = "navigation" }
+androidx-lifecycle-viewmodel-navigation3 = { module = "androidx.lifecycle:lifecycle-viewmodel-navigation3", version.ref = "lifecycleViewmodelNav3" }
+androidx-navigation3-runtime = { module = "androidx.navigation3:navigation3-runtime", version.ref = "nav3Core" }
+androidx-navigation3-ui = { module = "androidx.navigation3:navigation3-ui", version.ref = "nav3Core" }
 androidx-room = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
 androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
 androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
@@ -96,6 +100,7 @@ jupiter-engine = { group = "org.junit.jupiter", name = "junit-jupiter-engine", v
 jupiter-params = { group = "org.junit.jupiter", name = "junit-jupiter-params", version.ref = "junit5" }
 
 konsist = { group = "com.lemonappdev", name = "konsist", version.ref = "konsist" }
+kotlinx-serialization-core = { module = "org.jetbrains.kotlinx:kotlinx-serialization-core", version.ref = "kotlinxSerializationCore" }
 
 mockito-core = { group = "org.mockito", name = "mockito-core", version.ref = "mockitoCore" }
 mockito-android = { group = "org.mockito", name = "mockito-android", version.ref = "mockitoAndroid" }
@@ -111,6 +116,7 @@ android-library = { id = "com.android.library", version.ref = "androidGradlePlug
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlinAndroid" }
 detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
 hilt-android = { id = "com.google.dagger.hilt.android", version.ref = "hiltAndroid" }
+jetbrains-kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlinSerialization" }
 junit5 = { id = "de.mannodermaus.android-junit5", version.ref = "junit5Plugin" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlinAndroid" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }

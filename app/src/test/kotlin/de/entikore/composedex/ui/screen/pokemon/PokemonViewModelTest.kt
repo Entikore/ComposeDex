@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Entikore
+ * Copyright 2025 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -47,10 +47,8 @@ import org.junit.jupiter.api.extension.ExtendWith
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
-import org.mockito.ArgumentMatchers.anyString
 import org.mockito.Mock
 import org.mockito.Mockito.mock
-import org.mockito.kotlin.whenever
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(MainCoroutineRule::class)
@@ -101,95 +99,11 @@ class PokemonViewModelTest {
                 setAsFavouriteUseCase,
                 changeThemeUseCase,
                 mockPlayer,
-                mockTTS,
-                mockSavedStateHandle
+                mockTTS
             )
             val expectedState = PokemonScreenState.NoPokemonSelected
 
             assertThat(viewModel.screenState.value).isEqualTo(expectedState)
-        }
-
-    @Test
-    fun `creating PokemonDetailViewModel with SavedStateHandle exposes Success PokemonDetailScreenUiState with expected Pokemon`() =
-        runTest {
-            val expectedPokemon =
-                getPokemonInfoRemote(getTestModel(POKEMON_GLOOM_NAME)).toEntity().asExternalModel()
-            val oddish =
-                getPokemonInfoRemote(getTestModel(POKEMON_ODDISH_NAME)).toEntity().asExternalModel()
-            val vileplume = getPokemonInfoRemote(getTestModel(POKEMON_VILEPLUME_NAME)).toEntity()
-                .asExternalModel()
-            val bellossom = getPokemonInfoRemote(getTestModel(POKEMON_BELLOSSOM_NAME)).toEntity()
-                .asExternalModel()
-            fakePokemonRepository.addPokemon(expectedPokemon, oddish, vileplume, bellossom)
-            whenever(mockSavedStateHandle.get<String>(anyString())).thenReturn(POKEMON_GLOOM_NAME)
-
-            viewModel = PokemonViewModel(
-                GetPokemonUseCase(fakePokemonRepository),
-                saveRemoteImageUseCase,
-                saveRemoteCryUseCase,
-                setAsFavouriteUseCase,
-                changeThemeUseCase,
-                mockPlayer,
-                mockTTS,
-                mockSavedStateHandle
-            )
-
-            val expectedState = PokemonScreenState.Success(
-                selectedPokemon = expectedPokemon.processFlavourTextEntries(),
-                evolvesFrom = oddish.toPokemonPreview(evolvesTo = false),
-                evolvesTo = listOf(
-                    vileplume.toPokemonPreview(true),
-                    bellossom.toPokemonPreview(true)
-                ),
-                varieties = listOf(expectedPokemon.processFlavourTextEntries())
-            )
-
-            viewModel.screenState.test {
-                var stateResult = awaitItem()
-                assertThat(stateResult).isInstanceOf(PokemonScreenState.NoPokemonSelected::class.java)
-
-                stateResult = awaitItem()
-                assertThat(stateResult).isInstanceOf(PokemonScreenState.Loading::class.java)
-
-                stateResult = awaitItem()
-                assertThat(stateResult).isInstanceOf(PokemonScreenState.Success::class.java)
-                assertThat(stateResult).isEqualTo(
-                    expectedState
-                )
-            }
-        }
-
-    @Test
-    fun `creating PokemonDetailViewModel with unknown SavedStateHandle exposes Error PokemonDetailScreenUiState`() =
-        runTest {
-            whenever(mockSavedStateHandle.get<String>(anyString())).thenReturn(POKEMON_GLOOM_NAME)
-
-            viewModel = PokemonViewModel(
-                GetPokemonUseCase(fakePokemonRepository),
-                saveRemoteImageUseCase,
-                saveRemoteCryUseCase,
-                setAsFavouriteUseCase,
-                changeThemeUseCase,
-                mockPlayer,
-                mockTTS,
-                mockSavedStateHandle
-            )
-            val expectedState =
-                PokemonScreenState.Error("${PokemonViewModel.Companion.ERROR_LOADING_POKEMON} $POKEMON_GLOOM_NAME")
-
-            viewModel.screenState.test {
-                var stateResult = awaitItem()
-                assertThat(stateResult).isInstanceOf(PokemonScreenState.NoPokemonSelected::class.java)
-
-                stateResult = awaitItem()
-                assertThat(stateResult).isInstanceOf(PokemonScreenState.Loading::class.java)
-
-                stateResult = awaitItem()
-                assertThat(stateResult).isInstanceOf(PokemonScreenState.Error::class.java)
-                assertThat(stateResult).isEqualTo(
-                    expectedState
-                )
-            }
         }
 
     @ParameterizedTest
@@ -208,8 +122,7 @@ class PokemonViewModelTest {
             setAsFavouriteUseCase,
             changeThemeUseCase,
             mockPlayer,
-            mockTTS,
-            mockSavedStateHandle
+            mockTTS
         )
 
         viewModel.screenState.test {
@@ -239,8 +152,7 @@ class PokemonViewModelTest {
                 setAsFavouriteUseCase,
                 changeThemeUseCase,
                 mockPlayer,
-                mockTTS,
-                mockSavedStateHandle
+                mockTTS
             )
 
             val expectedState = PokemonScreenState.Error(

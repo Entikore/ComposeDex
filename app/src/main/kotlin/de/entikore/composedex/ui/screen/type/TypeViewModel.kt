@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Entikore
+ * Copyright 2025 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,6 @@
  */
 package de.entikore.composedex.ui.screen.type
 
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import de.entikore.composedex.domain.WorkResult
@@ -56,8 +55,7 @@ class TypeViewModel @Inject constructor(
     getTypeUseCase: GetTypeUseCase,
     getPokemonOfTypeUseCase: GetPokemonOfTypeUseCase,
     private val saveRemoteImageUseCase: @JvmSuppressWildcards ParamsSuspendUseCase<SaveImageData, String>,
-    private val setAsFavouriteUseCase: @JvmSuppressWildcards ParamsSuspendUseCase<SetFavouriteData, Unit>,
-    savedStateHandle: SavedStateHandle
+    private val setAsFavouriteUseCase: @JvmSuppressWildcards ParamsSuspendUseCase<SetFavouriteData, Unit>
 ) : PokemonFilterViewModel() {
 
     private val _selectedTypeFlow = MutableStateFlow<String?>(null)
@@ -92,10 +90,6 @@ class TypeViewModel @Inject constructor(
             SharingStarted.Eagerly,
             Success()
         )
-
-    init {
-        _selectedTypeFlow.value = savedStateHandle[de.entikore.composedex.ui.navigation.destination.Type.typeArg]
-    }
 
     fun fetchType(typeName: String) {
         Timber.d("Search for type $typeName")

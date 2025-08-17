@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- migrate to navigation3 library.
+
 ### Fixed
 - asynchronous DAO queries no longer suspend indefinitely if table is empty.
 

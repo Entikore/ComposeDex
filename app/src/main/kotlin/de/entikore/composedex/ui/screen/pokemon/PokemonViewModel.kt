@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Entikore
+ * Copyright 2025 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,6 @@
  */
 package de.entikore.composedex.ui.screen.pokemon
 
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.media3.common.MediaItem
@@ -49,7 +48,6 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
-import kotlin.text.get
 
 /**
  * Manages application state for the [PokemonScreen].
@@ -62,8 +60,7 @@ class PokemonViewModel @Inject constructor(
     private val setAsFavouriteUseCase: @JvmSuppressWildcards ParamsSuspendUseCase<SetFavouriteData, Unit>,
     private val changeThemeUseCase: @JvmSuppressWildcards ParamsSuspendUseCase<String, Unit>,
     private val exoPlayer: ExoPlayer,
-    private val tts: ComposeDexTTS,
-    savedStateHandle: SavedStateHandle
+    private val tts: ComposeDexTTS
 ) : ViewModel() {
 
     private val _selectedPokemonFlow = MutableStateFlow<String?>(null)
@@ -249,15 +246,8 @@ class PokemonViewModel @Inject constructor(
         return varieties.filterNotNull().toList()
     }
 
-    private val pokemonNameOrId: String? = savedStateHandle[
-        de.entikore.composedex.ui.navigation.destination.Pokemon.pokemonArg
-    ]
-
     init {
         exoPlayer.repeatMode = Player.REPEAT_MODE_OFF
-        if (!pokemonNameOrId.isNullOrEmpty()) {
-            lookUpPokemon(pokemonNameOrId)
-        }
     }
 
     override fun onCleared() {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Entikore
+ * Copyright 2025 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,16 +35,16 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.integerResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.navigation.NavBackStackEntry
 import coil3.compose.AsyncImage
 import de.entikore.composedex.R
 import de.entikore.composedex.ui.component.cutCornerShapeBorder
+import de.entikore.composedex.ui.navigation.destination.ComposeDexDestination
 import de.entikore.composedex.ui.navigation.destination.drawerScreens
 
 @Composable
 fun ComposeDexDrawer(
-    currentlySelected: NavBackStackEntry?,
-    onDestinationClick: (route: String) -> Unit,
+    currentlySelected: ComposeDexDestination?,
+    onDestinationClick: (route: ComposeDexDestination) -> Unit,
     modifier: Modifier = Modifier
 ) {
     ModalDrawerSheet(
@@ -108,8 +108,8 @@ fun DrawerHead(modifier: Modifier = Modifier) {
 
 @Composable
 fun DrawerBody(
-    onDestinationClick: (route: String) -> Unit,
-    currentlySelected: NavBackStackEntry?,
+    onDestinationClick: (ComposeDexDestination) -> Unit,
+    currentlySelected: ComposeDexDestination?,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -122,8 +122,8 @@ fun DrawerBody(
             DrawerEntry(
                 icon = entry.icon,
                 name = entry.uiName,
-                selected = entry.route == (currentlySelected?.destination?.route ?: ""),
-                onClick = { onDestinationClick(entry.route) },
+                selected = entry.javaClass == currentlySelected?.javaClass,
+                onClick = { onDestinationClick(entry) },
                 modifier = Modifier
                     .padding(dimensionResource(id = R.dimen.small_padding))
             )
