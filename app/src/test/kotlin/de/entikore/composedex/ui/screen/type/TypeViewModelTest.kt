@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Entikore
+ * Copyright 2025 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,9 +41,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mock
-import org.mockito.Mockito.anyString
 import org.mockito.Mockito.mock
-import org.mockito.kotlin.whenever
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(MainCoroutineRule::class)
@@ -78,8 +76,7 @@ class TypeViewModelTest {
             typeUseCase,
             getPokemonOfTypeUseCase,
             saveRemoteImageUseCase,
-            setAsFavouriteUseCase,
-            mockSavedStateHandle
+            setAsFavouriteUseCase
         )
 
         val expectedState = TypeScreenUiState.Success()
@@ -101,8 +98,7 @@ class TypeViewModelTest {
             typeUseCase,
             getPokemonOfTypeUseCase,
             saveRemoteImageUseCase,
-            setAsFavouriteUseCase,
-            mockSavedStateHandle
+            setAsFavouriteUseCase
         )
 
         val expectedState = TypeScreenUiState.Success(
@@ -114,79 +110,6 @@ class TypeViewModelTest {
             var stateResult = awaitItem()
             assertThat(stateResult).isInstanceOf(TypeScreenUiState.Success::class.java)
             assertThat(stateResult).isEqualTo(TypeScreenUiState.Success())
-
-            stateResult = awaitItem()
-            assertThat(stateResult).isInstanceOf(TypeScreenUiState.Success::class.java)
-            assertThat(stateResult).isEqualTo(expectedState)
-        }
-    }
-
-    @Test
-    fun `creating TypeViewModel with SavedStateHandle exposes Success SelectedTypeUiState with expected Type`() = runTest {
-        val expectedType = getTypeRemote(TYPE_ICE_FILE).toEntity().asExternalModel()
-        fakeTypeRepository.addTypes(expectedType)
-        whenever(mockSavedStateHandle.get<String>(anyString())).thenReturn(TYPE_ICE_NAME)
-
-        viewModel = TypeViewModel(
-            typesUseCase,
-            typeUseCase,
-            getPokemonOfTypeUseCase,
-            saveRemoteImageUseCase,
-            setAsFavouriteUseCase,
-            mockSavedStateHandle
-        )
-
-        val expectedState = TypeScreenUiState.Success(
-            types = listOf(getTypeRemote(TYPE_ICE_FILE).toEntity().asExternalModel()),
-            selectedType = SelectedTypeUiState.Success(
-                selectedType = getTypeRemote(TYPE_ICE_FILE).toEntity().asExternalModel(),
-                pokemonState = PokemonUiState.Success(emptyList()),
-                showLoadingItem = true
-            )
-        )
-
-        viewModel.screenState.test {
-            var stateResult = awaitItem()
-            assertThat(stateResult).isInstanceOf(TypeScreenUiState.Success::class.java)
-            assertThat(stateResult).isEqualTo(TypeScreenUiState.Success())
-
-            stateResult = awaitItem()
-            assertThat(stateResult).isInstanceOf(TypeScreenUiState.Success::class.java)
-            assertThat(stateResult).isEqualTo(expectedState.copy(selectedType = SelectedTypeUiState.Loading))
-
-            stateResult = awaitItem()
-            assertThat(stateResult).isInstanceOf(TypeScreenUiState.Success::class.java)
-            assertThat(stateResult).isEqualTo(expectedState)
-        }
-    }
-
-    @Test
-    fun `creating TypeViewModel with unknown SavedStateHandle exposes Error SelectedTypeUiState`() = runTest {
-        whenever(mockSavedStateHandle.get<String>(anyString())).thenReturn("unknown")
-
-        viewModel = TypeViewModel(
-            typesUseCase,
-            typeUseCase,
-            getPokemonOfTypeUseCase,
-            saveRemoteImageUseCase,
-            setAsFavouriteUseCase,
-            mockSavedStateHandle
-        )
-
-        val expectedState = TypeScreenUiState.Success(
-            selectedType = SelectedTypeUiState.Error
-        )
-
-        viewModel.screenState.test {
-            var stateResult = awaitItem()
-            assertThat(stateResult).isInstanceOf(TypeScreenUiState.Success::class.java)
-            assertThat(stateResult).isEqualTo(TypeScreenUiState.Success())
-
-            stateResult = awaitItem()
-            assertThat(stateResult).isInstanceOf(TypeScreenUiState.Success::class.java)
-            assertThat(
-                stateResult
-            ).isEqualTo(TypeScreenUiState.Success().copy(selectedType = SelectedTypeUiState.Loading))
 
             stateResult = awaitItem()
             assertThat(stateResult).isInstanceOf(TypeScreenUiState.Success::class.java)
@@ -207,8 +130,7 @@ class TypeViewModelTest {
             typeUseCase,
             getPokemonOfTypeUseCase,
             saveRemoteImageUseCase,
-            setAsFavouriteUseCase,
-            mockSavedStateHandle
+            setAsFavouriteUseCase
         )
 
         val expectedState = TypeScreenUiState.Success(
@@ -259,8 +181,7 @@ class TypeViewModelTest {
             typeUseCase,
             getPokemonOfTypeUseCase,
             saveRemoteImageUseCase,
-            setAsFavouriteUseCase,
-            mockSavedStateHandle
+            setAsFavouriteUseCase
         )
 
         val expectedState = TypeScreenUiState.Success(

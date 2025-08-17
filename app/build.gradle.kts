@@ -8,6 +8,7 @@ plugins {
     alias(libs.plugins.ksp)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.junit5)
+    alias(libs.plugins.jetbrains.kotlin.serialization)
 }
 
 android {
@@ -18,8 +19,8 @@ android {
         applicationId = "de.entikore.composedex"
         minSdk = libs.versions.minSdk.get().toInt()
         targetSdk = libs.versions.targetSdk.get().toInt()
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = 2
+        versionName = "2.0.0"
 
         testInstrumentationRunner = "de.entikore.composedex.HiltTestRunner"
     }
@@ -57,7 +58,6 @@ android {
     }
 }
 
-
 dependencies {
     detektPlugins(libs.detekt.formatting)
     detektPlugins(libs.detekt.compose)
@@ -74,11 +74,15 @@ dependencies {
 
     implementation(libs.androidx.core.ktx)
 
+    implementation(libs.androidx.navigation3.ui)
+    implementation(libs.androidx.navigation3.runtime)
+    implementation(libs.androidx.lifecycle.viewmodel.navigation3)
+    implementation(libs.kotlinx.serialization.core)
+
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)
 
     implementation(libs.androidx.datastore.preferences)
-    implementation(libs.androidx.navigation)
     implementation(libs.androidx.hilt.navigation)
 
     implementation(libs.androidx.room)
@@ -127,7 +131,6 @@ dependencies {
     androidTestImplementation(libs.androidx.compose.material3)
     androidTestImplementation(libs.androidx.test.runner)
     androidTestImplementation(libs.androidx.test.rules)
-    androidTestImplementation(libs.androidx.navigation.test)
     androidTestImplementation(libs.mock.webserver)
     debugImplementation(libs.androidx.compose.ui.manifest)
     androidTestImplementation(libs.hilt.android.testing)

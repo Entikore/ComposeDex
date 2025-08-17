@@ -89,7 +89,8 @@ The data layer is designed with an offline-first approach in mind. There exists 
 - [AndroidX Drawerlayout](https://developer.android.com/jetpack/androidx/releases/drawerlayout): Provides a UI panel that slides in from the edge of the screen, used for the navigation menu.
 - [AndroidX ExoPlayer](https://developer.android.com/reference/androidx/media3/exoplayer/ExoPlayer): An application-level media player for Android to play audio.
 - [AndroidX Hilt](https://developer.android.com/jetpack/androidx/releases/hilt): A dependency injection library to integrate Dagger with Android components.
-- [AndroidX Navigation](https://developer.android.com/jetpack/androidx/releases/navigation): A framework for navigating between different screens, providing a structured way to manage navigation flows and transitions.
+- [AndroidX navigation3](https://developer.android.com/jetpack/androidx/releases/navigation3):
+  Modern, type-safe navigation patterns for navigating between different composable screens.
 - [AndroidX Room](https://developer.android.com/jetpack/androidx/releases/room): An abstraction layer over SQLite, providing a convenient and type-safe way to interact with the app's database.
 - [Coil](https://github.com/coil-kt/coil): An image loading and caching library for Android.
 - [ksp](https://github.com/google/ksp): Kotlin Symbol Processing API.
