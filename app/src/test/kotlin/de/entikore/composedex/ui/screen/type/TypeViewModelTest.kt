@@ -15,7 +15,6 @@
  */
 package de.entikore.composedex.ui.screen.type
 
-import androidx.lifecycle.SavedStateHandle
 import app.cash.turbine.test
 import com.google.common.truth.Truth.assertThat
 import de.entikore.composedex.MainCoroutineRule
@@ -40,7 +39,6 @@ import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import org.mockito.Mock
 import org.mockito.Mockito.mock
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -53,9 +51,6 @@ class TypeViewModelTest {
     private lateinit var saveRemoteImageUseCase: FakeSaveRemoteImageUseCase
     private lateinit var setAsFavouriteUseCase: SetAsFavouriteUseCase
 
-    @Mock
-    private lateinit var mockSavedStateHandle: SavedStateHandle
-
     private lateinit var viewModel: TypeViewModel
     private val fakeTypeRepository = FakeTypeRepository()
 
@@ -66,7 +61,6 @@ class TypeViewModelTest {
         getPokemonOfTypeUseCase = GetPokemonOfTypeUseCase(fakeTypeRepository)
         saveRemoteImageUseCase = FakeSaveRemoteImageUseCase()
         setAsFavouriteUseCase = mock()
-        mockSavedStateHandle = mock(SavedStateHandle::class.java)
     }
 
     @Test
