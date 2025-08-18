@@ -7,7 +7,6 @@ plugins {
     alias(libs.plugins.detekt)
     alias(libs.plugins.ksp)
     alias(libs.plugins.compose.compiler)
-    alias(libs.plugins.junit5)
     alias(libs.plugins.jetbrains.kotlin.serialization)
 }
 
@@ -89,9 +88,8 @@ dependencies {
     ksp(libs.androidx.room.compiler)
     implementation(libs.androidx.room.ktx)
 
-    implementation(libs.coil)
     implementation(libs.coil.compose)
-    implementation(libs.coil.gif)
+    runtimeOnly(libs.coil.gif)
 
     implementation(libs.exo.player)
 
@@ -103,7 +101,6 @@ dependencies {
 
     implementation(libs.timber)
 
-    testImplementation(libs.jupiter)
     testImplementation(libs.jupiter.api)
     testRuntimeOnly(libs.jupiter.engine)
     testImplementation(libs.jupiter.params)
@@ -115,7 +112,6 @@ dependencies {
     testImplementation(project(":sharedTestCode"))
     implementation(libs.androidx.test.core)
     testImplementation(libs.mockito.core)
-    testImplementation(libs.mockito.kotlin)
     testImplementation(libs.androidx.arch.core)
 
     androidTestImplementation(composeBom)
@@ -123,16 +119,12 @@ dependencies {
     androidTestImplementation(libs.androidx.arch.core)
     androidTestImplementation(libs.androidx.compose.ui.test)
     androidTestImplementation(libs.coroutine.test)
-    androidTestImplementation(libs.mockito.android)
-    androidTestImplementation(libs.mockito.kotlin)
     androidTestImplementation(libs.turbine)
     androidTestImplementation(libs.truth)
     androidTestImplementation(libs.androidx.test.core)
     androidTestImplementation(libs.androidx.compose.material3)
     androidTestImplementation(libs.androidx.test.runner)
-    androidTestImplementation(libs.androidx.test.rules)
-    androidTestImplementation(libs.mock.webserver)
-    debugImplementation(libs.androidx.compose.ui.manifest)
+    debugRuntimeOnly(libs.androidx.compose.ui.manifest)
     androidTestImplementation(libs.hilt.android.testing)
     kspAndroidTest(libs.hilt.android.comp)
     androidTestImplementation(project(":sharedTestCode"))
