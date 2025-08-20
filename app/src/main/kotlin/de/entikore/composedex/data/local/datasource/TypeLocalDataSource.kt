@@ -15,6 +15,7 @@
  */
 package de.entikore.composedex.data.local.datasource
 
+import de.entikore.composedex.data.local.ComposeDexDatabase
 import de.entikore.composedex.data.local.dao.TypeDao
 import de.entikore.composedex.data.local.entity.pokemon.relation.PokemonWithSpeciesTypesAndVarieties
 import de.entikore.composedex.data.local.entity.type.TypeEntity
@@ -29,10 +30,11 @@ import kotlinx.coroutines.withContext
  * Local data source for [TypeEntity] instances and their associated [PokemonWithSpeciesTypesAndVarieties].
  */
 class TypeLocalDataSource(
-    private val pokemonLocalDataSource: PokemonLocalDataSource,
-    private val typeDao: TypeDao,
+    private val database: ComposeDexDatabase,
     private val dispatcher: CoroutineDispatcher = Dispatchers.IO
 ) {
+    private val typeDao: TypeDao = database.typeDao()
+
     suspend fun insertTypeOverview(typeOverviewEntity: TypeOverviewEntity) =
         withContext(dispatcher) { typeDao.insertOverview(typeOverviewEntity) }
 
@@ -41,14 +43,19 @@ class TypeLocalDataSource(
 
     suspend fun insertPokemonForType(
         type: TypeEntity,
-        pokemon: PokemonWithSpeciesTypesAndVarieties
+        fullPokemon: PokemonWithSpeciesTypesAndVarieties
     ) {
         withContext(dispatcher) {
-            pokemonLocalDataSource.insertPokemonWithSpeciesTypesAndVarieties(pokemon)
+            database.insertPokemonWithSpeciesTypesAndVarieties(
+                fullPokemon.pokemon,
+                fullPokemon.species,
+                fullPokemon.types,
+                fullPokemon.varieties,
+            )
             typeDao.insertPokemonCrossRef(
                 TypePokemonCrossRef(
                     type.typeId,
-                    pokemon.pokemon.pokemonId
+                    fullPokemon.pokemon.pokemonId
                 )
             )
         }

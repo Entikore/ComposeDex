@@ -15,6 +15,7 @@
  */
 package de.entikore.composedex.data.local.datasource
 
+import de.entikore.composedex.data.local.ComposeDexDatabase
 import de.entikore.composedex.data.local.dao.GenerationDao
 import de.entikore.composedex.data.local.entity.generation.GenerationEntity
 import de.entikore.composedex.data.local.entity.generation.GenerationOverviewEntity
@@ -29,10 +30,10 @@ import kotlinx.coroutines.withContext
  * Local data source for [GenerationEntity] instances and their associated [PokemonWithSpeciesTypesAndVarieties].
  */
 class GenerationLocalDataSource(
-    private val pokemonLocalDataSource: PokemonLocalDataSource,
-    private val generationDao: GenerationDao,
+    private val database: ComposeDexDatabase,
     private val dispatcher: CoroutineDispatcher = Dispatchers.IO
 ) {
+    private val generationDao: GenerationDao = database.generationDao()
 
     suspend fun insertGenerationOverview(generationOverviewEntity: GenerationOverviewEntity) =
         withContext(dispatcher) { generationDao.insertOverview(generationOverviewEntity) }
@@ -42,15 +43,20 @@ class GenerationLocalDataSource(
 
     suspend fun insertPokemonForGeneration(
         generation: GenerationEntity,
-        pokemon: PokemonWithSpeciesTypesAndVarieties
+        fullPokemon: PokemonWithSpeciesTypesAndVarieties
     ) {
         withContext(dispatcher) {
             insertGeneration(generation)
-            pokemonLocalDataSource.insertPokemonWithSpeciesTypesAndVarieties(pokemon)
+            database.insertPokemonWithSpeciesTypesAndVarieties(
+                fullPokemon.pokemon,
+                fullPokemon.species,
+                fullPokemon.types,
+                fullPokemon.varieties
+            )
             generationDao.insertPokemonCrossRef(
                 GenerationPokemonCrossRef(
                     generation.generationId,
-                    pokemon.pokemon.pokemonId
+                    fullPokemon.pokemon.pokemonId
                 )
             )
         }

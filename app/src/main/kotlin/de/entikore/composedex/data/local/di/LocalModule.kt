@@ -92,12 +92,9 @@ object LocalModule {
 
     @Provides
     fun providePokemonLocalDataSource(
-        pokemonDao: PokemonDao,
-        speciesDao: SpeciesDao,
-        varietyDao: VarietyDao,
-        typeDao: TypeDao
+        database: ComposeDexDatabase
     ): PokemonLocalDataSource =
-        PokemonLocalDataSource(pokemonDao, speciesDao, varietyDao, typeDao)
+        PokemonLocalDataSource(database)
 
     @Provides
     fun provideFavouriteLocalDataSource(pokemonDao: PokemonDao): FavouriteLocalDataSource =
@@ -107,14 +104,12 @@ object LocalModule {
 
     @Provides
     fun provideTypeLocalDataSource(
-        pokemonLocalDataSource: PokemonLocalDataSource,
-        typeDao: TypeDao
-    ): TypeLocalDataSource = TypeLocalDataSource(pokemonLocalDataSource, typeDao)
+        database: ComposeDexDatabase
+    ): TypeLocalDataSource = TypeLocalDataSource(database)
 
     @Provides
     fun provideGenerationLocalDataSource(
-        pokemonLocalDataSource: PokemonLocalDataSource,
-        generationDao: GenerationDao
+        database: ComposeDexDatabase
     ): GenerationLocalDataSource =
-        GenerationLocalDataSource(pokemonLocalDataSource, generationDao)
+        GenerationLocalDataSource(database)
 }

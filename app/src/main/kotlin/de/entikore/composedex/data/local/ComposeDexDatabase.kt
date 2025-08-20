@@ -17,6 +17,7 @@ package de.entikore.composedex.data.local
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
+import androidx.room.Transaction
 import androidx.room.TypeConverters
 import de.entikore.composedex.data.local.converter.ChainConverter
 import de.entikore.composedex.data.local.converter.StatsConverter
@@ -76,6 +77,44 @@ abstract class ComposeDexDatabase : RoomDatabase(), LocalStorage {
 
     override fun clearData() {
         this.clearAllTables()
+    }
+
+    @Transaction
+    suspend inline fun insertPokemonWithSpeciesTypesAndVarieties(
+        pokemon: PokemonEntity,
+        species: SpeciesEntity,
+        types: List<TypeEntity>,
+        varieties: List<VarietyEntity>
+    ) {
+        varieties.forEach { variety ->
+            varietyDao().insert(variety)
+            pokemonDao().insertVarietyCrossRef(
+                PokemonVarietyCrossRef(
+                    pokemon.pokemonId,
+                    variety.varietyName
+                )
+            )
+        }
+
+        types.forEach { type ->
+            typeDao().insert(type)
+            pokemonDao().insertTypeCrossRef(
+                PokemonTypeCrossRef(
+                    pokemon.pokemonId,
+                    type.typeId
+                )
+            )
+        }
+
+        speciesDao().insert(species)
+        pokemonDao().insertSpeciesCrossRef(
+            PokemonSpeciesCrossRef(
+                pokemon.pokemonId,
+                species.speciesId
+            )
+        )
+
+        pokemonDao().insert(pokemon)
     }
 
     companion object {

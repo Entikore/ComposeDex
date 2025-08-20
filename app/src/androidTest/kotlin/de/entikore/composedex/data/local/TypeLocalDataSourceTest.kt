@@ -72,15 +72,11 @@ class TypeLocalDataSourceTest: LocalDataSourceTest() {
             .addTypeConverter(TypesConverter(moshi))
             .build()
         pokemonLocalDataSource = PokemonLocalDataSource(
-            pokemonDao = database.pokemonDao(),
-            speciesDao = database.speciesDao(),
-            varietyDao = database.varietyDao(),
-            typeDao = database.typeDao(),
+            database = database,
             dispatcher = mainCoroutineRule.getDispatcher()
         )
         localDataSource = TypeLocalDataSource(
-            pokemonLocalDataSource = pokemonLocalDataSource,
-            typeDao = database.typeDao(),
+            database = database,
             dispatcher = mainCoroutineRule.getDispatcher()
         )
     }

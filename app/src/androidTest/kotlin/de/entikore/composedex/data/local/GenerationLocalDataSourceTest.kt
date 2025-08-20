@@ -30,21 +30,17 @@ import de.entikore.composedex.data.local.converter.TypesConverter
 import de.entikore.composedex.data.local.datasource.GenerationLocalDataSource
 import de.entikore.composedex.data.local.datasource.PokemonLocalDataSource
 import de.entikore.composedex.data.local.entity.generation.GenerationEntity
-import de.entikore.composedex.data.local.entity.pokemon.relation.PokemonWithSpeciesTypesAndVarieties
 import de.entikore.composedex.data.remote.model.generation.toEntity
 import de.entikore.composedex.data.remote.model.toEntity
 import de.entikore.sharedtestcode.GEN_II_FILE
 import de.entikore.sharedtestcode.GEN_I_FILE
 import de.entikore.sharedtestcode.GEN_VI_FILE
-import de.entikore.sharedtestcode.POKEMON_GLOOM_NAME
 import de.entikore.sharedtestcode.POKEMON_ODDISH_NAME
-import de.entikore.sharedtestcode.POKEMON_VILEPLUME_NAME
 import de.entikore.sharedtestcode.TestModelFactory.Companion.getGenerationListRemote
 import de.entikore.sharedtestcode.TestModelFactory.Companion.getGenerationRemote
 import de.entikore.sharedtestcode.TestModelFactory.Companion.getPokemonInfoRemote
 import de.entikore.sharedtestcode.TestModelFactory.Companion.getTestModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.test.runTest
 import org.junit.After
@@ -75,15 +71,11 @@ class GenerationLocalDataSourceTest: LocalDataSourceTest() {
             .addTypeConverter(TypesConverter(moshi))
             .build()
         pokemonLocalDataSource = PokemonLocalDataSource(
-            pokemonDao = database.pokemonDao(),
-            speciesDao = database.speciesDao(),
-            varietyDao = database.varietyDao(),
-            typeDao = database.typeDao(),
+            database = database,
             dispatcher = mainCoroutineRule.getDispatcher()
         )
         localDataSource = GenerationLocalDataSource(
-            pokemonLocalDataSource = pokemonLocalDataSource,
-            generationDao = database.generationDao(),
+            database = database,
             dispatcher = mainCoroutineRule.getDispatcher()
         )
     }
