@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Entikore
+ * Copyright 2025 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,7 +32,7 @@ class FavouriteLocalDataSource(
 ) {
     suspend fun updateIsFavourite(pokemonId: Int, isFavourite: Boolean) =
         withContext(dispatcher) {
-            return@withContext pokemonDao.updateFavourite(FavouriteUpdate(pokemonId, isFavourite))
+            pokemonDao.updateFavourite(FavouriteUpdate(pokemonId, isFavourite))
         }
 
     fun getAllFavourites(): Flow<List<PokemonWithSpeciesTypesAndVarieties>> =
