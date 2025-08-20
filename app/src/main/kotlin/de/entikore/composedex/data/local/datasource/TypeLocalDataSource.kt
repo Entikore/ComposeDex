@@ -20,7 +20,6 @@ import de.entikore.composedex.data.local.dao.TypeDao
 import de.entikore.composedex.data.local.entity.pokemon.relation.PokemonWithSpeciesTypesAndVarieties
 import de.entikore.composedex.data.local.entity.type.TypeEntity
 import de.entikore.composedex.data.local.entity.type.TypeOverviewEntity
-import de.entikore.composedex.data.local.entity.type.relation.TypePokemonCrossRef
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -44,22 +43,13 @@ class TypeLocalDataSource(
     suspend fun insertPokemonForType(
         type: TypeEntity,
         fullPokemon: PokemonWithSpeciesTypesAndVarieties
-    ) {
+    ) =
         withContext(dispatcher) {
-            database.insertPokemonWithSpeciesTypesAndVarieties(
-                fullPokemon.pokemon,
-                fullPokemon.species,
-                fullPokemon.types,
-                fullPokemon.varieties,
-            )
-            typeDao.insertPokemonCrossRef(
-                TypePokemonCrossRef(
-                    type.typeId,
-                    fullPokemon.pokemon.pokemonId
-                )
+            database.insertPokemonAndAssociateWithType(
+                type.typeId,
+                fullPokemon
             )
         }
-    }
 
     fun getTypeOverview(): Flow<TypeOverviewEntity?> = typeDao.getOverview()
 
