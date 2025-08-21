@@ -15,13 +15,9 @@
  */
 package de.entikore.composedex.data.local.datasource
 
+import de.entikore.composedex.data.local.ComposeDexDatabase
 import de.entikore.composedex.data.local.dao.PokemonDao
-import de.entikore.composedex.data.local.dao.SpeciesDao
-import de.entikore.composedex.data.local.dao.TypeDao
 import de.entikore.composedex.data.local.dao.VarietyDao
-import de.entikore.composedex.data.local.entity.pokemon.relation.PokemonSpeciesCrossRef
-import de.entikore.composedex.data.local.entity.pokemon.relation.PokemonTypeCrossRef
-import de.entikore.composedex.data.local.entity.pokemon.relation.PokemonVarietyCrossRef
 import de.entikore.composedex.data.local.entity.pokemon.relation.PokemonWithSpeciesTypesAndVarieties
 import de.entikore.composedex.data.local.entity.pokemon.update.ArtworkUpdate
 import de.entikore.composedex.data.local.entity.pokemon.update.CryUpdate
@@ -36,42 +32,22 @@ import kotlinx.coroutines.withContext
  * Local data source for [PokemonWithSpeciesTypesAndVarieties] instances.
  */
 class PokemonLocalDataSource(
-    private val pokemonDao: PokemonDao,
-    private val speciesDao: SpeciesDao,
-    private val varietyDao: VarietyDao,
-    private val typeDao: TypeDao,
+    private val database: ComposeDexDatabase,
     private val dispatcher: CoroutineDispatcher = Dispatchers.IO
 ) {
+    private val pokemonDao: PokemonDao = database.pokemonDao()
+    private val varietyDao: VarietyDao = database.varietyDao()
+
     suspend fun insertPokemonWithSpeciesTypesAndVarieties(
         pokemonWithSpeciesTypesAndVarieties: PokemonWithSpeciesTypesAndVarieties
     ) =
         withContext(dispatcher) {
-            for (variety in pokemonWithSpeciesTypesAndVarieties.varieties) {
-                varietyDao.insert(variety)
-                pokemonDao.insertVarietyCrossRef(
-                    PokemonVarietyCrossRef(
-                        pokemonWithSpeciesTypesAndVarieties.pokemon.pokemonId,
-                        variety.varietyName
-                    )
-                )
-            }
-            for (type in pokemonWithSpeciesTypesAndVarieties.types) {
-                typeDao.insert(type)
-                pokemonDao.insertTypeCrossRef(
-                    PokemonTypeCrossRef(
-                        pokemonWithSpeciesTypesAndVarieties.pokemon.pokemonId,
-                        type.typeId
-                    )
-                )
-            }
-            speciesDao.insert(pokemonWithSpeciesTypesAndVarieties.species)
-            pokemonDao.insertSpeciesCrossRef(
-                PokemonSpeciesCrossRef(
-                    pokemonWithSpeciesTypesAndVarieties.pokemon.pokemonId,
-                    pokemonWithSpeciesTypesAndVarieties.species.speciesId
-                )
+            database.insertPokemonWithSpeciesTypesAndVarieties(
+                pokemonWithSpeciesTypesAndVarieties.pokemon,
+                pokemonWithSpeciesTypesAndVarieties.species,
+                pokemonWithSpeciesTypesAndVarieties.types,
+                pokemonWithSpeciesTypesAndVarieties.varieties
             )
-            pokemonDao.insert(pokemonWithSpeciesTypesAndVarieties.pokemon)
         }
 
     suspend fun updatePokemonArtwork(pokemonId: Int, artworkPath: String) =

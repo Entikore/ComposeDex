@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Entikore
+ * Copyright 2025 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@ package de.entikore.composedex.data.local
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
+import androidx.room.Transaction
 import androidx.room.TypeConverters
 import de.entikore.composedex.data.local.converter.ChainConverter
 import de.entikore.composedex.data.local.converter.StatsConverter
@@ -33,6 +34,7 @@ import de.entikore.composedex.data.local.entity.pokemon.PokemonEntity
 import de.entikore.composedex.data.local.entity.pokemon.relation.PokemonSpeciesCrossRef
 import de.entikore.composedex.data.local.entity.pokemon.relation.PokemonTypeCrossRef
 import de.entikore.composedex.data.local.entity.pokemon.relation.PokemonVarietyCrossRef
+import de.entikore.composedex.data.local.entity.pokemon.relation.PokemonWithSpeciesTypesAndVarieties
 import de.entikore.composedex.data.local.entity.species.SpeciesEntity
 import de.entikore.composedex.data.local.entity.type.TypeEntity
 import de.entikore.composedex.data.local.entity.type.TypeOverviewEntity
@@ -76,6 +78,87 @@ abstract class ComposeDexDatabase : RoomDatabase(), LocalStorage {
 
     override fun clearData() {
         this.clearAllTables()
+    }
+
+    @Transaction
+    suspend fun insertPokemonWithSpeciesTypesAndVarieties(
+        pokemon: PokemonEntity,
+        species: SpeciesEntity,
+        types: List<TypeEntity>,
+        varieties: List<VarietyEntity>
+    ) {
+        varieties.forEach { variety ->
+            varietyDao().insert(variety)
+            pokemonDao().insertVarietyCrossRef(
+                PokemonVarietyCrossRef(
+                    pokemon.pokemonId,
+                    variety.varietyName
+                )
+            )
+        }
+
+        types.forEach { type ->
+            typeDao().insert(type)
+            pokemonDao().insertTypeCrossRef(
+                PokemonTypeCrossRef(
+                    pokemon.pokemonId,
+                    type.typeId
+                )
+            )
+        }
+
+        speciesDao().insert(species)
+        pokemonDao().insertSpeciesCrossRef(
+            PokemonSpeciesCrossRef(
+                pokemon.pokemonId,
+                species.speciesId
+            )
+        )
+
+        pokemonDao().insert(pokemon)
+    }
+
+    @Transaction
+    suspend fun insertPokemonAndAssociateWithType(
+        typeId: Int,
+        fullPokemon: PokemonWithSpeciesTypesAndVarieties,
+    ) {
+        insertPokemonWithSpeciesTypesAndVarieties(
+            fullPokemon.pokemon,
+            fullPokemon.species,
+            fullPokemon.types,
+            fullPokemon.varieties
+        )
+        typeDao().insertPokemonCrossRef(
+            TypePokemonCrossRef(
+                typeId,
+                fullPokemon.pokemon.pokemonId
+            )
+        )
+    }
+
+    @Transaction
+    suspend fun insertPokemonAndAssociateWithGeneration(
+        generation: GenerationEntity,
+        fullPokemon: PokemonWithSpeciesTypesAndVarieties
+    ) {
+        val generationDao = generationDao()
+
+        generationDao.insert(generation)
+
+        insertPokemonWithSpeciesTypesAndVarieties(
+            fullPokemon.pokemon,
+            fullPokemon.species,
+            fullPokemon.types,
+            fullPokemon.varieties
+        )
+
+        generationDao.insertPokemonCrossRef(
+            GenerationPokemonCrossRef(
+                generation.generationId,
+                fullPokemon.pokemon.pokemonId
+            )
+        )
     }
 
     companion object {

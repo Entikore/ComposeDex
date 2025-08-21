@@ -15,11 +15,11 @@
  */
 package de.entikore.composedex.data.local.datasource
 
+import de.entikore.composedex.data.local.ComposeDexDatabase
 import de.entikore.composedex.data.local.dao.TypeDao
 import de.entikore.composedex.data.local.entity.pokemon.relation.PokemonWithSpeciesTypesAndVarieties
 import de.entikore.composedex.data.local.entity.type.TypeEntity
 import de.entikore.composedex.data.local.entity.type.TypeOverviewEntity
-import de.entikore.composedex.data.local.entity.type.relation.TypePokemonCrossRef
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -29,10 +29,11 @@ import kotlinx.coroutines.withContext
  * Local data source for [TypeEntity] instances and their associated [PokemonWithSpeciesTypesAndVarieties].
  */
 class TypeLocalDataSource(
-    private val pokemonLocalDataSource: PokemonLocalDataSource,
-    private val typeDao: TypeDao,
+    private val database: ComposeDexDatabase,
     private val dispatcher: CoroutineDispatcher = Dispatchers.IO
 ) {
+    private val typeDao: TypeDao = database.typeDao()
+
     suspend fun insertTypeOverview(typeOverviewEntity: TypeOverviewEntity) =
         withContext(dispatcher) { typeDao.insertOverview(typeOverviewEntity) }
 
@@ -41,18 +42,14 @@ class TypeLocalDataSource(
 
     suspend fun insertPokemonForType(
         type: TypeEntity,
-        pokemon: PokemonWithSpeciesTypesAndVarieties
-    ) {
+        fullPokemon: PokemonWithSpeciesTypesAndVarieties
+    ) =
         withContext(dispatcher) {
-            pokemonLocalDataSource.insertPokemonWithSpeciesTypesAndVarieties(pokemon)
-            typeDao.insertPokemonCrossRef(
-                TypePokemonCrossRef(
-                    type.typeId,
-                    pokemon.pokemon.pokemonId
-                )
+            database.insertPokemonAndAssociateWithType(
+                type.typeId,
+                fullPokemon
             )
         }
-    }
 
     fun getTypeOverview(): Flow<TypeOverviewEntity?> = typeDao.getOverview()
 
