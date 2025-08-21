@@ -7,6 +7,7 @@ plugins {
     alias(libs.plugins.detekt)
     alias(libs.plugins.ksp)
     alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.junit5)
     alias(libs.plugins.jetbrains.kotlin.serialization)
 }
 
@@ -115,6 +116,7 @@ dependencies {
     testImplementation(libs.androidx.arch.core)
 
     androidTestImplementation(composeBom)
+    androidTestImplementation(libs.androidx.test.rules)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.arch.core)
     androidTestImplementation(libs.androidx.compose.ui.test)
