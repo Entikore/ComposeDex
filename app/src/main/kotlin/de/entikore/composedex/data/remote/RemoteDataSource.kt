@@ -38,9 +38,9 @@ class RemoteDataSource(
     suspend fun getPokemonInfoRemoteBySpeciesName(name: String): ApiResponse<PokemonInfoRemote> =
         withContext(dispatcher) {
             return@withContext try {
-                val pokemonWithSpeciesAndTypesRemote = getSpeciesWithPokemonTypeAndVarieties(name)
+                val initialPokemonInfo = getSpeciesWithPokemonTypeAndVarieties(name)
                 ApiResponse.success(
-                    getPokemonInfoRemoteByName(pokemonWithSpeciesAndTypesRemote)
+                    fetchAndProcessEvolutionChain(initialPokemonInfo)
                 )
             } catch (exception: RemoteDataSourceException) {
                 ApiResponse.error(
@@ -53,9 +53,9 @@ class RemoteDataSource(
     suspend fun getPokemonInfoRemoteByName(name: String): ApiResponse<PokemonInfoRemote> =
         withContext(dispatcher) {
             return@withContext try {
-                val pokemonWithSpeciesAndTypesRemote = getPokemonWithSpeciesAndType(name)
+                val initialPokemonInfo = getPokemonWithSpeciesAndType(name)
                 ApiResponse.success(
-                    getPokemonInfoRemoteByName(pokemonWithSpeciesAndTypesRemote)
+                    fetchAndProcessEvolutionChain(initialPokemonInfo)
                 )
             } catch (exception: RemoteDataSourceException) {
                 ApiResponse.error(
@@ -68,9 +68,9 @@ class RemoteDataSource(
     suspend fun getPokemonInfoRemoteById(id: Int): ApiResponse<PokemonInfoRemote> =
         withContext(dispatcher) {
             return@withContext try {
-                val pokemonWithSpeciesAndTypesRemote = getPokemonWithSpeciesAndType(id)
+                val initialPokemonInfo = getPokemonWithSpeciesAndType(id)
                 ApiResponse.success(
-                    getPokemonInfoRemoteByName(pokemonWithSpeciesAndTypesRemote)
+                    fetchAndProcessEvolutionChain(initialPokemonInfo)
                 )
             } catch (exception: RemoteDataSourceException) {
                 ApiResponse.error(ERROR_POKEMON_ID_NOT_FOUND.format(id), exception)
@@ -175,7 +175,7 @@ class RemoteDataSource(
         return PokemonInfoRemote(pokemon, species, types)
     }
 
-    private suspend fun getPokemonInfoRemoteByName(
+    private suspend fun fetchAndProcessEvolutionChain(
         pokemonWithSpeciesAndTypesRemote: PokemonInfoRemote
     ): PokemonInfoRemote {
         var chain: EvolutionChainRemote? = null
@@ -186,7 +186,32 @@ class RemoteDataSource(
                 )
             }.getSuccessOrThrow()
         }
-        return pokemonWithSpeciesAndTypesRemote.copy(evolutionChain = processChain(chain = chain?.chain))
+        return pokemonWithSpeciesAndTypesRemote.copy(evolutionChain = processEvolutionChain(chain = chain?.chain))
+    }
+
+    private fun processChain(
+        currentChainRemote: ChainRemote?,
+        currentRank: Int,
+        evolutionMap: MutableMap<Int, MutableList<ChainLink>>
+    ) {
+        if (currentChainRemote == null) return
+
+        val chainLink = ChainLink(
+            currentChainRemote.species.name,
+            getUrlPath(currentChainRemote.species.url),
+            currentChainRemote.isBaby
+        )
+        evolutionMap.computeIfAbsent(currentRank) { mutableListOf() }.add(chainLink)
+
+        for (nextEvolution in currentChainRemote.evolvesTo) {
+            processChain(nextEvolution, currentRank + 1, evolutionMap)
+        }
+    }
+
+    private fun processEvolutionChain(chain: ChainRemote?): Map<Int, List<ChainLink>> {
+        val evolutionMap = mutableMapOf<Int, MutableList<ChainLink>>()
+        processChain(chain, 0, evolutionMap)
+        return evolutionMap.mapValues { it.value.toList() }
     }
 
     companion object {
@@ -197,22 +222,5 @@ class RemoteDataSource(
         const val ERROR_GENERATIONS = "Could not fetch generations"
         const val ERROR_GENERATION_NOT_FOUND = "Generation with name %s not found"
         const val ERROR_GENERATION_ID_NOT_FOUND = "Generation with id %s not found"
-
-        private fun processChain(
-            map: Map<Int, List<ChainLink>> = mutableMapOf(),
-            chain: ChainRemote?,
-            rank: Int = 0
-        ): Map<Int, List<ChainLink>> {
-            val chainList = map.toMutableMap()
-            if (chain == null) return chainList
-            val oldList = chainList[rank].orEmpty().toMutableList().apply {
-                add(ChainLink(chain.species.name, getUrlPath(chain.species.url), chain.isBaby))
-            }
-            chainList[rank] = oldList
-            for (link in chain.evolvesTo) {
-                chainList.putAll(processChain(chainList, link, rank + 1))
-            }
-            return chainList
-        }
     }
 }
