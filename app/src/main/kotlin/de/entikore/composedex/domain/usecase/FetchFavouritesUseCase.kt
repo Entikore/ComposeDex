@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Entikore
+ * Copyright 2025 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,21 +15,23 @@
  */
 package de.entikore.composedex.domain.usecase
 
-import de.entikore.composedex.domain.WorkResult
-import de.entikore.composedex.domain.asWorkResult
 import de.entikore.composedex.domain.model.pokemon.Pokemon
 import de.entikore.composedex.domain.repository.FavouriteRepository
-import de.entikore.composedex.domain.usecase.base.UseCase
-import kotlinx.coroutines.flow.Flow
+import de.entikore.composedex.domain.usecase.base.BaseFetchUseCase
+import de.entikore.composedex.domain.util.asResult
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.distinctUntilChanged
 import javax.inject.Inject
 
 /**
  * This use case returns the latest as favourites marked Pokemon.
  */
-class GetFavouritesUseCase @Inject constructor(private val repository: FavouriteRepository) :
-    UseCase<Flow<WorkResult<List<Pokemon>>>>() {
-
-    override operator fun invoke() = repository.getFavourites().distinctUntilChanged()
-        .asWorkResult()
+@Suppress("TooGenericExceptionCaught")
+class FetchFavouritesUseCase @Inject constructor(
+    private val repository: FavouriteRepository,
+    dispatcher: CoroutineDispatcher = Dispatchers.IO
+) :
+    BaseFetchUseCase<Unit, List<Pokemon>>(dispatcher) {
+    override fun execute(params: Unit) = repository.getFavourites().distinctUntilChanged().asResult()
 }

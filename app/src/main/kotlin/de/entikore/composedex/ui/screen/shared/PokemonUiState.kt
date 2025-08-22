@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Entikore
+ * Copyright 2025 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@ import de.entikore.composedex.domain.model.pokemon.Pokemon
  * Models state of a list of Pokemon.
  */
 sealed interface PokemonUiState {
-    data class Success(val pokemon: List<Pokemon>) : PokemonUiState
+    data class Success(val pokemon: List<Pokemon> = emptyList()) : PokemonUiState
     data object Error : PokemonUiState
     data object Loading : PokemonUiState
 }

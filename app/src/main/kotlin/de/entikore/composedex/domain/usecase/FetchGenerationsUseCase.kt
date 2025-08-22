@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Entikore
+ * Copyright 2025 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,20 +15,23 @@
  */
 package de.entikore.composedex.domain.usecase
 
-import de.entikore.composedex.domain.WorkResult
-import de.entikore.composedex.domain.asWorkResult
 import de.entikore.composedex.domain.model.generation.Generation
 import de.entikore.composedex.domain.repository.GenerationRepository
-import de.entikore.composedex.domain.usecase.base.UseCase
-import kotlinx.coroutines.flow.Flow
+import de.entikore.composedex.domain.usecase.base.BaseFetchUseCase
+import de.entikore.composedex.domain.util.asResult
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.distinctUntilChanged
 import javax.inject.Inject
 
 /**
  * This use case returns the latest list of all [Generation].
  */
-class GetGenerationsUseCase @Inject constructor(private val repository: GenerationRepository) :
-    UseCase<Flow<WorkResult<List<Generation>>>>() {
-    override operator fun invoke() =
-        repository.getGenerations().distinctUntilChanged().asWorkResult()
+class FetchGenerationsUseCase @Inject constructor(
+    private val repository: GenerationRepository,
+    dispatcher: CoroutineDispatcher = Dispatchers.IO
+) :
+    BaseFetchUseCase<Unit, List<Generation>>(dispatcher) {
+    override fun execute(params: Unit) =
+        repository.getGenerations().distinctUntilChanged().asResult()
 }

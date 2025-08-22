@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Entikore
+ * Copyright 2025 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@ import com.google.common.truth.Truth.assertThat
 import de.entikore.composedex.MainCoroutineRule
 import de.entikore.composedex.data.local.entity.pokemon.relation.asExternalModel
 import de.entikore.composedex.data.remote.model.toEntity
-import de.entikore.composedex.domain.usecase.GetFavouritesUseCase
+import de.entikore.composedex.domain.usecase.FetchFavouritesUseCase
 import de.entikore.composedex.domain.usecase.SetAsFavouriteUseCase
 import de.entikore.composedex.fake.repository.FakeFavouriteRepository
 import de.entikore.composedex.ui.screen.shared.PokemonUiState
@@ -41,64 +41,64 @@ class FavouriteViewModelTest {
 
     private lateinit var viewModel: FavouriteViewModel
 
-    private lateinit var getFavouritesUseCase: GetFavouritesUseCase
+    private lateinit var getFavouritesUseCase: FetchFavouritesUseCase
     private lateinit var setAsFavouriteUseCase: SetAsFavouriteUseCase
     private lateinit var fakeFavouriteRepository: FakeFavouriteRepository
 
     @BeforeEach
     fun setup() {
         fakeFavouriteRepository = FakeFavouriteRepository()
-        getFavouritesUseCase = GetFavouritesUseCase(fakeFavouriteRepository)
+        getFavouritesUseCase = FetchFavouritesUseCase(fakeFavouriteRepository)
         setAsFavouriteUseCase = SetAsFavouriteUseCase(fakeFavouriteRepository)
     }
 
     @Test
-    fun `creating FavouriteViewModel without favourite Pokemon exposes empty PokemonUiState`() =
+    fun `creating FavouriteViewModel without favourite Pokemon exposes PokemonUiState loading`() =
         runTest {
             viewModel = FavouriteViewModel(getFavouritesUseCase, setAsFavouriteUseCase)
-            val expectedState = PokemonUiState.Success(emptyList())
 
-            assertThat(viewModel.screenState.value).isEqualTo(expectedState)
+            assertThat(viewModel.screenState.value).isEqualTo(PokemonUiState.Loading)
         }
 
     @Test
-    fun `favourites are loaded correctly`() = runTest {
-        val lapras =
-            getPokemonInfoRemote(getTestModel(POKEMON_LAPRAS_NAME)).toEntity().asExternalModel()
-                .copy(isFavourite = true)
-        val ditto =
-            getPokemonInfoRemote(getTestModel(POKEMON_DITTO_NAME)).toEntity().asExternalModel()
-                .copy(isFavourite = true)
-        viewModel = FavouriteViewModel(getFavouritesUseCase, setAsFavouriteUseCase)
+    fun `FavouriteViewModel exposes success state when getting favourites are loaded correctly`() =
+        runTest {
+            val lapras =
+                getPokemonInfoRemote(getTestModel(POKEMON_LAPRAS_NAME)).toEntity().asExternalModel()
+                    .copy(isFavourite = true)
+            val ditto =
+                getPokemonInfoRemote(getTestModel(POKEMON_DITTO_NAME)).toEntity().asExternalModel()
+                    .copy(isFavourite = true)
+            viewModel = FavouriteViewModel(getFavouritesUseCase, setAsFavouriteUseCase)
 
-        viewModel.screenState.test {
-            var stateResult = awaitItem()
-            assertThat(stateResult).isInstanceOf(PokemonUiState.Success::class.java)
-            assertThat((stateResult as PokemonUiState.Success).pokemon).isEmpty()
+            viewModel.screenState.test {
+                var stateResult = awaitItem()
+                assertThat(stateResult).isInstanceOf(PokemonUiState.Loading::class.java)
 
-            fakeFavouriteRepository.addPokemon(
-                lapras,
-                ditto
-            )
+                stateResult = awaitItem()
+                assertThat(stateResult).isInstanceOf(PokemonUiState.Success::class.java)
+                assertThat((stateResult as PokemonUiState.Success).pokemon).isEmpty()
 
-            stateResult = awaitItem()
-            assertThat(stateResult).isInstanceOf(PokemonUiState.Loading::class.java)
+                fakeFavouriteRepository.addPokemon(
+                    lapras,
+                    ditto
+                )
 
-            stateResult = awaitItem()
-            assertThat(stateResult).isInstanceOf(PokemonUiState.Success::class.java)
-            assertThat((stateResult as PokemonUiState.Success).pokemon).isEqualTo(
-                listOf(lapras, ditto)
-            )
+                stateResult = awaitItem()
+                assertThat(stateResult).isInstanceOf(PokemonUiState.Success::class.java)
+                assertThat((stateResult as PokemonUiState.Success).pokemon).isEqualTo(
+                    listOf(lapras, ditto)
+                )
 
-            viewModel.updateFavourite(POKEMON_LAPRAS_ID, false)
+                viewModel.updateFavourite(POKEMON_LAPRAS_ID, false)
 
-            stateResult = awaitItem()
-            assertThat(stateResult).isInstanceOf(PokemonUiState.Success::class.java)
-            assertThat((stateResult as PokemonUiState.Success).pokemon).isEqualTo(
-                listOf(ditto)
-            )
+                stateResult = awaitItem()
+                assertThat(stateResult).isInstanceOf(PokemonUiState.Success::class.java)
+                assertThat((stateResult as PokemonUiState.Success).pokemon).isEqualTo(
+                    listOf(ditto)
+                )
+            }
         }
-    }
 
     @Test
     fun `FavouriteViewModel exposes error state when getting favourites fails`() = runTest {
@@ -110,19 +110,15 @@ class FavouriteViewModelTest {
                 .copy(isFavourite = true)
         fakeFavouriteRepository.shouldReturnError = true
 
+        fakeFavouriteRepository.addPokemon(
+            lapras,
+            ditto
+        )
+
         viewModel = FavouriteViewModel(getFavouritesUseCase, setAsFavouriteUseCase)
 
         viewModel.screenState.test {
             var stateResult = awaitItem()
-            assertThat(stateResult).isInstanceOf(PokemonUiState.Success::class.java)
-            assertThat((stateResult as PokemonUiState.Success).pokemon).isEmpty()
-
-            fakeFavouriteRepository.addPokemon(
-                lapras,
-                ditto
-            )
-
-            stateResult = awaitItem()
             assertThat(stateResult).isInstanceOf(PokemonUiState.Loading::class.java)
 
             stateResult = awaitItem()

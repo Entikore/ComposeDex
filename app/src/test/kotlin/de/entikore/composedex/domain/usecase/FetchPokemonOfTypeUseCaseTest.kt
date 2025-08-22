@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Entikore
+ * Copyright 2025 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,6 @@ import de.entikore.composedex.data.local.entity.pokemon.relation.asExternalModel
 import de.entikore.composedex.data.local.entity.type.asExternalModel
 import de.entikore.composedex.data.remote.model.toEntity
 import de.entikore.composedex.data.remote.model.type.toEntity
-import de.entikore.composedex.domain.WorkResult
 import de.entikore.composedex.fake.repository.FailableFakeRepository.Companion.EXPECTED_TEST_EXCEPTION
 import de.entikore.composedex.fake.repository.FakeTypeRepository
 import de.entikore.sharedtestcode.POKEMON_BELLOSSOM_NAME
@@ -43,18 +42,18 @@ import org.junit.jupiter.api.extension.ExtendWith
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(MainCoroutineRule::class)
-class GetPokemonOfTypeUseCaseTest {
+class FetchPokemonOfTypeUseCaseTest {
     private lateinit var repository: FakeTypeRepository
-    private lateinit var getPokemonOfTypesUseCase: GetPokemonOfTypeUseCase
+    private lateinit var getPokemonOfTypesUseCase: FetchPokemonOfTypeUseCase
 
     @BeforeEach
     fun setUp() {
         repository = FakeTypeRepository()
-        getPokemonOfTypesUseCase = GetPokemonOfTypeUseCase(repository)
+        getPokemonOfTypesUseCase = FetchPokemonOfTypeUseCase(repository)
     }
 
     @Test
-    fun `get pokemon of types results in WorkResult Success with all expected pokemon`() = runTest {
+    fun `get pokemon of types results in successful Result with all expected pokemon`() = runTest {
         val poisonType = getTypeRemote(TYPE_POISON_FILE).toEntity().asExternalModel()
         val grassType = getTypeRemote(TYPE_GRASS_FILE).toEntity().asExternalModel()
 
@@ -70,25 +69,21 @@ class GetPokemonOfTypeUseCaseTest {
         val expectedGrassPokemon = expectedPoisonPokemon.plus(bellossom)
 
         getPokemonOfTypesUseCase(poisonType.name).test {
-            var actualPokemon = awaitItem()
-            assertThat(actualPokemon).isInstanceOf(WorkResult.Loading::class.java)
-            actualPokemon = awaitItem()
-            assertThat(actualPokemon).isInstanceOf(WorkResult.Success::class.java)
-            assertThat((actualPokemon as WorkResult.Success).data).isEqualTo(expectedPoisonPokemon)
+            val actualPokemon = awaitItem()
+            assertThat(actualPokemon.isSuccess).isTrue()
+            assertThat(actualPokemon.getOrThrow()).isEqualTo(expectedPoisonPokemon)
             awaitComplete()
         }
         getPokemonOfTypesUseCase(grassType.name).test {
-            var actualPokemon = awaitItem()
-            assertThat(actualPokemon).isInstanceOf(WorkResult.Loading::class.java)
-            actualPokemon = awaitItem()
-            assertThat(actualPokemon).isInstanceOf(WorkResult.Success::class.java)
-            assertThat((actualPokemon as WorkResult.Success).data).isEqualTo(expectedGrassPokemon)
+            val actualPokemon = awaitItem()
+            assertThat(actualPokemon.isSuccess).isTrue()
+            assertThat(actualPokemon.getOrThrow()).isEqualTo(expectedGrassPokemon)
             awaitComplete()
         }
     }
 
     @Test
-    fun `get pokemon of types results in WorkResult Success with empty list if no pokemon of type`() = runTest {
+    fun `get pokemon of types results in successful Result with empty list if no pokemon of type`() = runTest {
         val iceType = getTypeRemote(TYPE_ICE_FILE).toEntity().asExternalModel()
         val grassType = getTypeRemote(TYPE_GRASS_FILE).toEntity().asExternalModel()
 
@@ -101,27 +96,23 @@ class GetPokemonOfTypeUseCaseTest {
         repository.addPokemon(oddish, gloom, vileplume, bellossom)
 
         getPokemonOfTypesUseCase(iceType.name).test {
-            var actualPokemon = awaitItem()
-            assertThat(actualPokemon).isInstanceOf(WorkResult.Loading::class.java)
-            actualPokemon = awaitItem()
-            assertThat(actualPokemon).isInstanceOf(WorkResult.Success::class.java)
-            assertThat((actualPokemon as WorkResult.Success).data).isEmpty()
+            val actualPokemon = awaitItem()
+            assertThat(actualPokemon.isSuccess).isTrue()
+            assertThat(actualPokemon.getOrThrow()).isEmpty()
             awaitComplete()
         }
     }
 
     @Test
-    fun `get pokemon of types results in WorkResult Error on any exception`() = runTest {
+    fun `get pokemon of types results in error Result on any exception`() = runTest {
         val grassType = getTypeRemote(TYPE_GRASS_FILE).toEntity().asExternalModel()
         repository.addTypes(getTypeRemote(TYPE_GRASS_FILE).toEntity().asExternalModel())
         repository.addPokemon(getPokemonInfoRemote(getTestModel(POKEMON_ODDISH_NAME)).toEntity().asExternalModel())
         repository.setReturnError(true)
         getPokemonOfTypesUseCase(grassType.name).test {
-            var actualPokemon = awaitItem()
-            assertThat(actualPokemon).isInstanceOf(WorkResult.Loading::class.java)
-            actualPokemon = awaitItem()
-            assertThat(actualPokemon).isInstanceOf(WorkResult.Error::class.java)
-            assertThat((actualPokemon as WorkResult.Error).exception!!.message).isEqualTo(
+            val actualPokemon = awaitItem()
+            assertThat(actualPokemon.isFailure).isTrue()
+            assertThat(actualPokemon.exceptionOrNull()?.message).isEqualTo(
                 EXPECTED_TEST_EXCEPTION
             )
             awaitComplete()

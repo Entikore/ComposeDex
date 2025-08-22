@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Entikore
+ * Copyright 2025 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,10 +20,8 @@ import com.google.common.truth.Truth.assertThat
 import de.entikore.composedex.MainCoroutineRule
 import de.entikore.composedex.data.local.entity.type.asExternalModel
 import de.entikore.composedex.data.remote.model.type.toEntity
-import de.entikore.composedex.domain.WorkResult
 import de.entikore.composedex.fake.repository.FailableFakeRepository.Companion.EXPECTED_TEST_EXCEPTION
 import de.entikore.composedex.fake.repository.FakeTypeRepository
-import de.entikore.composedex.fake.repository.FakeTypeRepository.Companion.TYPE_WITH_NAME_NOT_FOUND
 import de.entikore.sharedtestcode.TYPE_GRASS_FILE
 import de.entikore.sharedtestcode.TYPE_NORMAL_FILE
 import de.entikore.sharedtestcode.TYPE_POISON_FILE
@@ -36,65 +34,54 @@ import org.junit.jupiter.api.extension.ExtendWith
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(MainCoroutineRule::class)
-class GetTypeUseCaseTest {
+class FetchTypesUseCaseTest {
 
     private lateinit var repository: FakeTypeRepository
-    private lateinit var getTypeUseCase: GetTypeUseCase
+    private lateinit var getTypesUseCase: FetchTypesUseCase
 
     @BeforeEach
     fun setUp() {
         repository = FakeTypeRepository()
-        getTypeUseCase = GetTypeUseCase(repository)
+        getTypesUseCase = FetchTypesUseCase(repository)
     }
 
     @Test
-    fun `get type results in WorkResult Success with searched type`() = runTest {
+    fun `get types results in successful Result with all types`() = runTest {
         val poisonType = getTypeRemote(TYPE_POISON_FILE).toEntity().asExternalModel()
         val grassType = getTypeRemote(TYPE_GRASS_FILE).toEntity().asExternalModel()
         val normalType = getTypeRemote(TYPE_NORMAL_FILE).toEntity().asExternalModel()
         repository.addTypes(poisonType, grassType, normalType)
 
-        getTypeUseCase.invoke(poisonType.name).test {
-            var actualType = awaitItem()
-            assertThat(actualType).isInstanceOf(WorkResult.Loading::class.java)
-            actualType = awaitItem()
-            assertThat(actualType).isInstanceOf(WorkResult.Success::class.java)
-            assertThat((actualType as WorkResult.Success).data).isEqualTo(poisonType)
+        getTypesUseCase().test {
+            val allTypesResult = awaitItem()
+            assertThat(allTypesResult.isSuccess).isTrue()
+            assertThat(allTypesResult.getOrThrow()).containsExactly(poisonType, grassType, normalType)
             awaitComplete()
         }
     }
 
     @Test
-    fun `get type by unknown name results in WorkResult Error`() = runTest {
+    fun `get types results in successful Result with empty list when no types are present`() = runTest {
+        getTypesUseCase().test {
+            val allTypesResult = awaitItem()
+            assertThat(allTypesResult.isSuccess).isTrue()
+            assertThat(allTypesResult.getOrThrow()).isEmpty()
+            awaitComplete()
+        }
+    }
+
+    @Test
+    fun `get types results in error Result on any exception`() = runTest {
         val poisonType = getTypeRemote(TYPE_POISON_FILE).toEntity().asExternalModel()
         val grassType = getTypeRemote(TYPE_GRASS_FILE).toEntity().asExternalModel()
         val normalType = getTypeRemote(TYPE_NORMAL_FILE).toEntity().asExternalModel()
         repository.addTypes(poisonType, grassType, normalType)
-
-        getTypeUseCase.invoke("unknown").test {
-            var actualType = awaitItem()
-            assertThat(actualType).isInstanceOf(WorkResult.Loading::class.java)
-            actualType = awaitItem()
-            assertThat(actualType).isInstanceOf(WorkResult.Error::class.java)
-            assertThat((actualType as WorkResult.Error).exception!!.message).isEqualTo(
-                TYPE_WITH_NAME_NOT_FOUND
-            )
-            awaitComplete()
-        }
-    }
-
-    @Test
-    fun `get type results in WorkResult Error on any exception`() = runTest {
-        val poisonType = getTypeRemote(TYPE_POISON_FILE).toEntity().asExternalModel()
-        repository.addTypes(poisonType)
         repository.setReturnError(true)
 
-        getTypeUseCase.invoke(poisonType.name).test {
-            var actualType = awaitItem()
-            assertThat(actualType).isInstanceOf(WorkResult.Loading::class.java)
-            actualType = awaitItem()
-            assertThat(actualType).isInstanceOf(WorkResult.Error::class.java)
-            assertThat((actualType as WorkResult.Error).exception!!.message).isEqualTo(EXPECTED_TEST_EXCEPTION)
+        getTypesUseCase().test {
+            val allTypesResult = awaitItem()
+            assertThat(allTypesResult.isFailure).isTrue()
+            assertThat(allTypesResult.exceptionOrNull()?.message).isEqualTo(EXPECTED_TEST_EXCEPTION)
             awaitComplete()
         }
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Entikore
+ * Copyright 2025 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,6 @@ import de.entikore.composedex.data.local.entity.generation.asExternalModel
 import de.entikore.composedex.data.local.entity.pokemon.relation.asExternalModel
 import de.entikore.composedex.data.remote.model.generation.toEntity
 import de.entikore.composedex.data.remote.model.toEntity
-import de.entikore.composedex.domain.WorkResult
 import de.entikore.composedex.domain.model.pokemon.Pokemon
 import de.entikore.composedex.fake.repository.FailableFakeRepository.Companion.EXPECTED_TEST_EXCEPTION
 import de.entikore.composedex.fake.repository.FakeGenerationRepository
@@ -42,18 +41,18 @@ import org.junit.jupiter.api.extension.ExtendWith
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(MainCoroutineRule::class)
-class GetPokemonOfGenerationUseCaseTest {
+class FetchPokemonOfGenerationUseCaseTest {
     private lateinit var repository: FakeGenerationRepository
-    private lateinit var getPokemonOfGenerationUseCase: GetPokemonOfGenerationUseCase
+    private lateinit var getPokemonOfGenerationUseCase: FetchPokemonOfGenerationUseCase
 
     @BeforeEach
     fun setUp() {
         repository = FakeGenerationRepository()
-        getPokemonOfGenerationUseCase = GetPokemonOfGenerationUseCase(repository)
+        getPokemonOfGenerationUseCase = FetchPokemonOfGenerationUseCase(repository)
     }
 
     @Test
-    fun `get pokemon of generation by name results in WorkResult Success with all expected pokemon`() = runTest {
+    fun `get pokemon of generation by name results in successful Result with all expected pokemon`() = runTest {
         val generationI = getGenerationRemote(GEN_I_FILE).toEntity().asExternalModel()
         val generationII = getGenerationRemote(GEN_II_FILE).toEntity().asExternalModel()
 
@@ -72,7 +71,7 @@ class GetPokemonOfGenerationUseCaseTest {
     }
 
     @Test
-    fun `get pokemon of generation by id results in WorkResult Success with all expected pokemon`() = runTest {
+    fun `get pokemon of generation by id results in successful Result with all expected pokemon`() = runTest {
         val generationI = getGenerationRemote(GEN_I_FILE).toEntity().asExternalModel()
         val generationII = getGenerationRemote(GEN_II_FILE).toEntity().asExternalModel()
 
@@ -91,7 +90,7 @@ class GetPokemonOfGenerationUseCaseTest {
     }
 
     @Test
-    fun `get pokemon of generation results in WorkResult Success with empty list if no pokemon of generation`() = runTest {
+    fun `get pokemon of generation results in successful Result with empty list if no pokemon of generation`() = runTest {
         val generationI = getGenerationRemote(GEN_I_FILE).toEntity().asExternalModel()
         val generationII = getGenerationRemote(GEN_II_FILE).toEntity().asExternalModel()
         val lapras = getPokemonInfoRemote(getTestModel(POKEMON_LAPRAS_NAME)).toEntity().asExternalModel()
@@ -105,7 +104,7 @@ class GetPokemonOfGenerationUseCaseTest {
     }
 
     @Test
-    fun `get pokemon of generation results in WorkResult Error on any exception`() = runTest {
+    fun `get pokemon of generation results in error Result on any exception`() = runTest {
         val generationI = getGenerationRemote(GEN_I_FILE).toEntity().asExternalModel()
         val lapras = getPokemonInfoRemote(getTestModel(POKEMON_LAPRAS_NAME)).toEntity().asExternalModel()
         val ditto = getPokemonInfoRemote(getTestModel(POKEMON_DITTO_NAME)).toEntity().asExternalModel()
@@ -114,11 +113,9 @@ class GetPokemonOfGenerationUseCaseTest {
         repository.addPokemon(lapras, ditto)
         repository.setReturnError(true)
         getPokemonOfGenerationUseCase(generationI.name).test {
-            var actualPokemon = awaitItem()
-            assertThat(actualPokemon).isInstanceOf(WorkResult.Loading::class.java)
-            actualPokemon = awaitItem()
-            assertThat(actualPokemon).isInstanceOf(WorkResult.Error::class.java)
-            assertThat((actualPokemon as WorkResult.Error).exception!!.message).isEqualTo(
+            val actualPokemon = awaitItem()
+            assertThat(actualPokemon.isFailure).isTrue()
+            assertThat(actualPokemon.exceptionOrNull()?.message).isEqualTo(
                 EXPECTED_TEST_EXCEPTION
             )
             awaitComplete()
@@ -126,11 +123,9 @@ class GetPokemonOfGenerationUseCaseTest {
     }
     private suspend fun getPokemonOfGenerationSuccessful(useCaseParam: String, expectedResult: List<Pokemon>) {
         getPokemonOfGenerationUseCase(useCaseParam).test {
-            var actualPokemon = awaitItem()
-            assertThat(actualPokemon).isInstanceOf(WorkResult.Loading::class.java)
-            actualPokemon = awaitItem()
-            assertThat(actualPokemon).isInstanceOf(WorkResult.Success::class.java)
-            assertThat((actualPokemon as WorkResult.Success).data).isEqualTo(expectedResult)
+            val actualPokemon = awaitItem()
+            assertThat(actualPokemon.isSuccess).isTrue()
+            assertThat(actualPokemon.getOrThrow()).isEqualTo(expectedResult)
             awaitComplete()
         }
     }

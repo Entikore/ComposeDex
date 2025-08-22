@@ -20,9 +20,9 @@ import com.google.common.truth.Truth.assertThat
 import de.entikore.composedex.MainCoroutineRule
 import de.entikore.composedex.data.local.entity.type.asExternalModel
 import de.entikore.composedex.data.remote.model.type.toEntity
-import de.entikore.composedex.domain.usecase.GetPokemonOfTypeUseCase
-import de.entikore.composedex.domain.usecase.GetTypeUseCase
-import de.entikore.composedex.domain.usecase.GetTypesUseCase
+import de.entikore.composedex.domain.usecase.FetchPokemonOfTypeUseCase
+import de.entikore.composedex.domain.usecase.FetchTypeUseCase
+import de.entikore.composedex.domain.usecase.FetchTypesUseCase
 import de.entikore.composedex.domain.usecase.SetAsFavouriteUseCase
 import de.entikore.composedex.fake.repository.FakeTypeRepository
 import de.entikore.composedex.fake.usecase.FakeSaveRemoteImageUseCase
@@ -45,9 +45,9 @@ import org.mockito.Mockito.mock
 @ExtendWith(MainCoroutineRule::class)
 class TypeViewModelTest {
 
-    private lateinit var typesUseCase: GetTypesUseCase
-    private lateinit var typeUseCase: GetTypeUseCase
-    private lateinit var getPokemonOfTypeUseCase: GetPokemonOfTypeUseCase
+    private lateinit var typesUseCase: FetchTypesUseCase
+    private lateinit var typeUseCase: FetchTypeUseCase
+    private lateinit var getPokemonOfTypeUseCase: FetchPokemonOfTypeUseCase
     private lateinit var saveRemoteImageUseCase: FakeSaveRemoteImageUseCase
     private lateinit var setAsFavouriteUseCase: SetAsFavouriteUseCase
 
@@ -56,9 +56,9 @@ class TypeViewModelTest {
 
     @BeforeEach
     fun setUp() {
-        typesUseCase = GetTypesUseCase(fakeTypeRepository)
-        typeUseCase = GetTypeUseCase(fakeTypeRepository)
-        getPokemonOfTypeUseCase = GetPokemonOfTypeUseCase(fakeTypeRepository)
+        typesUseCase = FetchTypesUseCase(fakeTypeRepository)
+        typeUseCase = FetchTypeUseCase(fakeTypeRepository)
+        getPokemonOfTypeUseCase = FetchPokemonOfTypeUseCase(fakeTypeRepository)
         saveRemoteImageUseCase = FakeSaveRemoteImageUseCase()
         setAsFavouriteUseCase = mock()
     }
@@ -75,8 +75,13 @@ class TypeViewModelTest {
 
         val expectedState = TypeScreenUiState.Success()
 
-        assertThat(viewModel.screenState.value).isInstanceOf(TypeScreenUiState.Success::class.java)
-        assertThat(viewModel.screenState.value).isEqualTo(expectedState)
+        viewModel.screenState.test {
+            var stateResult = awaitItem()
+            assertThat(stateResult).isEqualTo(TypeScreenUiState.Loading)
+            stateResult = awaitItem()
+            assertThat(stateResult).isEqualTo(TypeScreenUiState.Success())
+            assertThat(viewModel.screenState.value).isEqualTo(expectedState)
+        }
     }
 
     @Test
@@ -102,10 +107,9 @@ class TypeViewModelTest {
 
         viewModel.screenState.test {
             var stateResult = awaitItem()
-            assertThat(stateResult).isInstanceOf(TypeScreenUiState.Success::class.java)
-            assertThat(stateResult).isEqualTo(TypeScreenUiState.Success())
-
+            assertThat(stateResult).isEqualTo(TypeScreenUiState.Loading)
             stateResult = awaitItem()
+
             assertThat(stateResult).isInstanceOf(TypeScreenUiState.Success::class.java)
             assertThat(stateResult).isEqualTo(expectedState)
         }
@@ -129,38 +133,26 @@ class TypeViewModelTest {
 
         val expectedState = TypeScreenUiState.Success(
             types = listOf(iceType, normalType, grassType, poisonType),
-            selectedType = SelectedTypeUiState.NoTypeSelected
+            selectedType = SelectedTypeUiState.Success(
+                selectedType = iceType,
+                pokemonState = PokemonUiState.Success(emptyList()),
+                showLoadingItem = true
+            )
         )
 
         viewModel.screenState.test {
             var stateResult = awaitItem()
-            assertThat(stateResult).isInstanceOf(TypeScreenUiState.Success::class.java)
-            assertThat(stateResult).isEqualTo(TypeScreenUiState.Success())
-
+            assertThat(stateResult).isEqualTo(TypeScreenUiState.Loading)
             stateResult = awaitItem()
             assertThat(stateResult).isInstanceOf(TypeScreenUiState.Success::class.java)
-            assertThat(stateResult).isEqualTo(expectedState)
+            assertThat(stateResult).isEqualTo(expectedState.copy(selectedType = SelectedTypeUiState.NoTypeSelected))
 
             viewModel.fetchType(TYPE_ICE_NAME)
-            stateResult = awaitItem()
-            assertThat(stateResult).isInstanceOf(TypeScreenUiState.Success::class.java)
-            assertThat(stateResult).isEqualTo(
-                expectedState.copy(
-                    selectedType =
-                    SelectedTypeUiState.Loading
-                )
-            )
 
             stateResult = awaitItem()
             assertThat(stateResult).isInstanceOf(TypeScreenUiState.Success::class.java)
             assertThat(stateResult).isEqualTo(
-                expectedState.copy(
-                    selectedType = SelectedTypeUiState.Success(
-                        selectedType = iceType,
-                        pokemonState = PokemonUiState.Success(emptyList()),
-                        showLoadingItem = true
-                    )
-                )
+                expectedState
             )
         }
     }
@@ -185,22 +177,12 @@ class TypeViewModelTest {
 
         viewModel.screenState.test {
             var stateResult = awaitItem()
-            assertThat(stateResult).isInstanceOf(TypeScreenUiState.Success::class.java)
-            assertThat(stateResult).isEqualTo(TypeScreenUiState.Success())
-
+            assertThat(stateResult).isEqualTo(TypeScreenUiState.Loading)
             stateResult = awaitItem()
             assertThat(stateResult).isInstanceOf(TypeScreenUiState.Success::class.java)
-            assertThat(stateResult).isEqualTo(expectedState)
+            assertThat(stateResult).isEqualTo(expectedState.copy(selectedType = SelectedTypeUiState.NoTypeSelected))
 
             viewModel.fetchType(TYPE_POISON_NAME)
-            stateResult = awaitItem()
-            assertThat(stateResult).isInstanceOf(TypeScreenUiState.Success::class.java)
-            assertThat(stateResult).isEqualTo(
-                expectedState.copy(
-                    selectedType =
-                    SelectedTypeUiState.Loading
-                )
-            )
 
             stateResult = awaitItem()
             assertThat(stateResult).isInstanceOf(TypeScreenUiState.Success::class.java)

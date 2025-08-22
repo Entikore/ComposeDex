@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Entikore
+ * Copyright 2025 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,20 +15,24 @@
  */
 package de.entikore.composedex.domain.usecase
 
-import de.entikore.composedex.domain.WorkResult
-import de.entikore.composedex.domain.asWorkResult
 import de.entikore.composedex.domain.model.type.Type
 import de.entikore.composedex.domain.repository.TypeRepository
-import de.entikore.composedex.domain.usecase.base.ParamsUseCase
-import kotlinx.coroutines.flow.Flow
+import de.entikore.composedex.domain.usecase.base.BaseFetchUseCase
+import de.entikore.composedex.domain.util.asResult
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.distinctUntilChanged
 import javax.inject.Inject
 
 /**
  * This use case returns the latest [Type] of the provided name.
  */
-class GetTypeUseCase @Inject constructor(private val repository: TypeRepository) :
-    ParamsUseCase<String, Flow<WorkResult<Type>>>() {
-    override operator fun invoke(params: String): Flow<WorkResult<Type>> =
-        repository.getTypeByName(params).distinctUntilChanged().asWorkResult()
+class FetchTypeUseCase @Inject constructor(
+    private val repository: TypeRepository,
+    dispatcher: CoroutineDispatcher = Dispatchers.IO
+) :
+    BaseFetchUseCase<String, Type>(dispatcher) {
+
+    override fun execute(params: String) =
+        repository.getTypeByName(params).distinctUntilChanged().asResult()
 }

@@ -21,11 +21,10 @@ import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.exoplayer.ExoPlayer
 import dagger.hilt.android.lifecycle.HiltViewModel
-import de.entikore.composedex.domain.WorkResult
 import de.entikore.composedex.domain.model.pokemon.ChainLink
 import de.entikore.composedex.domain.model.pokemon.Pokemon
 import de.entikore.composedex.domain.model.pokemon.Variety
-import de.entikore.composedex.domain.usecase.GetPokemonUseCase
+import de.entikore.composedex.domain.usecase.FetchPokemonUseCase
 import de.entikore.composedex.domain.usecase.SaveImageData
 import de.entikore.composedex.domain.usecase.SaveSoundData
 import de.entikore.composedex.domain.usecase.SetFavouriteData
@@ -54,7 +53,7 @@ import javax.inject.Inject
  */
 @HiltViewModel
 class PokemonViewModel @Inject constructor(
-    private val getPokemonUseCase: GetPokemonUseCase,
+    private val getPokemonUseCase: FetchPokemonUseCase,
     private val saveRemoteImageUseCase: @JvmSuppressWildcards ParamsSuspendUseCase<SaveImageData, String>,
     private val saveRemoteCryUseCase: @JvmSuppressWildcards ParamsSuspendUseCase<SaveSoundData, String>,
     private val setAsFavouriteUseCase: @JvmSuppressWildcards ParamsSuspendUseCase<SetFavouriteData, Unit>,
@@ -74,16 +73,14 @@ class PokemonViewModel @Inject constructor(
             .flatMapLatest { pokemonParameter ->
                 pokemonParameter?.let {
                     getPokemonUseCase(pokemonParameter).map {
-                        when (it) {
-                            is WorkResult.Error -> {
+                        when {
+                            it.isFailure -> {
                                 PokemonScreenState.Error(
                                     errorMessage = "$ERROR_LOADING_POKEMON ${_selectedPokemonFlow.value}"
                                 )
                             }
-
-                            WorkResult.Loading -> PokemonScreenState.Loading
-                            is WorkResult.Success -> {
-                                val pokemon = it.data
+                            it.isSuccess -> {
+                                val pokemon = it.getOrThrow()
 
                                 viewModelScope.launch {
                                     retrieveAsset(
@@ -127,6 +124,7 @@ class PokemonViewModel @Inject constructor(
                                     varieties = listOf(pokemon)
                                 )
                             }
+                            else -> PokemonScreenState.Loading
                         }
                     }
                 } ?: flowOf(PokemonScreenState.NoPokemonSelected)
@@ -314,16 +312,10 @@ class PokemonViewModel @Inject constructor(
             getPokemonUseCase(name).map {
                 val evolutionText =
                     "Evolves from ${name.replaceFirstChar { char -> char.uppercaseChar() }}"
-                when (it) {
-                    is WorkResult.Error -> null
-                    WorkResult.Loading -> PokemonPreview(
-                        name = name,
-                        isLoading = true,
-                        evolutionText = evolutionText
-                    )
-
-                    is WorkResult.Success -> {
-                        it.data.also { pokemon ->
+                when {
+                    it.isFailure -> null
+                    it.isSuccess -> {
+                        it.getOrThrow().also { pokemon ->
                             retrieveAsset(
                                 pokemon.id,
                                 buildString {
@@ -337,25 +329,30 @@ class PokemonViewModel @Inject constructor(
                                 }
                             )
                         }
-                        if (it.data.sprite == null) {
+                        if (it.getOrThrow().sprite == null) {
                             PokemonPreview(
                                 name = name,
-                                url = it.data.remoteSprite,
-                                types = it.data.types,
+                                url = it.getOrThrow().remoteSprite,
+                                types = it.getOrThrow().types,
                                 evolutionText = evolutionText,
                                 isLoading = true
                             )
                         } else {
                             PokemonPreview(
                                 name = name,
-                                url = it.data.remoteSprite,
-                                types = it.data.types,
-                                sprite = it.data.sprite,
+                                url = it.getOrThrow().remoteSprite,
+                                types = it.getOrThrow().types,
+                                sprite = it.getOrThrow().sprite!!,
                                 evolutionText = evolutionText,
                                 isLoading = false
                             )
                         }
                     }
+                    else -> PokemonPreview(
+                        name = name,
+                        isLoading = true,
+                        evolutionText = evolutionText
+                    )
                 }
             }
         }
@@ -374,19 +371,13 @@ class PokemonViewModel @Inject constructor(
             val evolutionText =
                 "Evolves to ${evolvesToList[it].name.replaceFirstChar { char -> char.uppercaseChar() }}"
             getPokemonUseCase(evolvesToList[it].url).map { result ->
-                when (result) {
-                    is WorkResult.Error -> {
+                when {
+                    result.isFailure -> {
                         Timber.d("Error loading Pokemon ${evolvesToList[it].name}")
                         null
                     }
-                    WorkResult.Loading -> PokemonPreview(
-                        name = evolvesToList[it].name,
-                        evolutionText = evolutionText,
-                        isLoading = true
-                    )
-
-                    is WorkResult.Success -> {
-                        result.data.also { pokemon ->
+                    result.isSuccess -> {
+                        result.getOrThrow().also { pokemon ->
                             retrieveAsset(
                                 pokemon.id,
                                 buildString {
@@ -401,24 +392,29 @@ class PokemonViewModel @Inject constructor(
                             )
                         }
 
-                        if (result.data.sprite == null) {
+                        if (result.getOrThrow().sprite == null) {
                             PokemonPreview(
-                                name = result.data.name,
-                                url = result.data.remoteSprite,
-                                types = result.data.types,
+                                name = result.getOrThrow().name,
+                                url = result.getOrThrow().remoteSprite,
+                                types = result.getOrThrow().types,
                                 evolutionText = evolutionText,
                                 isLoading = true
                             )
                         } else {
                             PokemonPreview(
-                                name = result.data.name,
-                                types = result.data.types,
-                                sprite = result.data.sprite,
+                                name = result.getOrThrow().name,
+                                types = result.getOrThrow().types,
+                                sprite = result.getOrThrow().sprite!!,
                                 evolutionText = evolutionText,
                                 isLoading = false
                             )
                         }
                     }
+                    else -> PokemonPreview(
+                        name = evolvesToList[it].name,
+                        evolutionText = evolutionText,
+                        isLoading = true
+                    )
                 }
             }
         }
@@ -432,9 +428,9 @@ class PokemonViewModel @Inject constructor(
         }
         return Array(size = varieties.size) {
             getPokemonUseCase(varieties[it].varietyName).map { result ->
-                when (result) {
-                    is WorkResult.Success -> {
-                        result.data.also { pokemon ->
+                when {
+                    result.isSuccess -> {
+                        result.getOrThrow().also { pokemon ->
                             viewModelScope.launch {
                                 retrieveAsset(
                                     pokemon.id,
@@ -470,8 +466,8 @@ class PokemonViewModel @Inject constructor(
                                 )
                             }
                         }
-                        if (result.data.artwork != null) {
-                            result.data
+                        if (result.getOrThrow().artwork != null) {
+                            result.getOrThrow()
                         } else {
                             Timber.d("Artwork for variety ${varieties[it].varietyName} is null")
                             null

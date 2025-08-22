@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Entikore
+ * Copyright 2025 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,6 @@ import com.google.common.truth.Truth.assertThat
 import de.entikore.composedex.MainCoroutineRule
 import de.entikore.composedex.data.local.entity.pokemon.relation.asExternalModel
 import de.entikore.composedex.data.remote.model.toEntity
-import de.entikore.composedex.domain.WorkResult
 import de.entikore.composedex.domain.model.pokemon.Pokemon
 import de.entikore.composedex.fake.repository.FailableFakeRepository.Companion.EXPECTED_TEST_EXCEPTION
 import de.entikore.composedex.fake.repository.FakePokemonRepository
@@ -41,18 +40,18 @@ import org.junit.jupiter.api.extension.ExtendWith
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(MainCoroutineRule::class)
-class GetPokemonUseCaseTest {
+class FetchPokemonUseCaseTest {
     private lateinit var repository: FakePokemonRepository
-    private lateinit var getPokemonUseCase: GetPokemonUseCase
+    private lateinit var getPokemonUseCase: FetchPokemonUseCase
 
     @BeforeEach
     fun setUp() {
         repository = FakePokemonRepository()
-        getPokemonUseCase = GetPokemonUseCase(repository)
+        getPokemonUseCase = FetchPokemonUseCase(repository)
     }
 
     @Test
-    fun `get pokemon by name results in WorkResult Success with expected Pokemon`() = runTest {
+    fun `get pokemon by name results in successful Result with expected Pokemon`() = runTest {
         val oddish =
             getPokemonInfoRemote(getTestModel(POKEMON_ODDISH_NAME)).toEntity().asExternalModel()
         val gloom =
@@ -73,7 +72,7 @@ class GetPokemonUseCaseTest {
     }
 
     @Test
-    fun `get pokemon by id results in WorkResult Success with expected Pokemon`() = runTest {
+    fun `get pokemon by id results in successful Result with expected Pokemon`() = runTest {
         val oddish =
             getPokemonInfoRemote(getTestModel(POKEMON_ODDISH_NAME)).toEntity().asExternalModel()
         val gloom =
@@ -94,7 +93,7 @@ class GetPokemonUseCaseTest {
     }
 
     @Test
-    fun `get pokemon by unknown name results in WorkResult Error`() = runTest {
+    fun `get pokemon by unknown name results in error Result`() = runTest {
         val oddish =
             getPokemonInfoRemote(getTestModel(POKEMON_ODDISH_NAME)).toEntity().asExternalModel()
 
@@ -107,7 +106,7 @@ class GetPokemonUseCaseTest {
     }
 
     @Test
-    fun `get pokemon by unknown id results in WorkResult Error`() = runTest {
+    fun `get pokemon by unknown id results in error Result`() = runTest {
         val oddish =
             getPokemonInfoRemote(getTestModel(POKEMON_ODDISH_NAME)).toEntity().asExternalModel()
 
@@ -120,7 +119,7 @@ class GetPokemonUseCaseTest {
     }
 
     @Test
-    fun `get pokemon by name results in WorkResult Error on any exception`() = runTest {
+    fun `get pokemon by name results in error Result on any exception`() = runTest {
         val oddish =
             getPokemonInfoRemote(getTestModel(POKEMON_ODDISH_NAME)).toEntity().asExternalModel()
 
@@ -133,7 +132,7 @@ class GetPokemonUseCaseTest {
     }
 
     @Test
-    fun `get pokemon by id results in WorkResult Error on any exception`() = runTest {
+    fun `get pokemon by id results in error Result on any exception`() = runTest {
         val oddish =
             getPokemonInfoRemote(getTestModel(POKEMON_ODDISH_NAME)).toEntity().asExternalModel()
 
@@ -153,12 +152,10 @@ class GetPokemonUseCaseTest {
         repository.addPokemon(*testData)
 
         getPokemonUseCase.invoke(useCaseParam).test {
-            var actualPokemon = awaitItem()
-            assertThat(actualPokemon).isInstanceOf(WorkResult.Loading::class.java)
-            actualPokemon = awaitItem()
-            assertThat(actualPokemon).isInstanceOf(WorkResult.Success::class.java)
-            assertThat((actualPokemon as WorkResult.Success).data.name).isEqualTo(expectedPokemon.name)
-            assertThat((actualPokemon).data.id).isEqualTo(expectedPokemon.id)
+            val actualPokemon = awaitItem()
+            assertThat(actualPokemon.isSuccess).isTrue()
+            assertThat(actualPokemon.getOrThrow().name).isEqualTo(expectedPokemon.name)
+            assertThat(actualPokemon.getOrThrow().id).isEqualTo(expectedPokemon.id)
             awaitComplete()
         }
     }
@@ -173,11 +170,9 @@ class GetPokemonUseCaseTest {
         repository.setReturnError(shouldReturnError)
 
         getPokemonUseCase.invoke(useCaseParam).test {
-            var actualPokemon = awaitItem()
-            assertThat(actualPokemon).isInstanceOf(WorkResult.Loading::class.java)
-            actualPokemon = awaitItem()
-            assertThat(actualPokemon).isInstanceOf(WorkResult.Error::class.java)
-            assertThat((actualPokemon as WorkResult.Error).exception!!.message).isEqualTo(
+            val actualPokemon = awaitItem()
+            assertThat(actualPokemon.isFailure).isTrue()
+            assertThat(actualPokemon.exceptionOrNull()?.message).isEqualTo(
                 expectedException
             )
             awaitComplete()

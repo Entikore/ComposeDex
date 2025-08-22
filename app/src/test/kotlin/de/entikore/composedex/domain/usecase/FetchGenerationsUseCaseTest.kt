@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Entikore
+ * Copyright 2025 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,6 @@ import com.google.common.truth.Truth.assertThat
 import de.entikore.composedex.MainCoroutineRule
 import de.entikore.composedex.data.local.entity.generation.asExternalModel
 import de.entikore.composedex.data.remote.model.generation.toEntity
-import de.entikore.composedex.domain.WorkResult
 import de.entikore.composedex.fake.repository.FailableFakeRepository.Companion.EXPECTED_TEST_EXCEPTION
 import de.entikore.composedex.fake.repository.FakeGenerationRepository
 import de.entikore.sharedtestcode.GEN_II_FILE
@@ -35,50 +34,46 @@ import org.junit.jupiter.api.extension.ExtendWith
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(MainCoroutineRule::class)
-class GetGenerationsUseCaseTest {
+class FetchGenerationsUseCaseTest {
 
     private lateinit var repository: FakeGenerationRepository
-    private lateinit var getGenerationsUseCase: GetGenerationsUseCase
+    private lateinit var getGenerationsUseCase: FetchGenerationsUseCase
 
     @BeforeEach
     fun setUp() {
         repository = FakeGenerationRepository()
-        getGenerationsUseCase = GetGenerationsUseCase(repository)
+        getGenerationsUseCase = FetchGenerationsUseCase(repository)
     }
 
     @Test
-    fun `get generations results in WorkResult Success with all generations`() = runTest {
+    fun `get generations results in successful Result with all generations`() = runTest {
         val generationI = getGenerationRemote(GEN_I_FILE).toEntity().asExternalModel()
         val generationII = getGenerationRemote(GEN_II_FILE).toEntity().asExternalModel()
         val generationVI = getGenerationRemote(GEN_VI_FILE).toEntity().asExternalModel()
         repository.addGenerations(generationI, generationII, generationVI)
 
         getGenerationsUseCase().test {
-            var allGenerationsResult = awaitItem()
-            assertThat(allGenerationsResult).isInstanceOf(WorkResult.Loading::class.java)
-            allGenerationsResult = awaitItem()
-            assertThat(allGenerationsResult).isInstanceOf(WorkResult.Success::class.java)
+            val allGenerationsResult = awaitItem()
+            assertThat(allGenerationsResult.isSuccess).isTrue()
             assertThat(
-                (allGenerationsResult as WorkResult.Success).data
+                (allGenerationsResult.getOrThrow())
             ).containsExactly(generationI, generationII, generationVI)
             awaitComplete()
         }
     }
 
     @Test
-    fun `get generations results in WorkResult Success with empty list when no generations are present`() = runTest {
+    fun `successful Result with empty list when no generations are present`() = runTest {
         getGenerationsUseCase().test {
-            var allGenerationsResult = awaitItem()
-            assertThat(allGenerationsResult).isInstanceOf(WorkResult.Loading::class.java)
-            allGenerationsResult = awaitItem()
-            assertThat(allGenerationsResult).isInstanceOf(WorkResult.Success::class.java)
-            assertThat((allGenerationsResult as WorkResult.Success).data).isEmpty()
+            val allGenerationsResult = awaitItem()
+            assertThat(allGenerationsResult.isSuccess).isTrue()
+            assertThat((allGenerationsResult.getOrThrow())).isEmpty()
             awaitComplete()
         }
     }
 
     @Test
-    fun `get generations results in WorkResult Error on any exception`() = runTest {
+    fun `get generations results in error Result on any exception`() = runTest {
         val generationI = getGenerationRemote(GEN_I_FILE).toEntity().asExternalModel()
         val generationII = getGenerationRemote(GEN_II_FILE).toEntity().asExternalModel()
         val generationVI = getGenerationRemote(GEN_VI_FILE).toEntity().asExternalModel()
@@ -86,11 +81,9 @@ class GetGenerationsUseCaseTest {
         repository.setReturnError(true)
 
         getGenerationsUseCase().test {
-            var allGenerationsResult = awaitItem()
-            assertThat(allGenerationsResult).isInstanceOf(WorkResult.Loading::class.java)
-            allGenerationsResult = awaitItem()
-            assertThat(allGenerationsResult).isInstanceOf(WorkResult.Error::class.java)
-            assertThat((allGenerationsResult as WorkResult.Error).exception!!.message).isEqualTo(
+            val allGenerationsResult = awaitItem()
+            assertThat(allGenerationsResult.isFailure).isTrue()
+            assertThat((allGenerationsResult.exceptionOrNull())?.message).isEqualTo(
                 EXPECTED_TEST_EXCEPTION
             )
             awaitComplete()

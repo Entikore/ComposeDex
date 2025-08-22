@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Entikore
+ * Copyright 2025 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -55,6 +55,6 @@ class SettingsViewModel @Inject constructor(
     }
 
     fun switchTheme(theme: AppThemeConfig) {
-        viewModelScope.launch { changeLightDarkThemeUseCase.invoke(theme) }
+        viewModelScope.launch { changeLightDarkThemeUseCase(theme) }
     }
 }

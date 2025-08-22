@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Entikore
+ * Copyright 2025 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,12 +17,11 @@ package de.entikore.composedex.ui.screen.generation
 
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import de.entikore.composedex.domain.WorkResult
 import de.entikore.composedex.domain.model.generation.Generation
 import de.entikore.composedex.domain.model.pokemon.Pokemon
-import de.entikore.composedex.domain.usecase.GetGenerationUseCase
-import de.entikore.composedex.domain.usecase.GetGenerationsUseCase
-import de.entikore.composedex.domain.usecase.GetPokemonOfGenerationUseCase
+import de.entikore.composedex.domain.usecase.FetchGenerationUseCase
+import de.entikore.composedex.domain.usecase.FetchGenerationsUseCase
+import de.entikore.composedex.domain.usecase.FetchPokemonOfGenerationUseCase
 import de.entikore.composedex.domain.usecase.SaveImageData
 import de.entikore.composedex.domain.usecase.SetFavouriteData
 import de.entikore.composedex.domain.usecase.base.ParamsSuspendUseCase
@@ -48,9 +47,9 @@ import javax.inject.Inject
  */
 @HiltViewModel
 class GenerationViewModel @Inject constructor(
-    getGenerationsUseCase: GetGenerationsUseCase,
-    getGenerationUseCase: GetGenerationUseCase,
-    getPokemonOfGenerationUseCase: GetPokemonOfGenerationUseCase,
+    getGenerationsUseCase: FetchGenerationsUseCase,
+    getGenerationUseCase: FetchGenerationUseCase,
+    getPokemonOfGenerationUseCase: FetchPokemonOfGenerationUseCase,
     private val saveRemoteImageUseCase: @JvmSuppressWildcards ParamsSuspendUseCase<SaveImageData, String>,
     private val setAsFavouriteUseCase: @JvmSuppressWildcards ParamsSuspendUseCase<SetFavouriteData, Unit>
 ) : PokemonFilterViewModel() {
@@ -77,8 +76,8 @@ class GenerationViewModel @Inject constructor(
         )
     }.stateIn(
         viewModelScope,
-        SharingStarted.WhileSubscribed(5_000),
-        GenerationScreenUiState.Success()
+        SharingStarted.WhileSubscribed(5_000L),
+        GenerationScreenUiState.Loading
     )
 
     fun searchForGeneration(generationId: String) {
@@ -92,61 +91,72 @@ class GenerationViewModel @Inject constructor(
     }
 
     private fun buildSelectedGenerationUiState(
-        generation: WorkResult<Generation>,
-        pokemon: WorkResult<List<Pokemon>>
+        generation: Result<Generation>,
+        pokemon: Result<List<Pokemon>>
     ): SelectedGenerationUiState {
-        return when (generation) {
-            WorkResult.Loading -> SelectedGenerationUiState.Loading
-            is WorkResult.Error -> SelectedGenerationUiState.Error
-            is WorkResult.Success -> {
-                val pokemonUiState = when (pokemon) {
-                    is WorkResult.Error -> PokemonUiState.Error
-                    WorkResult.Loading -> PokemonUiState.Loading
-                    is WorkResult.Success -> {
+        return when {
+            generation.isFailure -> SelectedGenerationUiState.Error
+            generation.isSuccess -> {
+                val pokemonUiState = when {
+                    pokemon.isFailure -> PokemonUiState.Error
+                    pokemon.isSuccess -> {
                         PokemonUiState.Success(
-                            pokemon.data.sortedBy { it.id }.also { pokemonList ->
-                                viewModelScope.launch {
-                                    pokemonList.forEach {
-                                        retrieveAsset(
-                                            it.id,
-                                            buildString {
-                                                append(it.name)
-                                                append(SUFFIX_SPRITE)
-                                            },
-                                            it.sprite,
-                                            it.remoteSprite,
-                                            saveAssetUseCase = { id, url, fileName ->
-                                                saveRemoteImageUseCase(SaveImageData(id, url, fileName, true))
-                                            }
-                                        )
+                            pokemon.getOrDefault(emptyList()).sortedBy { it.id }
+                                .also { pokemonList ->
+                                    viewModelScope.launch {
+                                        pokemonList.forEach {
+                                            retrieveAsset(
+                                                it.id,
+                                                buildString {
+                                                    append(it.name)
+                                                    append(SUFFIX_SPRITE)
+                                                },
+                                                it.sprite,
+                                                it.remoteSprite,
+                                                saveAssetUseCase = { id, url, fileName ->
+                                                    saveRemoteImageUseCase(
+                                                        SaveImageData(
+                                                            id,
+                                                            url,
+                                                            fileName,
+                                                            true
+                                                        )
+                                                    )
+                                                }
+                                            )
+                                        }
                                     }
                                 }
-                            }
                         )
                     }
+
+                    else -> PokemonUiState.Loading
                 }
                 SelectedGenerationUiState.Success(
-                    selectedGeneration = generation.data,
+                    selectedGeneration = generation.getOrThrow(),
                     pokemonState = pokemonUiState,
-                    showLoadingItem = pokemonUiState.stillLoading(generation.data.numberOfPokemon)
+                    showLoadingItem = pokemonUiState.stillLoading(generation.getOrThrow().numberOfPokemon)
                 )
             }
+
+            else -> SelectedGenerationUiState.Loading
         }
     }
 
     private fun buildGenerationScreenUiState(
-        generations: WorkResult<List<Generation>>,
+        generations: Result<List<Generation>>,
         selectedGenerationUiState: SelectedGenerationUiState
     ): GenerationScreenUiState {
-        return when (generations) {
-            is WorkResult.Error -> GenerationScreenUiState.Error
-            WorkResult.Loading -> GenerationScreenUiState.Loading
-            is WorkResult.Success -> {
+        return when {
+            generations.isFailure -> GenerationScreenUiState.Error
+            generations.isSuccess -> {
                 GenerationScreenUiState.Success(
-                    generations = generations.data,
+                    generations = generations.getOrDefault(emptyList()),
                     selectedGeneration = selectedGenerationUiState
                 )
             }
+
+            else -> GenerationScreenUiState.Loading
         }
     }
 }
