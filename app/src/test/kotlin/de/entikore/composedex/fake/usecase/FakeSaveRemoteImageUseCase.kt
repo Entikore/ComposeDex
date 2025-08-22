@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Entikore
+ * Copyright 2025 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,11 +16,8 @@
 package de.entikore.composedex.fake.usecase
 
 import de.entikore.composedex.domain.usecase.SaveImageData
-import de.entikore.composedex.domain.usecase.base.ParamsSuspendUseCase
+import de.entikore.composedex.domain.usecase.base.BaseSuspendUseCase
 
-class FakeSaveRemoteImageUseCase : ParamsSuspendUseCase<SaveImageData, String>() {
-
-    override suspend fun invoke(params: SaveImageData): String {
-        return params.imageAddress
-    }
+class FakeSaveRemoteImageUseCase : BaseSuspendUseCase<SaveImageData, String>() {
+    override suspend fun execute(params: SaveImageData): String = params.imageAddress
 }

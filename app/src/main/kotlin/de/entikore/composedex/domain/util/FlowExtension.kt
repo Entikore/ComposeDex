@@ -13,20 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.entikore.composedex.domain.usecase
+package de.entikore.composedex.domain.util
 
-import de.entikore.composedex.domain.model.preferences.UserPreferences
-import de.entikore.composedex.domain.repository.AppSettingsRepository
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.distinctUntilChanged
-import javax.inject.Inject
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.retryWhen
+import java.io.IOException
 
-/**
- * This use case  returns the latest [UserPreferences].
- */
-class GetUserPreferencesUseCase @Inject constructor(
-    private val repository: AppSettingsRepository
-) {
-    operator fun invoke(): Flow<UserPreferences> =
-        repository.getUserPreferences().distinctUntilChanged()
-}
+fun <T> Flow<T>.asResult() =
+    this
+        .map { Result.success(it) }
+        .retryWhen { cause, _ ->
+            if (cause is IOException) {
+                emit(Result.failure(cause))
+                delay(RETRY_TIME_IN_MILLIS)
+                true
+            } else {
+                false
+            }
+        }.catch { e ->
+            emit(Result.failure(e))
+        }

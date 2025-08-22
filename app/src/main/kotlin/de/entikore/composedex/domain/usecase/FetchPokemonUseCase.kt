@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Entikore
+ * Copyright 2025 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,13 +15,14 @@
  */
 package de.entikore.composedex.domain.usecase
 
-import de.entikore.composedex.domain.WorkResult
-import de.entikore.composedex.domain.asWorkResult
 import de.entikore.composedex.domain.model.pokemon.Pokemon
 import de.entikore.composedex.domain.model.pokemon.wasPokemonUpdated
 import de.entikore.composedex.domain.repository.PokemonRepository
-import de.entikore.composedex.domain.usecase.base.ParamsUseCase
+import de.entikore.composedex.domain.usecase.base.BaseFetchUseCase
+import de.entikore.composedex.domain.util.asResult
 import de.entikore.composedex.domain.util.whitespacePattern
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
@@ -32,36 +33,30 @@ import javax.inject.Inject
  * [Pokemon] was retrieved successfully the flavor text entries are formatted and duplicates are
  * filtered.
  */
-class GetPokemonUseCase @Inject constructor(private val repository: PokemonRepository) :
-    ParamsUseCase<String, Flow<WorkResult<Pokemon>>>() {
-
-    override operator fun invoke(params: String): Flow<WorkResult<Pokemon>> {
+class FetchPokemonUseCase @Inject constructor(
+    private val repository: PokemonRepository,
+    dispatcher: CoroutineDispatcher = Dispatchers.IO
+) :
+    BaseFetchUseCase<String, Pokemon>(dispatcher) {
+    override fun execute(params: String): Flow<Result<Pokemon>> {
         val id = params.trim().toIntOrNull()
         return if (id != null) {
-            repository.getPokemonById(id).distinctUntilChanged(Pokemon::wasPokemonUpdated).asWorkResult().map {
+            repository.getPokemonById(id).distinctUntilChanged(Pokemon::wasPokemonUpdated).map {
                 processSuccessResult(it)
-            }
+            }.asResult()
         } else {
             val normalizedParams = params.lowercase().trim()
             repository.getPokemonByName(
                 normalizedParams
-            ).distinctUntilChanged(Pokemon::wasPokemonUpdated).asWorkResult()
+            ).distinctUntilChanged(Pokemon::wasPokemonUpdated)
                 .map {
                     processSuccessResult(it)
-                }
+                }.asResult()
         }
     }
 
-    private fun processSuccessResult(result: WorkResult<Pokemon>): WorkResult<Pokemon> {
-        return when (result) {
-            is WorkResult.Success -> {
-                val pokemon =
-                    result.data.copy(textEntries = processFlavorTextEntries(result.data.textEntries))
-                WorkResult.Success(pokemon)
-            }
-
-            else -> result
-        }
+    private fun processSuccessResult(result: Pokemon): Pokemon {
+        return result.copy(textEntries = processFlavorTextEntries(result.textEntries))
     }
 
     /**

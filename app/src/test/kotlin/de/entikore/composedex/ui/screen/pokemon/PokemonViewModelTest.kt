@@ -24,7 +24,7 @@ import de.entikore.composedex.MainCoroutineRule
 import de.entikore.composedex.data.local.entity.pokemon.relation.asExternalModel
 import de.entikore.composedex.data.remote.model.toEntity
 import de.entikore.composedex.domain.model.pokemon.Pokemon
-import de.entikore.composedex.domain.usecase.GetPokemonUseCase
+import de.entikore.composedex.domain.usecase.FetchPokemonUseCase
 import de.entikore.composedex.domain.usecase.SetAsFavouriteUseCase
 import de.entikore.composedex.domain.util.whitespacePattern
 import de.entikore.composedex.fake.repository.FakePokemonRepository
@@ -68,7 +68,7 @@ class PokemonViewModelTest {
     @Mock
     private lateinit var mockTTS: ComposeDexTTS
 
-    private lateinit var pokemonUseCase: GetPokemonUseCase
+    private lateinit var pokemonUseCase: FetchPokemonUseCase
     private lateinit var saveRemoteImageUseCase: FakeSaveRemoteImageUseCase
     private lateinit var saveRemoteCryUseCase: FakeSaveRemoteCryUseCase
     private lateinit var setAsFavouriteUseCase: SetAsFavouriteUseCase
@@ -82,7 +82,7 @@ class PokemonViewModelTest {
         mockSavedStateHandle = mock(SavedStateHandle::class.java)
         mockPlayer = mock(ExoPlayer::class.java)
         mockTTS = mock(ComposeDexTTS::class.java)
-        pokemonUseCase = GetPokemonUseCase(fakePokemonRepository)
+        pokemonUseCase = FetchPokemonUseCase(fakePokemonRepository)
         saveRemoteImageUseCase = FakeSaveRemoteImageUseCase()
         saveRemoteCryUseCase = FakeSaveRemoteCryUseCase()
         setAsFavouriteUseCase = mock()
@@ -93,7 +93,7 @@ class PokemonViewModelTest {
     fun `creating PokemonDetailViewModel exposes an empty Success PokemonDetailScreenUiState`() =
         runTest {
             viewModel = PokemonViewModel(
-                GetPokemonUseCase(fakePokemonRepository),
+                FetchPokemonUseCase(fakePokemonRepository),
                 saveRemoteImageUseCase,
                 saveRemoteCryUseCase,
                 setAsFavouriteUseCase,
@@ -116,7 +116,7 @@ class PokemonViewModelTest {
         fakePokemonRepository.addPokemon(*testData)
 
         viewModel = PokemonViewModel(
-            GetPokemonUseCase(fakePokemonRepository),
+            FetchPokemonUseCase(fakePokemonRepository),
             saveRemoteImageUseCase,
             saveRemoteCryUseCase,
             setAsFavouriteUseCase,
@@ -132,9 +132,6 @@ class PokemonViewModelTest {
             viewModel.lookUpPokemon(searchQuery)
 
             stateResult = awaitItem()
-            assertThat(stateResult).isInstanceOf(PokemonScreenState.Loading::class.java)
-
-            stateResult = awaitItem()
             assertThat(stateResult).isInstanceOf(PokemonScreenState.Success::class.java)
             assertThat(stateResult).isEqualTo(
                 expectedState
@@ -146,7 +143,7 @@ class PokemonViewModelTest {
     fun `search for unknown pokemon exposes Error PokemonDetailScreenUiState`() =
         runTest {
             viewModel = PokemonViewModel(
-                GetPokemonUseCase(fakePokemonRepository),
+                FetchPokemonUseCase(fakePokemonRepository),
                 saveRemoteImageUseCase,
                 saveRemoteCryUseCase,
                 setAsFavouriteUseCase,
@@ -164,9 +161,6 @@ class PokemonViewModelTest {
                 assertThat(stateResult).isInstanceOf(PokemonScreenState.NoPokemonSelected::class.java)
 
                 viewModel.lookUpPokemon(POKEMON_GLOOM_NAME)
-
-                stateResult = awaitItem()
-                assertThat(stateResult).isInstanceOf(PokemonScreenState.Loading::class.java)
 
                 stateResult = awaitItem()
                 assertThat(stateResult).isInstanceOf(PokemonScreenState.Error::class.java)
@@ -216,7 +210,7 @@ class PokemonViewModelTest {
         }
 
         /**
-         * Copy from [GetPokemonUseCase.processFlavorTextEntries].
+         * Copy from [FetchPokemonUseCase.processFlavorTextEntries].
          */
         private fun Pokemon.processFlavourTextEntries(): Pokemon =
             this.copy(

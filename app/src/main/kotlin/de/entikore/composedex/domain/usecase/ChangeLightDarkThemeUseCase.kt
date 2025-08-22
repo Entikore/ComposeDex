@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Entikore
+ * Copyright 2025 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,10 +17,9 @@ package de.entikore.composedex.domain.usecase
 
 import de.entikore.composedex.domain.model.preferences.AppThemeConfig
 import de.entikore.composedex.domain.repository.AppSettingsRepository
-import de.entikore.composedex.domain.usecase.base.ParamsSuspendUseCase
+import de.entikore.composedex.domain.usecase.base.BaseSuspendUseCase
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 /**
@@ -28,11 +27,9 @@ import javax.inject.Inject
  */
 class ChangeLightDarkThemeUseCase @Inject constructor(
     private val repository: AppSettingsRepository,
-    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
-) : ParamsSuspendUseCase<AppThemeConfig, Unit>() {
-    override suspend operator fun invoke(params: AppThemeConfig) {
-        withContext(ioDispatcher) {
-            repository.setTheme(params)
-        }
-    }
+    dispatcher: CoroutineDispatcher = Dispatchers.IO
+) : BaseSuspendUseCase<AppThemeConfig, Unit>(dispatcher) {
+
+    override suspend fun execute(params: AppThemeConfig) =
+        repository.setTheme(params)
 }

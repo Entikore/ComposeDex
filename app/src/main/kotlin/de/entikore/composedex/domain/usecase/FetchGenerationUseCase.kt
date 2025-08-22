@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Entikore
+ * Copyright 2025 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,31 +15,32 @@
  */
 package de.entikore.composedex.domain.usecase
 
-import de.entikore.composedex.domain.WorkResult
-import de.entikore.composedex.domain.asWorkResult
 import de.entikore.composedex.domain.model.generation.Generation
-import de.entikore.composedex.domain.model.pokemon.Pokemon
 import de.entikore.composedex.domain.repository.GenerationRepository
-import de.entikore.composedex.domain.usecase.base.ParamsUseCase
+import de.entikore.composedex.domain.usecase.base.BaseFetchUseCase
+import de.entikore.composedex.domain.util.asResult
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import javax.inject.Inject
 
 /**
- * This use case returns the latest list of [Pokemon] belonging to the [Generation]
- * of the provided name or id.
+ * This use case returns the latest [Generation] of the provided name or id.
  */
-class GetPokemonOfGenerationUseCase @Inject constructor(
-    private val repository: GenerationRepository
-) : ParamsUseCase<String, Flow<WorkResult<List<Pokemon>>>>() {
-    override operator fun invoke(params: String): Flow<WorkResult<List<Pokemon>>> {
+class FetchGenerationUseCase @Inject constructor(
+    private val repository: GenerationRepository,
+    dispatcher: CoroutineDispatcher = Dispatchers.IO
+) :
+    BaseFetchUseCase<String, Generation>(dispatcher) {
+
+    override fun execute(params: String): Flow<Result<Generation>> {
         val id = params.trim().toIntOrNull()
         return if (id != null) {
-            repository.getPokemonOfGenerationById(id).distinctUntilChanged().asWorkResult()
+            repository.getGenerationById(id).distinctUntilChanged().asResult()
         } else {
             val normalizedParams = params.lowercase().trim()
-            repository.getPokemonOfGenerationByName(normalizedParams).distinctUntilChanged()
-                .asWorkResult()
+            repository.getGenerationByName(normalizedParams).distinctUntilChanged().asResult()
         }
     }
 }

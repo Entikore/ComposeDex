@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Entikore
+ * Copyright 2025 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,9 +22,9 @@ import de.entikore.composedex.data.local.entity.generation.asExternalModel
 import de.entikore.composedex.data.local.entity.pokemon.relation.asExternalModel
 import de.entikore.composedex.data.remote.model.generation.toEntity
 import de.entikore.composedex.data.remote.model.toEntity
-import de.entikore.composedex.domain.usecase.GetGenerationUseCase
-import de.entikore.composedex.domain.usecase.GetGenerationsUseCase
-import de.entikore.composedex.domain.usecase.GetPokemonOfGenerationUseCase
+import de.entikore.composedex.domain.usecase.FetchGenerationUseCase
+import de.entikore.composedex.domain.usecase.FetchGenerationsUseCase
+import de.entikore.composedex.domain.usecase.FetchPokemonOfGenerationUseCase
 import de.entikore.composedex.domain.usecase.SetAsFavouriteUseCase
 import de.entikore.composedex.fake.repository.FakeGenerationRepository
 import de.entikore.composedex.fake.usecase.FakeSaveRemoteImageUseCase
@@ -49,9 +49,9 @@ import org.mockito.Mockito.mock
 @ExtendWith(MainCoroutineRule::class)
 class GenerationViewModelTest {
 
-    private lateinit var getGenerationsUseCase: GetGenerationsUseCase
-    private lateinit var getGenerationUseCase: GetGenerationUseCase
-    private lateinit var getPokemonOfGenerationUseCase: GetPokemonOfGenerationUseCase
+    private lateinit var getGenerationsUseCase: FetchGenerationsUseCase
+    private lateinit var getGenerationUseCase: FetchGenerationUseCase
+    private lateinit var getPokemonOfGenerationUseCase: FetchPokemonOfGenerationUseCase
     private lateinit var saveRemoteImageUseCase: FakeSaveRemoteImageUseCase
     private lateinit var setAsFavouriteUseCase: SetAsFavouriteUseCase
 
@@ -60,9 +60,9 @@ class GenerationViewModelTest {
 
     @BeforeEach
     fun setUp() {
-        getGenerationsUseCase = GetGenerationsUseCase(fakeGenerationRepository)
-        getGenerationUseCase = GetGenerationUseCase(fakeGenerationRepository)
-        getPokemonOfGenerationUseCase = GetPokemonOfGenerationUseCase(fakeGenerationRepository)
+        getGenerationsUseCase = FetchGenerationsUseCase(fakeGenerationRepository)
+        getGenerationUseCase = FetchGenerationUseCase(fakeGenerationRepository)
+        getPokemonOfGenerationUseCase = FetchPokemonOfGenerationUseCase(fakeGenerationRepository)
         saveRemoteImageUseCase = FakeSaveRemoteImageUseCase()
         setAsFavouriteUseCase = mock()
     }
@@ -79,8 +79,13 @@ class GenerationViewModelTest {
 
         val expectedState = GenerationScreenUiState.Success()
 
-        assertThat(viewModel.screenState.value).isInstanceOf(GenerationScreenUiState.Success::class.java)
-        assertThat(viewModel.screenState.value).isEqualTo(expectedState)
+        viewModel.screenState.test {
+            var stateResult = awaitItem()
+            assertThat(stateResult).isInstanceOf(GenerationScreenUiState.Loading::class.java)
+            stateResult = awaitItem()
+            assertThat(stateResult).isInstanceOf(GenerationScreenUiState.Success::class.java)
+            assertThat(stateResult).isEqualTo(expectedState)
+        }
     }
 
     @Test
@@ -105,8 +110,7 @@ class GenerationViewModelTest {
 
         viewModel.screenState.test {
             var stateResult = awaitItem()
-            assertThat(stateResult).isInstanceOf(GenerationScreenUiState.Success::class.java)
-            assertThat(stateResult).isEqualTo(GenerationScreenUiState.Success())
+            assertThat(stateResult).isInstanceOf(GenerationScreenUiState.Loading::class.java)
 
             stateResult = awaitItem()
             assertThat(stateResult).isInstanceOf(GenerationScreenUiState.Success::class.java)
@@ -141,16 +145,15 @@ class GenerationViewModelTest {
 
         viewModel.screenState.test {
             var stateResult = awaitItem()
-            assertThat(stateResult).isInstanceOf(GenerationScreenUiState.Success::class.java)
-            assertThat(stateResult).isEqualTo(GenerationScreenUiState.Success())
-
-            viewModel.searchForGeneration(generationI.id.toString())
+            assertThat(stateResult).isInstanceOf(GenerationScreenUiState.Loading::class.java)
 
             stateResult = awaitItem()
             assertThat(stateResult).isInstanceOf(GenerationScreenUiState.Success::class.java)
             assertThat(
                 stateResult
-            ).isEqualTo(expectedState.copy(selectedGeneration = SelectedGenerationUiState.Loading))
+            ).isEqualTo(expectedState.copy(selectedGeneration = SelectedGenerationUiState.NoGenerationSelected))
+
+            viewModel.searchForGeneration(generationI.id.toString())
 
             stateResult = awaitItem()
             assertThat(stateResult).isInstanceOf(GenerationScreenUiState.Success::class.java)
@@ -178,16 +181,15 @@ class GenerationViewModelTest {
 
         viewModel.screenState.test {
             var stateResult = awaitItem()
-            assertThat(stateResult).isInstanceOf(GenerationScreenUiState.Success::class.java)
-            assertThat(stateResult).isEqualTo(GenerationScreenUiState.Success())
-
-            viewModel.searchForGeneration(GEN_II_NAME)
+            assertThat(stateResult).isInstanceOf(GenerationScreenUiState.Loading::class.java)
 
             stateResult = awaitItem()
             assertThat(stateResult).isInstanceOf(GenerationScreenUiState.Success::class.java)
             assertThat(
                 stateResult
-            ).isEqualTo(expectedState.copy(selectedGeneration = SelectedGenerationUiState.Loading))
+            ).isEqualTo(expectedState.copy(selectedGeneration = SelectedGenerationUiState.NoGenerationSelected))
+
+            viewModel.searchForGeneration(GEN_II_NAME)
 
             stateResult = awaitItem()
             assertThat(stateResult).isInstanceOf(GenerationScreenUiState.Success::class.java)

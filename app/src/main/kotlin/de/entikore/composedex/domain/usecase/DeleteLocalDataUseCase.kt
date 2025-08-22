@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Entikore
+ * Copyright 2025 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,10 +18,9 @@ package de.entikore.composedex.domain.usecase
 import android.content.Context
 import dagger.hilt.android.qualifiers.ApplicationContext
 import de.entikore.composedex.domain.repository.LocalStorage
-import de.entikore.composedex.domain.usecase.base.SuspendUseCase
+import de.entikore.composedex.domain.usecase.base.BaseSuspendUseCase
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 
 /**
  * This use case deletes all stored data from the local storage.
@@ -29,16 +28,14 @@ import kotlinx.coroutines.withContext
 class DeleteLocalDataUseCase(
     @ApplicationContext private val context: Context,
     private val localStorage: LocalStorage,
-    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
-) : SuspendUseCase<Unit>() {
+    dispatcher: CoroutineDispatcher = Dispatchers.IO
+) : BaseSuspendUseCase<Unit, Unit>(dispatcher) {
 
-    override suspend operator fun invoke() {
-        withContext(ioDispatcher) {
-            val files = context.fileList()
-            for (file in files) {
-                context.deleteFile(file)
-            }
-            localStorage.clearData()
+    override suspend fun execute(params: Unit) {
+        val files = context.fileList()
+        for (file in files) {
+            context.deleteFile(file)
         }
+        localStorage.clearData()
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Entikore
+ * Copyright 2025 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,14 +17,14 @@ package de.entikore.composedex.ui.screen.favourite
 
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import de.entikore.composedex.domain.WorkResult
 import de.entikore.composedex.domain.model.pokemon.Pokemon
-import de.entikore.composedex.domain.usecase.GetFavouritesUseCase
+import de.entikore.composedex.domain.usecase.FetchFavouritesUseCase
 import de.entikore.composedex.domain.usecase.SetFavouriteData
-import de.entikore.composedex.domain.usecase.base.ParamsSuspendUseCase
+import de.entikore.composedex.domain.usecase.base.BaseSuspendUseCase
 import de.entikore.composedex.ui.screen.shared.PokemonFilterOptions
 import de.entikore.composedex.ui.screen.shared.PokemonFilterViewModel
 import de.entikore.composedex.ui.screen.shared.PokemonUiState
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
@@ -37,27 +37,31 @@ import javax.inject.Inject
  */
 @HiltViewModel
 class FavouriteViewModel @Inject constructor(
-    getFavourites: GetFavouritesUseCase,
-    private val setAsFavouriteUseCase: @JvmSuppressWildcards ParamsSuspendUseCase<SetFavouriteData, Unit>
+    getFavourites: FetchFavouritesUseCase,
+    private val setAsFavouriteUseCase: @JvmSuppressWildcards BaseSuspendUseCase<SetFavouriteData, Unit>
 ) : PokemonFilterViewModel() {
 
+    private val _isUpdatingFavourite = MutableStateFlow(false)
+
     val screenState =
-        getFavourites().combine(
-            filterOptions
-        ) { favourites: WorkResult<List<Pokemon>>, filterSettings: PokemonFilterOptions ->
-            when (favourites) {
-                is WorkResult.Error -> PokemonUiState.Error
-                WorkResult.Loading -> PokemonUiState.Loading
-                is WorkResult.Success -> PokemonUiState.Success(
+        combine(
+            getFavourites(),
+            filterOptions,
+            _isUpdatingFavourite
+        ) { favourites: Result<List<Pokemon>>, filterSettings: PokemonFilterOptions, isUpdating: Boolean ->
+            if (favourites.isSuccess) {
+                PokemonUiState.Success(
                     filterSettings.getFilteredList(
-                        favourites.data
+                        favourites.getOrDefault(emptyList())
                     )
                 )
+            } else {
+                PokemonUiState.Error
             }
         }.stateIn(
             viewModelScope,
             SharingStarted.Eagerly,
-            PokemonUiState.Success(emptyList())
+            PokemonUiState.Loading
         )
 
     fun updateFavourite(id: Int, isFavourite: Boolean) {

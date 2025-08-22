@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Entikore
+ * Copyright 2025 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,6 @@ import com.google.common.truth.Truth.assertThat
 import de.entikore.composedex.MainCoroutineRule
 import de.entikore.composedex.data.local.entity.generation.asExternalModel
 import de.entikore.composedex.data.remote.model.generation.toEntity
-import de.entikore.composedex.domain.WorkResult
 import de.entikore.composedex.domain.model.generation.Generation
 import de.entikore.composedex.fake.repository.FailableFakeRepository.Companion.EXPECTED_TEST_EXCEPTION
 import de.entikore.composedex.fake.repository.FakeGenerationRepository
@@ -37,18 +36,18 @@ import org.junit.jupiter.api.extension.ExtendWith
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(MainCoroutineRule::class)
-class GetGenerationUseCaseTest {
+class FetchGenerationUseCaseTest {
     private lateinit var repository: FakeGenerationRepository
-    private lateinit var getGenerationUseCase: GetGenerationUseCase
+    private lateinit var getGenerationUseCase: FetchGenerationUseCase
 
     @BeforeEach
     fun setUp() {
         repository = FakeGenerationRepository()
-        getGenerationUseCase = GetGenerationUseCase(repository)
+        getGenerationUseCase = FetchGenerationUseCase(repository)
     }
 
     @Test
-    fun `get generation by name results in WorkResult Success with searched generation`() =
+    fun `get generation by name results in successful Result Success with searched generation`() =
         runTest {
             val generationI = getGenerationRemote(GEN_I_FILE).toEntity().asExternalModel()
             val generationII = getGenerationRemote(GEN_II_FILE).toEntity().asExternalModel()
@@ -63,7 +62,7 @@ class GetGenerationUseCaseTest {
         }
 
     @Test
-    fun `get generation by id results in WorkResult Success with searched generation`() =
+    fun `get generation by id results in successful Result with searched generation`() =
         runTest {
             val generationI = getGenerationRemote(GEN_I_FILE).toEntity().asExternalModel()
             val generationII = getGenerationRemote(GEN_II_FILE).toEntity().asExternalModel()
@@ -85,28 +84,24 @@ class GetGenerationUseCaseTest {
         repository.addGenerations(*testData)
 
         getGenerationUseCase.invoke(useCaseParam).test {
-            var actualGeneration = awaitItem()
-            assertThat(actualGeneration).isInstanceOf(WorkResult.Loading::class.java)
-            actualGeneration = awaitItem()
-            assertThat(actualGeneration).isInstanceOf(WorkResult.Success::class.java)
-            assertThat((actualGeneration as WorkResult.Success).data).isEqualTo(expectedGeneration)
+            val actualGeneration = awaitItem()
+            assertThat(actualGeneration.isSuccess).isTrue()
+            assertThat(actualGeneration.getOrThrow()).isEqualTo(expectedGeneration)
             awaitComplete()
         }
     }
 
     @Test
-    fun `get generation by unknown name results in WorkResult Error`() = runTest {
+    fun `get generation by unknown name results in error Result`() = runTest {
         val generationI = getGenerationRemote(GEN_I_FILE).toEntity().asExternalModel()
         val generationII = getGenerationRemote(GEN_II_FILE).toEntity().asExternalModel()
         val generationVI = getGenerationRemote(GEN_VI_FILE).toEntity().asExternalModel()
         repository.addGenerations(generationI, generationII, generationVI)
 
         getGenerationUseCase.invoke("unknown").test {
-            var actualGeneration = awaitItem()
-            assertThat(actualGeneration).isInstanceOf(WorkResult.Loading::class.java)
-            actualGeneration = awaitItem()
-            assertThat(actualGeneration).isInstanceOf(WorkResult.Error::class.java)
-            assertThat((actualGeneration as WorkResult.Error).exception!!.message).isEqualTo(
+            val actualGeneration = awaitItem()
+            assertThat(actualGeneration.isFailure).isTrue()
+            assertThat(actualGeneration.exceptionOrNull()?.message).isEqualTo(
                 GENERATION_WITH_NAME_NOT_FOUND
             )
             awaitComplete()
@@ -114,7 +109,7 @@ class GetGenerationUseCaseTest {
     }
 
     @Test
-    fun `get generation by name results in WorkResult Error on any exception`() = runTest {
+    fun `get generation by name results in error Result on any exception`() = runTest {
         val generationI = getGenerationRemote(GEN_I_FILE).toEntity().asExternalModel()
         val generationII = getGenerationRemote(GEN_II_FILE).toEntity().asExternalModel()
         val generationVI = getGenerationRemote(GEN_VI_FILE).toEntity().asExternalModel()
@@ -128,7 +123,7 @@ class GetGenerationUseCaseTest {
     }
 
     @Test
-    fun `get generation by id results in WorkResult Error on any exception`() = runTest {
+    fun `get generation by id results in error Result on any exception`() = runTest {
         val generationI = getGenerationRemote(GEN_I_FILE).toEntity().asExternalModel()
         val generationII = getGenerationRemote(GEN_II_FILE).toEntity().asExternalModel()
         val generationVI = getGenerationRemote(GEN_VI_FILE).toEntity().asExternalModel()
@@ -149,11 +144,9 @@ class GetGenerationUseCaseTest {
         repository.setReturnError(true)
 
         getGenerationUseCase.invoke(useCaseParam).test {
-            var actualGeneration = awaitItem()
-            assertThat(actualGeneration).isInstanceOf(WorkResult.Loading::class.java)
-            actualGeneration = awaitItem()
-            assertThat(actualGeneration).isInstanceOf(WorkResult.Error::class.java)
-            assertThat((actualGeneration as WorkResult.Error).exception!!.message).isEqualTo(
+            val actualGeneration = awaitItem()
+            assertThat(actualGeneration.isFailure).isTrue()
+            assertThat(actualGeneration.exceptionOrNull()?.message).isEqualTo(
                 EXPECTED_TEST_EXCEPTION
             )
             awaitComplete()

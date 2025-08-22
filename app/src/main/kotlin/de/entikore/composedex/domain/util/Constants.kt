@@ -17,5 +17,5 @@ package de.entikore.composedex.domain.util
 
 const val IDLE_CONNECTION_COUNT = 2
 const val KEEP_ALIVE_DURATION = 5L
-
+const val RETRY_TIME_IN_MILLIS = 3_000L
 val whitespacePattern = "\\s+".toRegex()

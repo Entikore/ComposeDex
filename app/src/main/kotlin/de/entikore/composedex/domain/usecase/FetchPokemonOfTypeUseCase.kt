@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Entikore
+ * Copyright 2025 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,23 +15,25 @@
  */
 package de.entikore.composedex.domain.usecase
 
-import de.entikore.composedex.domain.WorkResult
-import de.entikore.composedex.domain.asWorkResult
+import de.entikore.composedex.domain.model.pokemon.Pokemon
 import de.entikore.composedex.domain.model.type.Type
 import de.entikore.composedex.domain.repository.TypeRepository
-import de.entikore.composedex.domain.usecase.base.UseCase
-import kotlinx.coroutines.flow.Flow
+import de.entikore.composedex.domain.usecase.base.BaseFetchUseCase
+import de.entikore.composedex.domain.util.asResult
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 /**
- * This use case returns the latest list of all [Type].
+ * This use case returns the latest list of [Pokemon] belonging to the [Type]
+ * of the provided name.
  */
-class GetTypesUseCase @Inject constructor(private val repository: TypeRepository) :
-    UseCase<Flow<WorkResult<List<Type>>>>() {
-    override operator fun invoke(): Flow<WorkResult<List<Type>>> =
-        repository.getTypes().distinctUntilChanged().map {
-            it.filter { processedType -> !Type.isUnsupportedType(processedType.name) }
-        }.asWorkResult()
+class FetchPokemonOfTypeUseCase @Inject constructor(
+    private val repository: TypeRepository,
+    dispatcher: CoroutineDispatcher = Dispatchers.IO
+) :
+    BaseFetchUseCase<String, List<Pokemon>>(dispatcher) {
+    override fun execute(params: String) =
+        repository.getPokemonOfType(params).distinctUntilChanged().asResult()
 }

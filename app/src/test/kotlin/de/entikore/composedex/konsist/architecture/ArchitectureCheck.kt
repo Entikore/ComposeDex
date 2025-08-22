@@ -45,21 +45,6 @@ class ArchitectureCheck {
     }
 
     @Test
-    fun `Classes with 'UseCases' suffix should expose one public function with 'operator' modifier named 'invoke'`() {
-        Konsist
-            .scopeFromProduction()
-            .classes()
-            .withNameEndingWith(USE_CASE)
-            .assertTrue {
-                val hasSingleInvokeOperatorMethod = it.hasFunction { function ->
-                    function.name == "invoke" && function.hasPublicOrDefaultModifier && function.hasOperatorModifier
-                }
-
-                hasSingleInvokeOperatorMethod && it.countFunctions { item -> item.hasPublicOrDefaultModifier } == 1
-            }
-    }
-
-    @Test
     fun `Classes with 'UseCase' suffix should reside in 'domain' and 'usecase' package`() {
         Konsist
             .scopeFromProduction()
