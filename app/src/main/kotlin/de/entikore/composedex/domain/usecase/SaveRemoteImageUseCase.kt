@@ -20,7 +20,7 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import dagger.hilt.android.qualifiers.ApplicationContext
 import de.entikore.composedex.domain.repository.PokemonRepository
-import de.entikore.composedex.domain.usecase.base.ParamsSuspendUseCase
+import de.entikore.composedex.domain.usecase.base.BaseSuspendUseCase
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -41,28 +41,24 @@ class SaveRemoteImageUseCase @Inject constructor(
     @ApplicationContext private val context: Context,
     private val pokemonRepository: PokemonRepository,
     httpClientBuilder: OkHttpClient.Builder,
-    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
-) : ParamsSuspendUseCase<SaveImageData, String>() {
+    private val dispatcher: CoroutineDispatcher = Dispatchers.IO
+) : BaseSuspendUseCase<SaveImageData, String>(dispatcher) {
 
     private var client: OkHttpClient = httpClientBuilder.build()
-
-    override suspend operator fun invoke(
-        params: SaveImageData
-    ): String =
-        withContext(ioDispatcher) {
-            val bitmap = downloadImage(params.imageAddress)
-            return@withContext if (bitmap == null) {
-                params.imageAddress
-            } else {
-                saveImage(params.id, params.fileName, bitmap, params.isSprite)
-            }
+    override suspend fun execute(params: SaveImageData): String {
+        val bitmap = downloadImage(params.imageAddress)
+        return if (bitmap == null) {
+            params.imageAddress
+        } else {
+            saveImage(params.id, params.fileName, bitmap, params.isSprite)
         }
+    }
 
     private suspend fun downloadImage(imageAddress: String): Bitmap? {
         if (imageAddress.isEmpty()) return null
         val request: Request = Request.Builder().url(imageAddress).build()
 
-        return withContext(ioDispatcher) {
+        return withContext(dispatcher) {
             try {
                 client.newCall(request).execute().use { response ->
                     if (!response.isSuccessful) {
@@ -99,10 +95,10 @@ class SaveRemoteImageUseCase @Inject constructor(
     }
 
     private suspend fun saveImage(id: Int, fileName: String, bitmap: Bitmap?, isSprite: Boolean) =
-        withContext(ioDispatcher) {
+        withContext(dispatcher) {
             val fos = context.openFileOutput(fileName, Context.MODE_PRIVATE)
             bitmap?.compress(Bitmap.CompressFormat.PNG, COMPRESSION_QUALITY_PERCENT, fos)
-            withContext(Dispatchers.IO) { fos.close() }
+            withContext(dispatcher) { fos.close() }
             val fileLocation = "${context.filesDir}/$fileName"
             if (isSprite) {
                 pokemonRepository.updatePokemonSprite(id, fileLocation)

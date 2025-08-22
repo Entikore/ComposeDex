@@ -24,7 +24,7 @@ import de.entikore.composedex.domain.usecase.FetchTypeUseCase
 import de.entikore.composedex.domain.usecase.FetchTypesUseCase
 import de.entikore.composedex.domain.usecase.SaveImageData
 import de.entikore.composedex.domain.usecase.SetFavouriteData
-import de.entikore.composedex.domain.usecase.base.ParamsSuspendUseCase
+import de.entikore.composedex.domain.usecase.base.BaseSuspendUseCase
 import de.entikore.composedex.ui.screen.shared.PokemonFilterOptions
 import de.entikore.composedex.ui.screen.shared.PokemonFilterViewModel
 import de.entikore.composedex.ui.screen.shared.PokemonUiState
@@ -54,8 +54,8 @@ class TypeViewModel @Inject constructor(
     getTypesUseCase: FetchTypesUseCase,
     private val getTypeUseCase: FetchTypeUseCase,
     private val getPokemonOfTypeUseCase: FetchPokemonOfTypeUseCase,
-    private val saveRemoteImageUseCase: @JvmSuppressWildcards ParamsSuspendUseCase<SaveImageData, String>,
-    private val setAsFavouriteUseCase: @JvmSuppressWildcards ParamsSuspendUseCase<SetFavouriteData, Unit>
+    private val saveRemoteImageUseCase: @JvmSuppressWildcards BaseSuspendUseCase<SaveImageData, String>,
+    private val setAsFavouriteUseCase: @JvmSuppressWildcards BaseSuspendUseCase<SetFavouriteData, Unit>
 ) : PokemonFilterViewModel() {
 
     private val _selectedTypeFlow = MutableStateFlow("")

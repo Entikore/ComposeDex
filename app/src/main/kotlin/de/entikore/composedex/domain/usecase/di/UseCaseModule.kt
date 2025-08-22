@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Entikore
+ * Copyright 2025 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,6 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ViewModelComponent
 import dagger.hilt.android.qualifiers.ApplicationContext
 import de.entikore.composedex.domain.model.preferences.AppThemeConfig
-import de.entikore.composedex.domain.model.preferences.UserPreferences
 import de.entikore.composedex.domain.repository.AppSettingsRepository
 import de.entikore.composedex.domain.repository.FavouriteRepository
 import de.entikore.composedex.domain.repository.LocalStorage
@@ -37,10 +36,7 @@ import de.entikore.composedex.domain.usecase.SaveRemoteSoundUseCase
 import de.entikore.composedex.domain.usecase.SaveSoundData
 import de.entikore.composedex.domain.usecase.SetAsFavouriteUseCase
 import de.entikore.composedex.domain.usecase.SetFavouriteData
-import de.entikore.composedex.domain.usecase.base.ParamsSuspendUseCase
-import de.entikore.composedex.domain.usecase.base.SuspendUseCase
-import de.entikore.composedex.domain.usecase.base.UseCase
-import kotlinx.coroutines.flow.Flow
+import de.entikore.composedex.domain.usecase.base.BaseSuspendUseCase
 import okhttp3.OkHttpClient
 
 @Module
@@ -52,7 +48,7 @@ object UseCaseModule {
         @ApplicationContext context: Context,
         repository: PokemonRepository,
         okHttpClientBuilder: OkHttpClient.Builder
-    ): ParamsSuspendUseCase<SaveImageData, String> =
+    ): BaseSuspendUseCase<SaveImageData, String> =
         SaveRemoteImageUseCase(context, repository, okHttpClientBuilder)
 
     @Provides
@@ -60,30 +56,30 @@ object UseCaseModule {
         @ApplicationContext context: Context,
         repository: PokemonRepository,
         okHttpClientBuilder: OkHttpClient.Builder
-    ): ParamsSuspendUseCase<SaveSoundData, String> =
+    ): BaseSuspendUseCase<SaveSoundData, String> =
         SaveRemoteSoundUseCase(context, repository, okHttpClientBuilder)
 
     @Provides
-    fun provideSetAsFavouriteUseCase(repository: FavouriteRepository): ParamsSuspendUseCase<SetFavouriteData, Unit> =
+    fun provideSetAsFavouriteUseCase(repository: FavouriteRepository): BaseSuspendUseCase<SetFavouriteData, Unit> =
         SetAsFavouriteUseCase(repository)
 
     @Provides
     fun provideDeleteLocalDataUseCase(
         @ApplicationContext context: Context,
         composeDexDatabase: LocalStorage
-    ): SuspendUseCase<Unit> = DeleteLocalDataUseCase(context, composeDexDatabase)
+    ): BaseSuspendUseCase<Unit, Unit> = DeleteLocalDataUseCase(context, composeDexDatabase)
 
     @Provides
-    fun provideGetUserPreferencesUseCase(repository: AppSettingsRepository): UseCase<Flow<UserPreferences>> =
+    fun provideGetUserPreferencesUseCase(repository: AppSettingsRepository) =
         GetUserPreferencesUseCase(repository)
 
     @Provides
     fun provideChangeLightDarkThemeUseCase(
         repository: AppSettingsRepository
-    ): ParamsSuspendUseCase<AppThemeConfig, Unit> =
+    ): BaseSuspendUseCase<AppThemeConfig, Unit> =
         ChangeLightDarkThemeUseCase(repository)
 
     @Provides
-    fun provideChangeTypeThemeUseCase(repository: AppSettingsRepository): ParamsSuspendUseCase<String, Unit> =
+    fun provideChangeTypeThemeUseCase(repository: AppSettingsRepository): BaseSuspendUseCase<String, Unit> =
         ChangeTypeThemeUseCase(repository)
 }

@@ -28,7 +28,7 @@ import de.entikore.composedex.domain.usecase.FetchPokemonUseCase
 import de.entikore.composedex.domain.usecase.SaveImageData
 import de.entikore.composedex.domain.usecase.SaveSoundData
 import de.entikore.composedex.domain.usecase.SetFavouriteData
-import de.entikore.composedex.domain.usecase.base.ParamsSuspendUseCase
+import de.entikore.composedex.domain.usecase.base.BaseSuspendUseCase
 import de.entikore.composedex.ui.ComposeDexTTS
 import de.entikore.composedex.ui.screen.util.SUFFIX_ARTWORK
 import de.entikore.composedex.ui.screen.util.SUFFIX_CRY
@@ -54,10 +54,10 @@ import javax.inject.Inject
 @HiltViewModel
 class PokemonViewModel @Inject constructor(
     private val getPokemonUseCase: FetchPokemonUseCase,
-    private val saveRemoteImageUseCase: @JvmSuppressWildcards ParamsSuspendUseCase<SaveImageData, String>,
-    private val saveRemoteCryUseCase: @JvmSuppressWildcards ParamsSuspendUseCase<SaveSoundData, String>,
-    private val setAsFavouriteUseCase: @JvmSuppressWildcards ParamsSuspendUseCase<SetFavouriteData, Unit>,
-    private val changeThemeUseCase: @JvmSuppressWildcards ParamsSuspendUseCase<String, Unit>,
+    private val saveRemoteImageUseCase: @JvmSuppressWildcards BaseSuspendUseCase<SaveImageData, String>,
+    private val saveRemoteCryUseCase: @JvmSuppressWildcards BaseSuspendUseCase<SaveSoundData, String>,
+    private val setAsFavouriteUseCase: @JvmSuppressWildcards BaseSuspendUseCase<SetFavouriteData, Unit>,
+    private val changeThemeUseCase: @JvmSuppressWildcards BaseSuspendUseCase<String, Unit>,
     private val exoPlayer: ExoPlayer,
     private val tts: ComposeDexTTS
 ) : ViewModel() {

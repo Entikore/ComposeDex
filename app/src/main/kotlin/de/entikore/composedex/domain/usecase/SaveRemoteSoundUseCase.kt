@@ -18,7 +18,7 @@ package de.entikore.composedex.domain.usecase
 import android.content.Context
 import dagger.hilt.android.qualifiers.ApplicationContext
 import de.entikore.composedex.domain.repository.PokemonRepository
-import de.entikore.composedex.domain.usecase.base.ParamsSuspendUseCase
+import de.entikore.composedex.domain.usecase.base.BaseSuspendUseCase
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -39,22 +39,21 @@ class SaveRemoteSoundUseCase @Inject constructor(
     @ApplicationContext private val context: Context,
     private val pokemonRepository: PokemonRepository,
     httpClientBuilder: OkHttpClient.Builder,
-    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
-) : ParamsSuspendUseCase<SaveSoundData, String>() {
+    private val dispatcher: CoroutineDispatcher = Dispatchers.IO
+) : BaseSuspendUseCase<SaveSoundData, String>(dispatcher) {
 
     private var client: OkHttpClient = httpClientBuilder.build()
+    override suspend fun execute(params: SaveSoundData): String =
+        downloadAndSaveSound(params.soundAddress, params.fileName, params.id)
+            ?: params.soundAddress
 
-    override suspend operator fun invoke(
-        params: SaveSoundData
-    ): String =
-        withContext(ioDispatcher) {
-            return@withContext downloadAndSaveSound(params.soundAddress, params.fileName, params.id)
-                ?: params.soundAddress
-        }
-
-    private suspend fun downloadAndSaveSound(soundAddress: String, dataName: String, id: Int): String? {
+    private suspend fun downloadAndSaveSound(
+        soundAddress: String,
+        dataName: String,
+        id: Int
+    ): String? {
         val request = Request.Builder().url(soundAddress).build()
-        return withContext(ioDispatcher) {
+        return withContext(dispatcher) {
             try {
                 client.newCall(request).execute().use { response ->
                     if (!response.isSuccessful) {

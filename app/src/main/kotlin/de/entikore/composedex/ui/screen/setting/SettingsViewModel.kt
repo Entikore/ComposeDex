@@ -19,11 +19,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import de.entikore.composedex.domain.model.preferences.AppThemeConfig
-import de.entikore.composedex.domain.model.preferences.UserPreferences
-import de.entikore.composedex.domain.usecase.base.ParamsSuspendUseCase
-import de.entikore.composedex.domain.usecase.base.SuspendUseCase
-import de.entikore.composedex.domain.usecase.base.UseCase
-import kotlinx.coroutines.flow.Flow
+import de.entikore.composedex.domain.usecase.GetUserPreferencesUseCase
+import de.entikore.composedex.domain.usecase.base.BaseSuspendUseCase
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
@@ -36,12 +33,12 @@ import javax.inject.Inject
  */
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
-    getSettingsUseCase: @JvmSuppressWildcards UseCase<Flow<UserPreferences>>,
-    private val changeLightDarkThemeUseCase: @JvmSuppressWildcards ParamsSuspendUseCase<AppThemeConfig, Unit>,
-    private val deleteLocalData: @JvmSuppressWildcards SuspendUseCase<Unit>
+    userPreferencesUseCase: GetUserPreferencesUseCase,
+    private val changeLightDarkThemeUseCase: @JvmSuppressWildcards BaseSuspendUseCase<AppThemeConfig, Unit>,
+    private val deleteLocalData: @JvmSuppressWildcards BaseSuspendUseCase<Unit, Unit>
 ) : ViewModel() {
 
-    val screenState = getSettingsUseCase.invoke().map {
+    val screenState = userPreferencesUseCase.invoke().map {
         SettingScreenUiState(selected = it.appThemeConfig.ordinal)
     }.stateIn(
         viewModelScope,

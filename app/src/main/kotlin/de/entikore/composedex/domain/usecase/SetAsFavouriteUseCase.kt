@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Entikore
+ * Copyright 2025 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,10 +16,9 @@
 package de.entikore.composedex.domain.usecase
 
 import de.entikore.composedex.domain.repository.FavouriteRepository
-import de.entikore.composedex.domain.usecase.base.ParamsSuspendUseCase
+import de.entikore.composedex.domain.usecase.base.BaseSuspendUseCase
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 /**
@@ -27,11 +26,10 @@ import javax.inject.Inject
  */
 class SetAsFavouriteUseCase @Inject constructor(
     private val repository: FavouriteRepository,
-    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
-) : ParamsSuspendUseCase<@JvmSuppressWildcards SetFavouriteData, @JvmSuppressWildcards Unit>() {
-
-    override suspend operator fun invoke(params: SetFavouriteData) =
-        withContext(ioDispatcher) { repository.updateIsFavourite(params.id, params.isFavourite) }
+    dispatcher: CoroutineDispatcher = Dispatchers.IO
+) : BaseSuspendUseCase<@JvmSuppressWildcards SetFavouriteData, @JvmSuppressWildcards Unit>(dispatcher) {
+    override suspend fun execute(params: @JvmSuppressWildcards SetFavouriteData) =
+        repository.updateIsFavourite(params.id, params.isFavourite)
 }
 
 /**

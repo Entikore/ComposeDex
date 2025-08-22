@@ -20,7 +20,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import de.entikore.composedex.domain.model.pokemon.Pokemon
 import de.entikore.composedex.domain.usecase.FetchFavouritesUseCase
 import de.entikore.composedex.domain.usecase.SetFavouriteData
-import de.entikore.composedex.domain.usecase.base.ParamsSuspendUseCase
+import de.entikore.composedex.domain.usecase.base.BaseSuspendUseCase
 import de.entikore.composedex.ui.screen.shared.PokemonFilterOptions
 import de.entikore.composedex.ui.screen.shared.PokemonFilterViewModel
 import de.entikore.composedex.ui.screen.shared.PokemonUiState
@@ -38,7 +38,7 @@ import javax.inject.Inject
 @HiltViewModel
 class FavouriteViewModel @Inject constructor(
     getFavourites: FetchFavouritesUseCase,
-    private val setAsFavouriteUseCase: @JvmSuppressWildcards ParamsSuspendUseCase<SetFavouriteData, Unit>
+    private val setAsFavouriteUseCase: @JvmSuppressWildcards BaseSuspendUseCase<SetFavouriteData, Unit>
 ) : PokemonFilterViewModel() {
 
     private val _isUpdatingFavourite = MutableStateFlow(false)

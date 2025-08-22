@@ -24,7 +24,7 @@ import de.entikore.composedex.domain.usecase.FetchGenerationsUseCase
 import de.entikore.composedex.domain.usecase.FetchPokemonOfGenerationUseCase
 import de.entikore.composedex.domain.usecase.SaveImageData
 import de.entikore.composedex.domain.usecase.SetFavouriteData
-import de.entikore.composedex.domain.usecase.base.ParamsSuspendUseCase
+import de.entikore.composedex.domain.usecase.base.BaseSuspendUseCase
 import de.entikore.composedex.ui.screen.shared.PokemonFilterOptions
 import de.entikore.composedex.ui.screen.shared.PokemonFilterViewModel
 import de.entikore.composedex.ui.screen.shared.PokemonUiState
@@ -50,8 +50,8 @@ class GenerationViewModel @Inject constructor(
     getGenerationsUseCase: FetchGenerationsUseCase,
     getGenerationUseCase: FetchGenerationUseCase,
     getPokemonOfGenerationUseCase: FetchPokemonOfGenerationUseCase,
-    private val saveRemoteImageUseCase: @JvmSuppressWildcards ParamsSuspendUseCase<SaveImageData, String>,
-    private val setAsFavouriteUseCase: @JvmSuppressWildcards ParamsSuspendUseCase<SetFavouriteData, Unit>
+    private val saveRemoteImageUseCase: @JvmSuppressWildcards BaseSuspendUseCase<SaveImageData, String>,
+    private val setAsFavouriteUseCase: @JvmSuppressWildcards BaseSuspendUseCase<SetFavouriteData, Unit>
 ) : PokemonFilterViewModel() {
 
     private val _selectedGenerationFlow = MutableStateFlow<String?>(null)

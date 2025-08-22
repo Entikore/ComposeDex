@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Entikore
+ * Copyright 2025 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,6 @@ package de.entikore.composedex.domain.usecase
 
 import de.entikore.composedex.domain.model.preferences.UserPreferences
 import de.entikore.composedex.domain.repository.AppSettingsRepository
-import de.entikore.composedex.domain.usecase.base.UseCase
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import javax.inject.Inject
@@ -27,7 +26,7 @@ import javax.inject.Inject
  */
 class GetUserPreferencesUseCase @Inject constructor(
     private val repository: AppSettingsRepository
-) : UseCase<Flow<UserPreferences>>() {
-
-    override operator fun invoke() = repository.getUserPreferences().distinctUntilChanged()
+) {
+    operator fun invoke(): Flow<UserPreferences> =
+        repository.getUserPreferences().distinctUntilChanged()
 }
