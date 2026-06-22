@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Entikore
+ * Copyright 2026 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,14 +19,17 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import de.entikore.composedex.domain.model.pokemon.Pokemon
 import de.entikore.composedex.domain.usecase.FetchFavouritesUseCase
+import de.entikore.composedex.domain.usecase.SaveImageData
 import de.entikore.composedex.domain.usecase.SetFavouriteData
 import de.entikore.composedex.domain.usecase.base.BaseSuspendUseCase
 import de.entikore.composedex.ui.screen.shared.PokemonFilterOptions
 import de.entikore.composedex.ui.screen.shared.PokemonFilterViewModel
 import de.entikore.composedex.ui.screen.shared.PokemonUiState
-import kotlinx.coroutines.flow.MutableStateFlow
+import de.entikore.composedex.ui.screen.util.SUFFIX_SPRITE
+import de.entikore.composedex.ui.screen.util.retrieveAsset
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -38,17 +41,17 @@ import javax.inject.Inject
 @HiltViewModel
 class FavouriteViewModel @Inject constructor(
     getFavourites: FetchFavouritesUseCase,
+    private val saveRemoteImageUseCase: @JvmSuppressWildcards BaseSuspendUseCase<SaveImageData, String>,
     private val setAsFavouriteUseCase: @JvmSuppressWildcards BaseSuspendUseCase<SetFavouriteData, Unit>
 ) : PokemonFilterViewModel() {
 
-    private val _isUpdatingFavourite = MutableStateFlow(false)
-
     val screenState =
         combine(
-            getFavourites(),
-            filterOptions,
-            _isUpdatingFavourite
-        ) { favourites: Result<List<Pokemon>>, filterSettings: PokemonFilterOptions, isUpdating: Boolean ->
+            getFavourites().onEach { result ->
+                result.onSuccess { launchAssetRetrieval(it) }
+            },
+            filterOptions
+        ) { favourites: Result<List<Pokemon>>, filterSettings: PokemonFilterOptions ->
             if (favourites.isSuccess) {
                 PokemonUiState.Success(
                     filterSettings.getFilteredList(
@@ -60,12 +63,30 @@ class FavouriteViewModel @Inject constructor(
             }
         }.stateIn(
             viewModelScope,
-            SharingStarted.Eagerly,
+            SharingStarted.WhileSubscribed(5_000L),
             PokemonUiState.Loading
         )
 
     fun updateFavourite(id: Int, isFavourite: Boolean) {
         Timber.d("Updating favourite for $id to $isFavourite")
-        viewModelScope.launch { setAsFavouriteUseCase(SetFavouriteData(id, isFavourite)) }
+        viewModelScope.launch {
+            setAsFavouriteUseCase(SetFavouriteData(id, isFavourite))
+        }
+    }
+
+    private fun launchAssetRetrieval(pokemonList: List<Pokemon>) {
+        viewModelScope.launch {
+            pokemonList.forEach { pokemon ->
+                retrieveAsset(
+                    pokemon.id,
+                    "${pokemon.name}$SUFFIX_SPRITE",
+                    pokemon.sprite,
+                    pokemon.remoteSprite,
+                    saveAssetUseCase = { id, url, fileName ->
+                        saveRemoteImageUseCase(SaveImageData(id, url, fileName, true))
+                    }
+                )
+            }
+        }
     }
 }
