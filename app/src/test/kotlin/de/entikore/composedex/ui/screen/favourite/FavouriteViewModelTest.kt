@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Entikore
+ * Copyright 2026 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,6 +23,7 @@ import de.entikore.composedex.data.remote.model.toEntity
 import de.entikore.composedex.domain.usecase.FetchFavouritesUseCase
 import de.entikore.composedex.domain.usecase.SetAsFavouriteUseCase
 import de.entikore.composedex.fake.repository.FakeFavouriteRepository
+import de.entikore.composedex.fake.usecase.FakeSaveRemoteImageUseCase
 import de.entikore.composedex.ui.screen.shared.PokemonUiState
 import de.entikore.sharedtestcode.POKEMON_DITTO_NAME
 import de.entikore.sharedtestcode.POKEMON_LAPRAS_ID
@@ -43,6 +44,8 @@ class FavouriteViewModelTest {
 
     private lateinit var getFavouritesUseCase: FetchFavouritesUseCase
     private lateinit var setAsFavouriteUseCase: SetAsFavouriteUseCase
+
+    private lateinit var fakeSaveRemoteImageUseCase: FakeSaveRemoteImageUseCase
     private lateinit var fakeFavouriteRepository: FakeFavouriteRepository
 
     @BeforeEach
@@ -50,12 +53,13 @@ class FavouriteViewModelTest {
         fakeFavouriteRepository = FakeFavouriteRepository()
         getFavouritesUseCase = FetchFavouritesUseCase(fakeFavouriteRepository)
         setAsFavouriteUseCase = SetAsFavouriteUseCase(fakeFavouriteRepository)
+        fakeSaveRemoteImageUseCase = FakeSaveRemoteImageUseCase()
     }
 
     @Test
     fun `creating FavouriteViewModel without favourite Pokemon exposes PokemonUiState loading`() =
         runTest {
-            viewModel = FavouriteViewModel(getFavouritesUseCase, setAsFavouriteUseCase)
+            viewModel = FavouriteViewModel(getFavouritesUseCase, fakeSaveRemoteImageUseCase, setAsFavouriteUseCase)
 
             assertThat(viewModel.screenState.value).isEqualTo(PokemonUiState.Loading)
         }
@@ -69,7 +73,7 @@ class FavouriteViewModelTest {
             val ditto =
                 getPokemonInfoRemote(getTestModel(POKEMON_DITTO_NAME)).toEntity().asExternalModel()
                     .copy(isFavourite = true)
-            viewModel = FavouriteViewModel(getFavouritesUseCase, setAsFavouriteUseCase)
+            viewModel = FavouriteViewModel(getFavouritesUseCase, fakeSaveRemoteImageUseCase, setAsFavouriteUseCase)
 
             viewModel.screenState.test {
                 var stateResult = awaitItem()
@@ -115,7 +119,7 @@ class FavouriteViewModelTest {
             ditto
         )
 
-        viewModel = FavouriteViewModel(getFavouritesUseCase, setAsFavouriteUseCase)
+        viewModel = FavouriteViewModel(getFavouritesUseCase, fakeSaveRemoteImageUseCase, setAsFavouriteUseCase)
 
         viewModel.screenState.test {
             var stateResult = awaitItem()

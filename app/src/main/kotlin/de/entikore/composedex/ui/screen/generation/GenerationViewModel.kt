@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Entikore
+ * Copyright 2026 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,9 +34,11 @@ import de.entikore.composedex.ui.screen.util.retrieveAsset
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -57,15 +59,20 @@ class GenerationViewModel @Inject constructor(
     private val _selectedGenerationFlow = MutableStateFlow<String?>(null)
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    val screenState = combine(
+    val screenState: StateFlow<GenerationScreenUiState> = combine(
         getGenerationsUseCase(),
         _selectedGenerationFlow.flatMapLatest { selectedGeneration ->
-            selectedGeneration?.let {
-                getGenerationUseCase(it).combine(
-                    getPokemonOfGenerationUseCase(it),
+            if (selectedGeneration == null) {
+                flowOf(SelectedGenerationUiState.NoGenerationSelected)
+            } else {
+                combine(
+                    getGenerationUseCase(selectedGeneration),
+                    getPokemonOfGenerationUseCase(selectedGeneration).onEach { result ->
+                        result.onSuccess { launchAssetRetrieval(it) }
+                    },
                     ::buildSelectedGenerationUiState
                 )
-            } ?: flowOf(SelectedGenerationUiState.NoGenerationSelected)
+            }
         },
         ::buildGenerationScreenUiState
     ).combine(filterOptions) { uiState: GenerationScreenUiState, filterSettings: PokemonFilterOptions ->
@@ -90,6 +97,22 @@ class GenerationViewModel @Inject constructor(
         viewModelScope.launch { setAsFavouriteUseCase(SetFavouriteData(id, isFavourite)) }
     }
 
+    private fun launchAssetRetrieval(pokemonList: List<Pokemon>) {
+        viewModelScope.launch {
+            pokemonList.forEach { pokemon ->
+                retrieveAsset(
+                    pokemon.id,
+                    "${pokemon.name}$SUFFIX_SPRITE",
+                    pokemon.sprite,
+                    pokemon.remoteSprite,
+                    saveAssetUseCase = { id, url, fileName ->
+                        saveRemoteImageUseCase(SaveImageData(id, url, fileName, true))
+                    }
+                )
+            }
+        }
+    }
+
     private fun buildSelectedGenerationUiState(
         generation: Result<Generation>,
         pokemon: Result<List<Pokemon>>
@@ -102,31 +125,6 @@ class GenerationViewModel @Inject constructor(
                     pokemon.isSuccess -> {
                         PokemonUiState.Success(
                             pokemon.getOrDefault(emptyList()).sortedBy { it.id }
-                                .also { pokemonList ->
-                                    viewModelScope.launch {
-                                        pokemonList.forEach {
-                                            retrieveAsset(
-                                                it.id,
-                                                buildString {
-                                                    append(it.name)
-                                                    append(SUFFIX_SPRITE)
-                                                },
-                                                it.sprite,
-                                                it.remoteSprite,
-                                                saveAssetUseCase = { id, url, fileName ->
-                                                    saveRemoteImageUseCase(
-                                                        SaveImageData(
-                                                            id,
-                                                            url,
-                                                            fileName,
-                                                            true
-                                                        )
-                                                    )
-                                                }
-                                            )
-                                        }
-                                    }
-                                }
                         )
                     }
 
