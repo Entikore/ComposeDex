@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Entikore
+ * Copyright 2026 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,9 +24,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CutCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowDropDown
-import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -196,9 +193,9 @@ fun DropdownMenuItemMultiSelectList(
 ) {
     var expanded by remember { mutableStateOf(false) }
     val icon = if (expanded) {
-        Icons.Filled.KeyboardArrowUp
+        R.drawable.keyboard_arrow_up
     } else {
-        Icons.Filled.ArrowDropDown
+        R.drawable.keyboard_arrow_down
     }
 
     DropdownMenuItem(onClick = {}, modifier = modifier, enabled = false, text = {
@@ -221,7 +218,7 @@ fun DropdownMenuItemMultiSelectList(
                 label = { Text("Shape") },
                 trailingIcon = {
                     IconButton(onClick = { expanded = !expanded }) {
-                        Icon(icon, "contentDescription")
+                        Icon(painterResource(icon), contentDescription = "contentDescription")
                     }
                 }
             )
