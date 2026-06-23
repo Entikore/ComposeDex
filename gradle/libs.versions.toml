@@ -1,8 +1,8 @@
 [versions]
 
 # SDK versions
-compileSdk = "36"
-targetSdk = "36"
+compileSdk = "37"
+targetSdk = "37"
 minSdk = "24"
 
 # Dependency versions
@@ -12,8 +12,8 @@ androidxTest = "1.7.0"
 androidxTestRunner = "1.7.0"
 archTesting = "2.2.0"
 coil = "3.5.0"
-coreKtx = "1.17.0"
-coreSplash = "1.0.1"
+coreKtx = "1.19.0"
+coreSplash = "1.2.0"
 coroutineTest = "1.10.2"
 dataStore = "1.1.7"
 detekt = "1.23.8"
