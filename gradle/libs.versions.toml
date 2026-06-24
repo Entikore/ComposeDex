@@ -14,7 +14,7 @@ archTesting = "2.2.0"
 coil = "3.5.0"
 coreKtx = "1.19.0"
 coreSplash = "1.2.0"
-coroutineTest = "1.10.2"
+coroutine = "1.11.0"
 dataStore = "1.2.1"
 detekt = "2.0.0-alpha.5"
 detektCompose = "0.6.2"
@@ -85,7 +85,9 @@ androidx-test-runner = { group = "androidx.test", name = "runner", version.ref =
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-arch-core = { group = "androidx.arch.core", name = "core-testing", version.ref = "archTesting" }
 
-coroutine-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "coroutineTest"}
+coroutine-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "coroutine"}
+coroutine-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "coroutine" }
+coroutine-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "coroutine" }
 
 detekt-formatting = { group = "dev.detekt", name = "detekt-rules-ktlint-wrapper", version.ref = "detekt" }
 detekt-compose = { group = "io.nlopez.compose.rules", name= "detekt", version.ref = "detektCompose" }

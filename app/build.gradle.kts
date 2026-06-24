@@ -76,6 +76,8 @@ dependencies {
     implementation(libs.androidx.navigation3.ui)
     implementation(libs.androidx.navigation3.runtime)
     implementation(libs.androidx.lifecycle.viewmodel.navigation3)
+    implementation(libs.coroutine.core)
+    implementation(libs.coroutine.android)
     implementation(libs.kotlinx.serialization.core)
 
     implementation(libs.hilt.android)
