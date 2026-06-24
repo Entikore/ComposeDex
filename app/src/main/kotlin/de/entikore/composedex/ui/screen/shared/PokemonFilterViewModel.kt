@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Entikore
+ * Copyright 2024-2026 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -57,8 +57,8 @@ abstract class PokemonFilterViewModel : ViewModel() {
         _filterOptions.update { oldValue ->
             oldValue.copy(
                 shapeFilter = oldValue.shapeFilter.copy(
-                    second = shape
-                )
+                    second = shape,
+                ),
             )
         }
     }
@@ -81,24 +81,22 @@ data class PokemonFilterOptions(
     val checkBoxFilter: FilterOptions = FilterOptions(),
     val shapeFilter: Pair<List<PokemonShape>, PokemonShape> = Pair(
         PokemonShape.getShapes(),
-        PokemonShape.UNDEFINED
+        PokemonShape.UNDEFINED,
     ),
 ) {
-    fun getFilteredList(pokemon: List<Pokemon>): List<Pokemon> {
-        return pokemon
-            .asSequence()
-            .filter {
-                if (nameFilter.isNotBlank()) {
-                    it.name.contains(nameFilter, ignoreCase = true)
-                } else {
-                    true
-                }
+    fun getFilteredList(pokemon: List<Pokemon>): List<Pokemon> = pokemon
+        .asSequence()
+        .filter {
+            if (nameFilter.isNotBlank()) {
+                it.name.contains(nameFilter, ignoreCase = true)
+            } else {
+                true
             }
-            .filter { if (checkBoxFilter.baby.second) it.pokemonLabel.baby.second else true }
-            .filter { if (checkBoxFilter.legendary.second) it.pokemonLabel.legendary.second else true }
-            .filter { if (checkBoxFilter.mystical.second) it.pokemonLabel.mystical.second else true }
-            .filter { if (checkBoxFilter.favourite.second) it.isFavourite else true }
-            .filter { if (shapeFilter.second != PokemonShape.UNDEFINED) it.shape == shapeFilter.second else true }
-            .toList()
-    }
+        }
+        .filter { if (checkBoxFilter.baby.second) it.pokemonLabel.baby.second else true }
+        .filter { if (checkBoxFilter.legendary.second) it.pokemonLabel.legendary.second else true }
+        .filter { if (checkBoxFilter.mystical.second) it.pokemonLabel.mystical.second else true }
+        .filter { if (checkBoxFilter.favourite.second) it.isFavourite else true }
+        .filter { if (shapeFilter.second != PokemonShape.UNDEFINED) it.shape == shapeFilter.second else true }
+        .toList()
 }

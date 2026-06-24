@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Entikore
+ * Copyright 2024-2026 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -65,7 +65,7 @@ fun GenerationScreen(
     openDrawer: () -> Unit,
     navigateToPokemon: (String) -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: GenerationViewModel = hiltViewModel()
+    viewModel: GenerationViewModel = hiltViewModel(),
 ) {
     val screenState by viewModel.screenState.collectAsState()
     val filterOptions by viewModel.filterOptions.collectAsState()
@@ -78,7 +78,7 @@ fun GenerationScreen(
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
-        modifier = modifier
+        modifier = modifier,
     ) {
         GenerationScreenTopBar(
             filterOptions,
@@ -86,7 +86,7 @@ fun GenerationScreen(
             searchGeneration,
             onNameFilterChange,
             onCheckBoxFilterChange,
-            onShapeFilterChange
+            onShapeFilterChange,
         )
         GenerationScreenContent(
             screenState,
@@ -105,7 +105,7 @@ private fun GenerationScreenTopBar(
     onNameFilterChange: (text: String) -> Unit,
     onCheckBoxFilterChange: (option: String, newValue: Boolean) -> Unit,
     onShapeFilterChange: (shape: PokemonShape) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     TopBarWithSearchbarAndFilter(
         title = stringResource(R.string.generation_screen_top_bar),
@@ -117,7 +117,7 @@ private fun GenerationScreenTopBar(
         changeFilter = onCheckBoxFilterChange,
         shapeFilter = filterOptions.shapeFilter,
         changeShapeFilter = onShapeFilterChange,
-        modifier = modifier
+        modifier = modifier,
     )
 }
 
@@ -127,25 +127,25 @@ fun GenerationScreenContent(
     searchGeneration: (String) -> Unit,
     updateFavourite: (id: Int, isFavourite: Boolean) -> Unit,
     navigateToPokemon: (String) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
-        modifier = modifier.fillMaxSize()
+        modifier = modifier.fillMaxSize(),
     ) {
         when (screenState) {
             GenerationScreenUiState.Error -> ErrorMessage(
                 errorMessage = stringResource(R.string.error_fetching_generations),
                 modifier = Modifier.testTag(
-                    stringResource(R.string.test_tag_generation_screen_error)
-                )
+                    stringResource(R.string.test_tag_generation_screen_error),
+                ),
             )
 
             GenerationScreenUiState.Loading -> LoadingAnimation(
                 modifier = Modifier.testTag(
-                    stringResource(R.string.test_tag_generation_screen_loading)
-                )
+                    stringResource(R.string.test_tag_generation_screen_loading),
+                ),
             )
 
             is GenerationScreenUiState.Success -> {
@@ -155,8 +155,8 @@ fun GenerationScreenContent(
                             screenState.generations,
                             searchGeneration,
                             Modifier.testTag(
-                                stringResource(R.string.test_tag_generation_screen_overview)
-                            )
+                                stringResource(R.string.test_tag_generation_screen_overview),
+                            ),
                         )
                     }
 
@@ -165,7 +165,7 @@ fun GenerationScreenContent(
                             screenState.selectedGeneration,
                             navigateToPokemon,
                             updateFavourite,
-                            Modifier.testTag(stringResource(R.string.test_tag_generation_screen_detail))
+                            Modifier.testTag(stringResource(R.string.test_tag_generation_screen_detail)),
                         )
                     }
                 }
@@ -178,11 +178,11 @@ fun GenerationScreenContent(
 private fun GenerationOverview(
     generations: List<Generation>,
     searchGeneration: (String) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     LazyColumn(
         verticalArrangement = Arrangement.SpaceEvenly,
-        modifier = modifier.fillMaxSize()
+        modifier = modifier.fillMaxSize(),
     ) {
         items(generations) { generation ->
             ClickableColumnItem(
@@ -193,8 +193,8 @@ private fun GenerationOverview(
                 onClick = searchGeneration,
                 modifier = Modifier.padding(
                     horizontal = dimensionResource(id = R.dimen.medium_padding),
-                    vertical = dimensionResource(id = R.dimen.small_padding)
-                )
+                    vertical = dimensionResource(id = R.dimen.small_padding),
+                ),
             )
         }
     }
@@ -205,16 +205,16 @@ private fun GenerationDetail(
     selectedGenerationUiState: SelectedGenerationUiState,
     navigateToPokemon: (String) -> Unit,
     updateFavourite: (id: Int, isFavourite: Boolean) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
-        modifier = modifier
+        modifier = modifier,
     ) {
         when (selectedGenerationUiState) {
             SelectedGenerationUiState.Loading -> LoadingAnimation(
-                Modifier.testTag(stringResource(R.string.test_tag_generation_detail_loading))
+                Modifier.testTag(stringResource(R.string.test_tag_generation_detail_loading)),
             )
 
             is SelectedGenerationUiState.Success -> {
@@ -224,7 +224,7 @@ private fun GenerationDetail(
                     selectedGenerationUiState.showLoadingItem,
                     navigateToPokemon,
                     updateFavourite,
-                    Modifier.testTag(stringResource(R.string.test_tag_generation_detail_success))
+                    Modifier.testTag(stringResource(R.string.test_tag_generation_detail_success)),
                 )
             }
 
@@ -240,7 +240,7 @@ private fun GenerationDetailSuccess(
     showLoadingItem: Boolean,
     navigateToPokemon: (String) -> Unit,
     updateFavourite: (id: Int, isFavourite: Boolean) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = modifier) {
         GenerationHeader(selectedGeneration.name, Modifier.weight(0.1f))
@@ -250,16 +250,13 @@ private fun GenerationDetailSuccess(
             showLoadingItem,
             navigateToPokemon,
             updateFavourite,
-            modifier = Modifier.weight(0.9f)
+            modifier = Modifier.weight(0.9f),
         )
     }
 }
 
 @Composable
-private fun GenerationHeader(
-    generationName: String,
-    modifier: Modifier = Modifier
-) {
+private fun GenerationHeader(generationName: String, modifier: Modifier = Modifier) {
     Row(
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically,
@@ -270,16 +267,16 @@ private fun GenerationHeader(
             .border(
                 dimensionResource(id = R.dimen.default_border),
                 TYPE_TCG_COLORLESS_BORDER,
-                CutCornerShape(integerResource(id = R.integer.default_cut_corner_shape_percentage))
+                CutCornerShape(integerResource(id = R.integer.default_cut_corner_shape_percentage)),
             )
             .background(
                 TYPE_TCG_COLORLESS_BACKGROUND,
-                CutCornerShape(integerResource(id = R.integer.default_cut_corner_shape_percentage))
-            )
+                CutCornerShape(integerResource(id = R.integer.default_cut_corner_shape_percentage)),
+            ),
     ) {
         Text(
             text = generationName.replaceFirstChar { it.uppercaseChar() },
-            color = TYPE_TCG_COLORLESS_BORDER
+            color = TYPE_TCG_COLORLESS_BORDER,
         )
     }
 }
@@ -291,15 +288,15 @@ private fun GenerationBody(
     showLoadingItem: Boolean,
     navigateToPokemon: (String) -> Unit,
     updateFavourite: (id: Int, isFavourite: Boolean) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     when (pokemonState) {
         is PokemonUiState.Success -> {
             LazyColumn(
                 verticalArrangement = Arrangement.Top,
                 modifier = modifier.testTag(
-                    stringResource(R.string.test_tag_generation_detail_pokemon_success)
-                )
+                    stringResource(R.string.test_tag_generation_detail_pokemon_success),
+                ),
             ) {
                 items(pokemonState.pokemon) {
                     PokemonColumnItem(
@@ -307,12 +304,12 @@ private fun GenerationBody(
                         backgroundBrush = createGradientBrush(
                             it.types.map { type ->
                                 getTypeBackgroundColor(type.name)
-                            }
+                            },
                         ),
                         borderBrush = createGradientBrush(
                             it.types.map { type ->
                                 getTypeBorderColor(type.name)
-                            }
+                            },
                         ),
                         textColor = getTypePrimaryColor(it.types.first().name),
                         navigateToPokemon = navigateToPokemon,
@@ -322,8 +319,8 @@ private fun GenerationBody(
                             .height(dimensionResource(id = R.dimen.preview_size))
                             .padding(
                                 horizontal = dimensionResource(id = R.dimen.standard_padding),
-                                vertical = dimensionResource(id = R.dimen.medium_padding)
-                            )
+                                vertical = dimensionResource(id = R.dimen.medium_padding),
+                            ),
                     )
                 }
                 if (showLoadingItem) {
@@ -336,23 +333,23 @@ private fun GenerationBody(
                                 .height(dimensionResource(id = R.dimen.preview_size))
                                 .padding(
                                     horizontal = dimensionResource(id = R.dimen.standard_padding),
-                                    vertical = dimensionResource(id = R.dimen.medium_padding)
+                                    vertical = dimensionResource(id = R.dimen.medium_padding),
                                 )
                                 .clip(
-                                    CutCornerShape(integerResource(id = R.integer.default_cut_corner_shape_percentage))
+                                    CutCornerShape(integerResource(id = R.integer.default_cut_corner_shape_percentage)),
                                 )
                                 .border(
                                     dimensionResource(id = R.dimen.default_border),
                                     TYPE_TCG_COLORLESS_BORDER,
-                                    CutCornerShape(integerResource(id = R.integer.default_cut_corner_shape_percentage))
+                                    CutCornerShape(integerResource(id = R.integer.default_cut_corner_shape_percentage)),
                                 )
                                 .background(
                                     TYPE_TCG_COLORLESS_BACKGROUND,
-                                    CutCornerShape(integerResource(id = R.integer.default_cut_corner_shape_percentage))
-                                )
+                                    CutCornerShape(integerResource(id = R.integer.default_cut_corner_shape_percentage)),
+                                ),
                         ) {
                             LoadingAnimation(
-                                modifier = Modifier.testTag(stringResource(R.string.test_tag_loading_animation))
+                                modifier = Modifier.testTag(stringResource(R.string.test_tag_loading_animation)),
                             )
                         }
                     }
@@ -363,19 +360,19 @@ private fun GenerationBody(
         PokemonUiState.Loading -> Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center,
-            modifier = modifier.testTag(stringResource(R.string.test_tag_generation_detail_pokemon_loading))
+            modifier = modifier.testTag(stringResource(R.string.test_tag_generation_detail_pokemon_loading)),
         ) { LoadingAnimation() }
 
         PokemonUiState.Error -> Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center,
-            modifier = modifier.testTag(stringResource(R.string.test_tag_generation_detail_pokemon_error))
+            modifier = modifier.testTag(stringResource(R.string.test_tag_generation_detail_pokemon_error)),
         ) {
             ErrorMessage(
                 errorMessage = stringResource(
                     R.string.error_loading_pokemon_for_generation,
-                    selectedGeneration.name
-                )
+                    selectedGeneration.name,
+                ),
             )
         }
     }

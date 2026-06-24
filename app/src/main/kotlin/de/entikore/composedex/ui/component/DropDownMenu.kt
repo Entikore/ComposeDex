@@ -69,22 +69,22 @@ fun DropDownMenuWithFilterOptions(
         onDismissRequest = changeVisibility,
         modifier =
         modifier.background(
-            color = TYPE_TCG_COLORLESS_BACKGROUND
-        )
+            color = TYPE_TCG_COLORLESS_BACKGROUND,
+        ),
     ) {
         val menuModifier =
             Modifier
                 .padding(
                     vertical = dimensionResource(id = R.dimen.medium_padding),
                     horizontal = dimensionResource(
-                        id = R.dimen.standard_padding
-                    )
+                        id = R.dimen.standard_padding,
+                    ),
                 )
                 .clip(shape = CutCornerShape(integerResource(id = R.integer.medium_cut_corner_shape_percentage)))
                 .border(
                     dimensionResource(id = R.dimen.default_border),
                     TYPE_TCG_COLORLESS_BORDER,
-                    CutCornerShape(integerResource(id = R.integer.medium_cut_corner_shape_percentage))
+                    CutCornerShape(integerResource(id = R.integer.medium_cut_corner_shape_percentage)),
                 )
 
         DropdownMenuItemTextField(
@@ -98,9 +98,9 @@ fun DropDownMenuWithFilterOptions(
                 unfocusedContainerColor = TYPE_TCG_COLORLESS_PRIMARY,
                 focusedLabelColor = TYPE_TCG_COLORLESS_PRIMARY,
                 unfocusedLabelColor = TYPE_TCG_COLORLESS_BORDER,
-                cursorColor = TYPE_TCG_COLORLESS_BORDER
+                cursorColor = TYPE_TCG_COLORLESS_BORDER,
             ),
-            modifier = menuModifier
+            modifier = menuModifier,
         )
         checkBoxItems.forEach { item ->
             DropdownMenuItemCheckbox(
@@ -108,7 +108,7 @@ fun DropDownMenuWithFilterOptions(
                 checkBoxState = item.second,
                 checkBoxText = item.first,
                 onCheckedClick = { newCheck -> changeCheckBoxItem(item.first, newCheck) },
-                modifier = menuModifier
+                modifier = menuModifier,
             )
         }
         DropdownMenuItemMultiSelectList(shapeFiler, changeShapeFilter, menuModifier)
@@ -120,14 +120,14 @@ fun CustomDropDownMenu(
     menuExpanded: Boolean,
     onDismissRequest: () -> Unit,
     modifier: Modifier = Modifier,
-    menuItems: @Composable () -> Unit
+    menuItems: @Composable () -> Unit,
 ) {
     DropdownMenu(
         expanded = menuExpanded,
         onDismissRequest = onDismissRequest,
         modifier = modifier
             .border(dimensionResource(id = R.dimen.small_padding), Color.Black)
-            .padding(horizontal = dimensionResource(R.dimen.medium_padding))
+            .padding(horizontal = dimensionResource(R.dimen.medium_padding)),
     ) {
         menuItems()
     }
@@ -140,7 +140,7 @@ fun DropdownMenuItemTextField(
     textFieldValue: String,
     onValueChange: (String) -> Unit,
     textFieldColors: TextFieldColors,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     DropdownMenuItem(
         text = {
@@ -154,15 +154,15 @@ fun DropdownMenuItemTextField(
                         IconButton(onClick = { onValueChange("") }) {
                             Icon(
                                 painterResource(id = R.drawable.close),
-                                contentDescription = stringResource(R.string.description_delete_icon)
+                                contentDescription = stringResource(R.string.description_delete_icon),
                             )
                         }
                     }
-                }
+                },
             )
         },
         onClick = onClick,
-        modifier = modifier
+        modifier = modifier,
     )
 }
 
@@ -172,12 +172,12 @@ fun DropdownMenuItemCheckbox(
     checkBoxState: Boolean,
     checkBoxText: String,
     onCheckedClick: (Boolean) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     DropdownMenuItem(onClick = onClick, modifier = modifier, enabled = false, text = {
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Start
+            horizontalArrangement = Arrangement.Start,
         ) {
             Checkbox(checked = checkBoxState, onCheckedChange = onCheckedClick)
             Text(text = checkBoxText)
@@ -189,7 +189,7 @@ fun DropdownMenuItemCheckbox(
 fun DropdownMenuItemMultiSelectList(
     shapes: Pair<List<PokemonShape>, PokemonShape>,
     changeShapeFilter: (shape: PokemonShape) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     var expanded by remember { mutableStateOf(false) }
     val icon = if (expanded) {
@@ -205,9 +205,9 @@ fun DropdownMenuItemMultiSelectList(
             modifier = Modifier.padding(
                 vertical = dimensionResource(id = R.dimen.small_padding),
                 horizontal = dimensionResource(
-                    id = R.dimen.small_padding
-                )
-            )
+                    id = R.dimen.small_padding,
+                ),
+            ),
         ) {
             TextField(
                 readOnly = true,
@@ -220,7 +220,7 @@ fun DropdownMenuItemMultiSelectList(
                     IconButton(onClick = { expanded = !expanded }) {
                         Icon(painterResource(icon), contentDescription = "contentDescription")
                     }
-                }
+                },
             )
 
             if (expanded) {
@@ -229,7 +229,7 @@ fun DropdownMenuItemMultiSelectList(
                     verticalArrangement = Arrangement.Center,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(vertical = dimensionResource(id = R.dimen.standard_padding))
+                        .padding(vertical = dimensionResource(id = R.dimen.standard_padding)),
                 ) {
                     Row(
                         horizontalArrangement = Arrangement.Center,
@@ -239,32 +239,32 @@ fun DropdownMenuItemMultiSelectList(
                             .padding(
                                 vertical = dimensionResource(id = R.dimen.small_padding),
                                 horizontal = dimensionResource(
-                                    id = R.dimen.medium_padding
-                                )
+                                    id = R.dimen.medium_padding,
+                                ),
                             )
                             .clip(
                                 shape = CutCornerShape(
-                                    integerResource(id = R.integer.medium_cut_corner_shape_percentage)
-                                )
+                                    integerResource(id = R.integer.medium_cut_corner_shape_percentage),
+                                ),
                             )
                             .border(
                                 dimensionResource(id = R.dimen.default_border),
                                 TYPE_TCG_COLORLESS_BORDER,
-                                CutCornerShape(integerResource(id = R.integer.medium_cut_corner_shape_percentage))
+                                CutCornerShape(integerResource(id = R.integer.medium_cut_corner_shape_percentage)),
                             )
                             .clickable {
                                 changeShapeFilter(PokemonShape.UNDEFINED)
                                 expanded = false
-                            }
+                            },
                     ) {
                         Text(
                             text = "no filter",
                             modifier = Modifier.padding(
                                 vertical = dimensionResource(id = R.dimen.medium_padding),
                                 horizontal = dimensionResource(
-                                    id = R.dimen.standard_padding
-                                )
-                            )
+                                    id = R.dimen.standard_padding,
+                                ),
+                            ),
                         )
                     }
                     shapes.first.forEach {
@@ -276,32 +276,32 @@ fun DropdownMenuItemMultiSelectList(
                                 .padding(
                                     vertical = dimensionResource(id = R.dimen.small_padding),
                                     horizontal = dimensionResource(
-                                        id = R.dimen.medium_padding
-                                    )
+                                        id = R.dimen.medium_padding,
+                                    ),
                                 )
                                 .clip(
                                     shape = CutCornerShape(
-                                        integerResource(id = R.integer.medium_cut_corner_shape_percentage)
-                                    )
+                                        integerResource(id = R.integer.medium_cut_corner_shape_percentage),
+                                    ),
                                 )
                                 .border(
                                     dimensionResource(id = R.dimen.default_border),
                                     TYPE_TCG_COLORLESS_BORDER,
-                                    CutCornerShape(integerResource(id = R.integer.medium_cut_corner_shape_percentage))
+                                    CutCornerShape(integerResource(id = R.integer.medium_cut_corner_shape_percentage)),
                                 )
                                 .clickable {
                                     changeShapeFilter(it)
                                     expanded = false
-                                }
+                                },
                         ) {
                             Text(
                                 text = it.name,
                                 modifier = Modifier.padding(
                                     vertical = dimensionResource(id = R.dimen.medium_padding),
                                     horizontal = dimensionResource(
-                                        id = R.dimen.standard_padding
-                                    )
-                                )
+                                        id = R.dimen.standard_padding,
+                                    ),
+                                ),
                             )
                         }
                     }

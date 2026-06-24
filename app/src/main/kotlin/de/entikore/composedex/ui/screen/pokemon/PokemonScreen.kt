@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Entikore
+ * Copyright 2024-2026 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -116,7 +116,7 @@ fun PokemonScreen(
         updateFavourite,
         playSound,
         speakTextEntry,
-        modifier
+        modifier,
     )
 }
 
@@ -132,29 +132,29 @@ fun PokemonScreen(
     updateFavourite: (Int, Boolean) -> Unit,
     playSound: (String?) -> Unit,
     speakTextEntry: (String) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
-        modifier = modifier.fillMaxSize()
+        modifier = modifier.fillMaxSize(),
     ) {
         TopBarWithSearchbar(
             title = stringResource(R.string.pokemon_screen_top_bar),
             openDrawer = openDrawer,
-            searchOnClick = lookUpPokemon
+            searchOnClick = lookUpPokemon,
         )
 
         Column(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier.fillMaxSize(),
         ) {
             when (screenState) {
                 is PokemonScreenState.Error -> {
                     ErrorMessage(
                         errorMessage = screenState.errorMessage,
-                        modifier = Modifier.testTag(stringResource(R.string.test_tag_pokemonscreenstate_error))
+                        modifier = Modifier.testTag(stringResource(R.string.test_tag_pokemonscreenstate_error)),
                     )
                 }
 
@@ -163,7 +163,7 @@ fun PokemonScreen(
                         modifier = Modifier
                             .testTag(stringResource(R.string.test_tag_pokemonscreenstate_loading))
                             .fillMaxSize()
-                            .padding(dimensionResource(id = R.dimen.large_padding))
+                            .padding(dimensionResource(id = R.dimen.large_padding)),
                     )
                 }
 
@@ -171,8 +171,8 @@ fun PokemonScreen(
                     NoPokemonSelected(
                         searchPokemon = lookUpPokemon,
                         modifier = Modifier.testTag(
-                            stringResource(R.string.test_tag_pokemonscreenstate_nopokemonselected)
-                        )
+                            stringResource(R.string.test_tag_pokemonscreenstate_nopokemonselected),
+                        ),
                     )
                 }
 
@@ -192,7 +192,7 @@ fun PokemonScreen(
                         updateFavourite,
                         playSound,
                         speakTextEntry,
-                        Modifier.testTag(stringResource(R.string.test_tag_pokemonscreenstate_success))
+                        Modifier.testTag(stringResource(R.string.test_tag_pokemonscreenstate_success)),
                     )
                 }
             }
@@ -205,12 +205,12 @@ private fun NoPokemonSelected(searchPokemon: (id: String) -> Unit, modifier: Mod
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
-        modifier = modifier.fillMaxSize()
+        modifier = modifier.fillMaxSize(),
     ) {
         Text(
             text = stringResource(R.string.composedex),
             fontSize = MaterialTheme.typography.headlineSmall.fontSize,
-            modifier = Modifier.padding(vertical = dimensionResource(id = R.dimen.standard_padding))
+            modifier = Modifier.padding(vertical = dimensionResource(id = R.dimen.standard_padding)),
         )
         Box(
             contentAlignment = Alignment.Center,
@@ -223,18 +223,18 @@ private fun NoPokemonSelected(searchPokemon: (id: String) -> Unit, modifier: Mod
                 .border(
                     width = dimensionResource(id = R.dimen.standard_padding),
                     Color.Black,
-                    shape = CircleShape
-                )
+                    shape = CircleShape,
+                ),
         ) {
             Column(
                 modifier = Modifier
-                    .fillMaxSize()
+                    .fillMaxSize(),
             ) {
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
                         .weight(1f)
-                        .background(colorResource(id = R.color.pokeball_top))
+                        .background(colorResource(id = R.color.pokeball_top)),
                 )
 
                 Searchbar(
@@ -242,15 +242,15 @@ private fun NoPokemonSelected(searchPokemon: (id: String) -> Unit, modifier: Mod
                     modifier = Modifier
                         .border(
                             width = dimensionResource(id = R.dimen.medium_padding),
-                            Color.Black
-                        )
+                            Color.Black,
+                        ),
                 )
 
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
                         .weight(1f)
-                        .background(colorResource(id = R.color.pokeball_bottom))
+                        .background(colorResource(id = R.color.pokeball_bottom)),
                 )
             }
         }
@@ -273,12 +273,12 @@ private fun PokemonInformation(
     updateFavourite: (Int, Boolean) -> Unit,
     playSound: (String?) -> Unit,
     speakTextEntry: (String) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
-        modifier = modifier.fillMaxSize()
+        modifier = modifier.fillMaxSize(),
     ) {
         PokemonHeader(
             selectedPokemon,
@@ -296,8 +296,8 @@ private fun PokemonInformation(
                 .padding(
                     top = dimensionResource(id = R.dimen.standard_padding),
                     start = dimensionResource(id = R.dimen.medium_padding),
-                    end = dimensionResource(id = R.dimen.medium_padding)
-                )
+                    end = dimensionResource(id = R.dimen.medium_padding),
+                ),
         )
 
         PokemonPicture(
@@ -307,7 +307,7 @@ private fun PokemonInformation(
             speakTextEntry,
             modifier = Modifier
                 .testTag(stringResource(R.string.test_tag_pokemonpicture))
-                .weight(0.4f)
+                .weight(0.4f),
         )
 
         PokemonInformation(
@@ -317,7 +317,7 @@ private fun PokemonInformation(
             speakTextEntry,
             modifier = Modifier
                 .testTag(stringResource(R.string.test_tag_pokemoninfo))
-                .weight(0.3f)
+                .weight(0.3f),
         )
 
         PokemonWeaknessAndResistance(
@@ -327,11 +327,11 @@ private fun PokemonInformation(
                 .padding(
                     start = dimensionResource(id = R.dimen.medium_padding),
                     end = dimensionResource(id = R.dimen.medium_padding),
-                    bottom = dimensionResource(id = R.dimen.standard_padding)
+                    bottom = dimensionResource(id = R.dimen.standard_padding),
                 ),
             types = selectedPokemon.types,
             selectedType = selectedType,
-            navigateToTypes = navigateToTypes
+            navigateToTypes = navigateToTypes,
         )
     }
 }
@@ -342,18 +342,18 @@ private fun PokemonInformation(
     updateFavourite: (Int, Boolean) -> Unit,
     playSound: (String?) -> Unit,
     speakTextEntry: (String) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .padding(dimensionResource(id = R.dimen.standard_padding))
+            .padding(dimensionResource(id = R.dimen.standard_padding)),
     ) {
         val pagerState = rememberPagerState(pageCount = { selectedPokemon.textEntries.size })
         PokemonTextEntries(
             pagerState = pagerState,
             pokemon = selectedPokemon,
-            modifier = Modifier.weight(0.8f)
+            modifier = Modifier.weight(0.8f),
         )
         PokemonButtons(
             pokemon = selectedPokemon,
@@ -363,7 +363,7 @@ private fun PokemonInformation(
             talkPokemon = speakTextEntry,
             modifier = Modifier
                 .weight(0.2f)
-                .padding(vertical = dimensionResource(id = R.dimen.standard_padding))
+                .padding(vertical = dimensionResource(id = R.dimen.standard_padding)),
         )
     }
 }
@@ -379,20 +379,20 @@ private fun PokemonHeader(
     navigateToTypes: (String) -> Unit,
     selectType: (String) -> Unit,
     changeEvolutionText: (String) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val sharedModifier = Modifier.padding(
-        dimensionResource(id = R.dimen.small_padding)
+        dimensionResource(id = R.dimen.small_padding),
     )
     Row(
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.Top,
-        modifier = modifier.fillMaxSize()
+        modifier = modifier.fillMaxSize(),
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Top,
-            modifier = Modifier.weight(0.25f)
+            modifier = Modifier.weight(0.25f),
         ) {
             EvolutionChainPreview(
                 evolvesFrom = evolvesFrom,
@@ -401,33 +401,33 @@ private fun PokemonHeader(
                 selectPokemon = lookUpPokemon,
                 changeEvolutionText,
                 modifier = sharedModifier
-                    .aspectRatio(1f)
+                    .aspectRatio(1f),
             )
         }
 
         Column(
             horizontalAlignment = Alignment.Start,
             verticalArrangement = Arrangement.Top,
-            modifier = Modifier.weight(0.75f)
+            modifier = Modifier.weight(0.75f),
         ) {
             Row(
                 horizontalArrangement = Arrangement.Start,
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
-                    .fillMaxWidth()
+                    .fillMaxWidth(),
             ) {
                 PokemonLabelRow(
                     rank = selectedPokemon.evolutionRank.uiString,
                     pokemonLabel = selectedPokemon.pokemonLabel,
                     modifier = sharedModifier
-                        .weight(0.65f)
+                        .weight(0.65f),
                 )
                 TypeRow(
                     typeNames = selectedPokemon.types.map { it.name },
                     onClick = selectType,
                     onLongClick = navigateToTypes,
                     modifier = sharedModifier
-                        .weight(0.35f, false)
+                        .weight(0.35f, false),
                 )
             }
 
@@ -435,12 +435,12 @@ private fun PokemonHeader(
                 horizontalArrangement = Arrangement.Start,
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
-                    .fillMaxWidth()
+                    .fillMaxWidth(),
             ) {
                 Column(
                     horizontalAlignment = Alignment.Start,
                     verticalArrangement = Arrangement.Center,
-                    modifier = Modifier.padding(horizontal = dimensionResource(id = R.dimen.small_padding))
+                    modifier = Modifier.padding(horizontal = dimensionResource(id = R.dimen.small_padding)),
                 ) {
                     AutoSizeText(
                         text = selectedPokemon.name.replaceFirstChar { it.uppercaseChar() },
@@ -448,7 +448,7 @@ private fun PokemonHeader(
                     )
                     AutoSizeText(
                         text = displayedEvolution,
-                        style = MaterialTheme.typography.labelMedium
+                        style = MaterialTheme.typography.labelMedium,
                     )
                 }
             }
@@ -457,31 +457,27 @@ private fun PokemonHeader(
 }
 
 @Composable
-private fun PokemonLabelRow(
-    rank: String,
-    pokemonLabel: PokemonLabels,
-    modifier: Modifier = Modifier
-) {
+private fun PokemonLabelRow(rank: String, pokemonLabel: PokemonLabels, modifier: Modifier = Modifier) {
     Row(
         verticalAlignment = Alignment.Top,
         horizontalArrangement = Arrangement.Start,
-        modifier = modifier
+        modifier = modifier,
 
     ) {
         BorderedLabel(labelText = rank)
         if (pokemonLabel.baby.second) {
             BorderedLabel(
-                labelText = pokemonLabel.baby.first.uiString
+                labelText = pokemonLabel.baby.first.uiString,
             )
         }
         if (pokemonLabel.legendary.second) {
             BorderedLabel(
-                labelText = pokemonLabel.legendary.first.uiString
+                labelText = pokemonLabel.legendary.first.uiString,
             )
         }
         if (pokemonLabel.mystical.second) {
             BorderedLabel(
-                labelText = pokemonLabel.mystical.first.uiString
+                labelText = pokemonLabel.mystical.first.uiString,
             )
         }
     }
@@ -494,11 +490,11 @@ private fun EvolutionChainPreview(
     selectedType: String,
     selectPokemon: (String) -> Unit,
     changeEvolutionText: (String) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Box(
         contentAlignment = Alignment.TopStart,
-        modifier = modifier
+        modifier = modifier,
     ) {
         val previewSizeModifier = Modifier
             .fillMaxSize()
@@ -506,7 +502,7 @@ private fun EvolutionChainPreview(
                 integerResource(id = R.integer.default_cut_corner_shape_percentage),
                 color = MaterialTheme.colorScheme.primaryContainer,
                 borderWidth = dimensionResource(R.dimen.default_border),
-                borderColor = MaterialTheme.colorScheme.onPrimaryContainer
+                borderColor = MaterialTheme.colorScheme.onPrimaryContainer,
             )
         when (evolvesFrom != null && evolvesTo.isNotEmpty()) {
             true -> {
@@ -516,7 +512,7 @@ private fun EvolutionChainPreview(
                     selectedType,
                     selectPokemon,
                     changeEvolutionText,
-                    previewSizeModifier.testTag(stringResource(R.string.test_tag_stage1pokemon))
+                    previewSizeModifier.testTag(stringResource(R.string.test_tag_stage1pokemon)),
                 )
             }
 
@@ -527,7 +523,7 @@ private fun EvolutionChainPreview(
                         selectedType,
                         selectPokemon,
                         changeEvolutionText,
-                        previewSizeModifier.testTag(stringResource(R.string.test_tag_stage2pokemon))
+                        previewSizeModifier.testTag(stringResource(R.string.test_tag_stage2pokemon)),
                     )
                 } else if (evolvesTo.isNotEmpty()) {
                     Stage0PokemonWithEvolution(
@@ -535,7 +531,7 @@ private fun EvolutionChainPreview(
                         selectedType,
                         selectPokemon,
                         changeEvolutionText,
-                        previewSizeModifier.testTag(stringResource(R.string.test_tag_stage0pokemonwithevolution))
+                        previewSizeModifier.testTag(stringResource(R.string.test_tag_stage0pokemonwithevolution)),
                     )
                 } else {
                     Spacer(modifier = Modifier.fillMaxSize())
@@ -551,24 +547,24 @@ private fun Stage0PokemonWithEvolution(
     selectedTypeName: String,
     selectPokemon: (String) -> Unit,
     changeEvolutionText: (String) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
-        modifier = modifier
+        modifier = modifier,
     ) {
         EvolvesToPager(
             evolvesTo = evolvesTo,
             selectedTypeName = selectedTypeName,
             selectPokemon = selectPokemon,
             changeEvolutionText,
-            modifier = Modifier.fillMaxSize(0.9f)
+            modifier = Modifier.fillMaxSize(0.9f),
         )
         Spacer(
             modifier = Modifier
                 .size(dimensionResource(id = R.dimen.small_indicator_size))
-                .padding(vertical = dimensionResource(id = R.dimen.small_padding))
+                .padding(vertical = dimensionResource(id = R.dimen.small_padding)),
         )
     }
 }
@@ -580,7 +576,7 @@ private fun Stage1Pokemon(
     typeName: String,
     selectPokemon: (String) -> Unit,
     changeEvolutionText: (String) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val pagerState = rememberPagerState { 2 }
     val sharedModifier = Modifier
@@ -599,18 +595,18 @@ private fun Stage1Pokemon(
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
-        modifier = modifier
+        modifier = modifier,
     ) {
         HorizontalPager(
             state = pagerState,
-            pageSize = PageSize.Fill
+            pageSize = PageSize.Fill,
         ) { index ->
             when (index) {
                 0 -> {
                     if (evolvesFrom.isLoading) {
                         Box(
                             contentAlignment = Alignment.Center,
-                            modifier = sharedModifier
+                            modifier = sharedModifier,
                         ) {
                             LoadingAnimation(circleSize = dimensionResource(id = R.dimen.indicator_size))
                         }
@@ -621,7 +617,7 @@ private fun Stage1Pokemon(
                             evolvesFromName = evolvesFrom.name,
                             evolvesFromSprite = evolvesFrom.sprite,
                             selectPokemon = selectPokemon,
-                            modifier = sharedModifier
+                            modifier = sharedModifier,
                         )
                     }
                 }
@@ -632,7 +628,7 @@ private fun Stage1Pokemon(
                         selectedTypeName = typeName,
                         selectPokemon = selectPokemon,
                         changeEvolutionText = changeEvolutionText,
-                        modifier = sharedModifier
+                        modifier = sharedModifier,
                     )
                 }
             }
@@ -647,7 +643,7 @@ private fun Stage2Pokemon(
     selectedTypeName: String,
     selectPokemon: (String) -> Unit,
     changeEvolutionText: (String) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val sharedModifier = Modifier
         .fillMaxWidth(0.9f)
@@ -659,12 +655,12 @@ private fun Stage2Pokemon(
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
-        modifier = modifier
+        modifier = modifier,
     ) {
         if (pokemon.isLoading) {
             Box(
                 contentAlignment = Alignment.Center,
-                modifier = sharedModifier
+                modifier = sharedModifier,
             ) {
                 LoadingAnimation(circleSize = dimensionResource(id = R.dimen.indicator_size))
             }
@@ -675,13 +671,13 @@ private fun Stage2Pokemon(
                 evolvesFromName = pokemon.name,
                 evolvesFromSprite = pokemon.sprite,
                 selectPokemon = selectPokemon,
-                modifier = sharedModifier
+                modifier = sharedModifier,
             )
         }
         Spacer(
             modifier = Modifier
                 .size(dimensionResource(id = R.dimen.small_indicator_size))
-                .padding(vertical = dimensionResource(id = R.dimen.small_padding))
+                .padding(vertical = dimensionResource(id = R.dimen.small_padding)),
         )
     }
 }
@@ -693,7 +689,7 @@ private fun EvolutionChainPicture(
     evolvesFromName: String,
     evolvesFromSprite: String,
     selectPokemon: (String) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     var type: Type?
     if (evolvesFromTypes.isNotEmpty()) {
@@ -706,12 +702,12 @@ private fun EvolutionChainPicture(
         model = evolvesFromSprite,
         contentDescription = stringResource(
             R.string.image_description_pokemon_sprite,
-            evolvesFromName
+            evolvesFromName,
         ),
         modifier
             .clickable {
                 selectPokemon(evolvesFromName)
-            }
+            },
     )
 }
 
@@ -721,12 +717,12 @@ private fun EvolvesToPager(
     selectedTypeName: String,
     selectPokemon: (String) -> Unit,
     changeEvolutionText: (String) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Row(
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically,
-        modifier = modifier.testTag(stringResource(R.string.test_tag_evolvestopager))
+        modifier = modifier.testTag(stringResource(R.string.test_tag_evolvestopager)),
     ) {
         val pagerState = rememberPagerState { evolvesTo.size }
         val sharedModifier = Modifier
@@ -743,12 +739,12 @@ private fun EvolvesToPager(
 
         VerticalPager(
             state = pagerState,
-            pageSize = PageSize.Fill
+            pageSize = PageSize.Fill,
         ) { index ->
             if (evolvesTo[index].isLoading) {
                 Box(
                     contentAlignment = Alignment.Center,
-                    modifier = sharedModifier
+                    modifier = sharedModifier,
                 ) {
                     LoadingAnimation(circleSize = 8.dp)
                 }
@@ -759,7 +755,7 @@ private fun EvolvesToPager(
                     evolvesFromName = evolvesTo[index].name,
                     evolvesFromSprite = evolvesTo[index].sprite,
                     selectPokemon = selectPokemon,
-                    modifier = sharedModifier
+                    modifier = sharedModifier,
                 )
             }
         }
@@ -774,7 +770,7 @@ private fun PokemonPicture(
     varieties: List<Pokemon>,
     selectVariety: (Int) -> Unit,
     speakTextEntry: (String) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Box(
         modifier = modifier
@@ -786,8 +782,8 @@ private fun PokemonPicture(
                 integerResource(id = R.integer.medium_cut_corner_shape_percentage),
                 color = MaterialTheme.colorScheme.primaryContainer,
                 borderWidth = dimensionResource(R.dimen.default_border),
-                borderColor = MaterialTheme.colorScheme.onPrimaryContainer
-            )
+                borderColor = MaterialTheme.colorScheme.onPrimaryContainer,
+            ),
     ) {
         if (varieties.isNotEmpty()) {
             val pagerState = rememberPagerState(initialPage = 0, pageCount = {
@@ -809,8 +805,8 @@ private fun PokemonPicture(
                         .fillMaxWidth()
                         .padding(
                             vertical = dimensionResource(R.dimen.medium_padding),
-                            horizontal = dimensionResource(R.dimen.xl_padding)
-                        )
+                            horizontal = dimensionResource(R.dimen.xl_padding),
+                        ),
                 ) {
                     val number = pagerState.pageCount
                     if (number > 1) {
@@ -822,7 +818,7 @@ private fun PokemonPicture(
                                 modifier = Modifier
                                     .size(dimensionResource(R.dimen.large_padding))
                                     .padding(horizontal = dimensionResource(R.dimen.small_padding))
-                                    .alpha(alpha)
+                                    .alpha(alpha),
                             )
                         }
                     }
@@ -835,13 +831,13 @@ private fun PokemonPicture(
                         .align(Alignment.Center)
                         .fillMaxWidth()
                         .padding(dimensionResource(R.dimen.standard_padding))
-                        .aspectRatio(1f)
+                        .aspectRatio(1f),
                 ) { index ->
                     AsyncImage(
                         model = varieties[index].artwork,
                         contentDescription = stringResource(
                             R.string.image_description_pokemon_artwork,
-                            varieties[index].name
+                            varieties[index].name,
                         ),
                         Modifier
                             .fillMaxSize()
@@ -849,8 +845,8 @@ private fun PokemonPicture(
                             .clickable { speakTextEntry("${varieties[index].name} the ${varieties[index].genera}") }
                             .padding(
                                 dimensionResource(R.dimen.large_padding),
-                                bottom = dimensionResource(R.dimen.large_padding)
-                            )
+                                bottom = dimensionResource(R.dimen.large_padding),
+                            ),
                     )
                 }
                 Column(
@@ -861,17 +857,17 @@ private fun PokemonPicture(
                         .padding(
                             start = dimensionResource(R.dimen.standard_padding),
                             end = dimensionResource(R.dimen.standard_padding),
-                            bottom = dimensionResource(R.dimen.standard_padding)
+                            bottom = dimensionResource(R.dimen.standard_padding),
                         )
-                        .align(Alignment.BottomCenter)
+                        .align(Alignment.BottomCenter),
                 ) {
                     Row(
                         horizontalArrangement = Arrangement.Center,
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier.fillMaxWidth(),
                     ) {
                         Text(
                             text = stringResource(R.string.pokemon_number, selectedPokemon.id),
-                            fontSize = MaterialTheme.typography.labelMedium.fontSize
+                            fontSize = MaterialTheme.typography.labelMedium.fontSize,
                         )
                         Spacer(modifier = Modifier.padding(dimensionResource(R.dimen.medium_padding)))
                         Text(
@@ -880,21 +876,21 @@ private fun PokemonPicture(
                                 it.replaceFirstChar { char -> char.uppercase() }
                             },
                             fontWeight = FontWeight.Bold,
-                            fontSize = MaterialTheme.typography.labelMedium.fontSize
+                            fontSize = MaterialTheme.typography.labelMedium.fontSize,
                         )
                     }
                     Row(
                         horizontalArrangement = Arrangement.Center,
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier.fillMaxWidth(),
                     ) {
                         Text(
                             text = stringResource(R.string.pokemon_height, selectedPokemon.height),
-                            fontSize = MaterialTheme.typography.labelSmall.fontSize
+                            fontSize = MaterialTheme.typography.labelSmall.fontSize,
                         )
                         Spacer(modifier = Modifier.padding(dimensionResource(R.dimen.standard_padding)))
                         Text(
                             text = stringResource(R.string.pokemon_weight, selectedPokemon.weight),
-                            fontSize = MaterialTheme.typography.labelSmall.fontSize
+                            fontSize = MaterialTheme.typography.labelSmall.fontSize,
                         )
                     }
                 }
@@ -912,24 +908,24 @@ private fun PokemonButtons(
     updateFavourite: (Int, Boolean) -> Unit,
     playSound: (String?) -> Unit,
     talkPokemon: (String) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Column(
         verticalArrangement = Arrangement.SpaceEvenly,
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = modifier.fillMaxHeight()
+        modifier = modifier.fillMaxHeight(),
     ) {
         val buttonModifier = Modifier
             .cutCornerShapeBackgroundWithBorder(
                 integerResource(id = R.integer.default_cut_corner_shape_percentage),
                 color = MaterialTheme.colorScheme.primaryContainer,
                 borderWidth = dimensionResource(R.dimen.default_border),
-                borderColor = MaterialTheme.colorScheme.onPrimaryContainer
+                borderColor = MaterialTheme.colorScheme.onPrimaryContainer,
             )
             .padding(dimensionResource(id = R.dimen.large_padding))
         Icon(
             painterResource(
-                id = if (pokemon.isFavourite) R.drawable.ic_favourite else R.drawable.ic_favourite_border
+                id = if (pokemon.isFavourite) R.drawable.ic_favourite else R.drawable.ic_favourite_border,
             ),
             contentDescription = stringResource(R.string.image_description_favourite_indicator),
             tint = MaterialTheme.colorScheme.onPrimaryContainer,
@@ -938,7 +934,7 @@ private fun PokemonButtons(
                 .clickable {
                     updateFavourite(pokemon.id, !pokemon.isFavourite)
                 }
-                .then(buttonModifier)
+                .then(buttonModifier),
         )
         Spacer(modifier = Modifier.padding(dimensionResource(id = R.dimen.small_padding)))
         Icon(
@@ -950,7 +946,7 @@ private fun PokemonButtons(
                 .clickable {
                     talkPokemon(pokemon.textEntries[textEntry])
                 }
-                .then(buttonModifier)
+                .then(buttonModifier),
         )
         Spacer(modifier = Modifier.padding(dimensionResource(id = R.dimen.small_padding)))
         Icon(
@@ -962,20 +958,16 @@ private fun PokemonButtons(
                 .clickable {
                     playSound(pokemon.cry)
                 }
-                .then(buttonModifier)
+                .then(buttonModifier),
         )
     }
 }
 
 @Composable
-private fun PokemonTextEntries(
-    pokemon: Pokemon,
-    pagerState: PagerState,
-    modifier: Modifier = Modifier
-) {
+private fun PokemonTextEntries(pokemon: Pokemon, pagerState: PagerState, modifier: Modifier = Modifier) {
     val textEntryPagerSemantics = stringResource(
         R.string.semantics_displays_the_text_information_of_the_pokemon,
-        pokemon.name
+        pokemon.name,
     )
     Column(
         verticalArrangement = Arrangement.Center,
@@ -985,11 +977,11 @@ private fun PokemonTextEntries(
                 shape = integerResource(id = R.integer.small_cut_corner_shape_percentage),
                 color = MaterialTheme.colorScheme.primaryContainer,
                 borderWidth = dimensionResource(R.dimen.default_border),
-                borderColor = MaterialTheme.colorScheme.onPrimaryContainer
+                borderColor = MaterialTheme.colorScheme.onPrimaryContainer,
             )
             .padding(
-                dimensionResource(id = R.dimen.medium_padding)
-            )
+                dimensionResource(id = R.dimen.medium_padding),
+            ),
     ) {
         HorizontalPager(
             state = pagerState,
@@ -998,7 +990,7 @@ private fun PokemonTextEntries(
                 .padding(horizontal = dimensionResource(id = R.dimen.medium_padding))
                 .semantics {
                     contentDescription = textEntryPagerSemantics
-                }
+                },
         ) { page ->
             LazyColumn(
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -1008,7 +1000,7 @@ private fun PokemonTextEntries(
                     Text(
                         text = pokemon.textEntries[page],
                         fontSize = MaterialTheme.typography.labelMedium.fontSize,
-                        modifier = Modifier.weight(1f, fill = true)
+                        modifier = Modifier.weight(1f, fill = true),
                     )
                 }
             }
@@ -1019,18 +1011,18 @@ private fun PokemonTextEntries(
             modifier = Modifier
                 .padding(
                     horizontal = dimensionResource(id = R.dimen.medium_padding),
-                    vertical = dimensionResource(id = R.dimen.medium_padding)
+                    vertical = dimensionResource(id = R.dimen.medium_padding),
                 )
                 .fillMaxWidth()
-                .weight(0.2f, fill = true)
+                .weight(0.2f, fill = true),
         ) {
             Text(
                 text = stringResource(
                     R.string.pokemon_screen_text_entry_indicator,
                     pagerState.currentPage.plus(1),
-                    pokemon.textEntries.size
+                    pokemon.textEntries.size,
                 ),
-                fontSize = MaterialTheme.typography.labelSmall.fontSize
+                fontSize = MaterialTheme.typography.labelSmall.fontSize,
             )
         }
     }
@@ -1041,11 +1033,11 @@ private fun PokemonWeaknessAndResistance(
     types: List<Type>,
     selectedType: Type,
     navigateToTypes: (String) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Column(
         verticalArrangement = Arrangement.Bottom,
-        modifier = modifier
+        modifier = modifier,
     ) {
         Row(modifier = Modifier.fillMaxWidth()) {
             LazyTypeRowWithTopLabel(
@@ -1054,7 +1046,7 @@ private fun PokemonWeaknessAndResistance(
                 onClick = navigateToTypes,
                 modifier = Modifier
                     .testTag(stringResource(R.string.test_tag_weakness))
-                    .weight(1f)
+                    .weight(1f),
             )
             LazyTypeRowWithTopLabel(
                 typeNames = types.first { it == selectedType }.halfDamageFrom,
@@ -1062,7 +1054,7 @@ private fun PokemonWeaknessAndResistance(
                 onClick = navigateToTypes,
                 modifier = Modifier
                     .testTag(stringResource(R.string.test_tag_resistance))
-                    .weight(1f)
+                    .weight(1f),
             )
         }
     }

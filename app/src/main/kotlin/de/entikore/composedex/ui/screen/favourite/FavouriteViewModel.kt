@@ -42,7 +42,7 @@ import javax.inject.Inject
 class FavouriteViewModel @Inject constructor(
     getFavourites: FetchFavouritesUseCase,
     private val saveRemoteImageUseCase: @JvmSuppressWildcards BaseSuspendUseCase<SaveImageData, String>,
-    private val setAsFavouriteUseCase: @JvmSuppressWildcards BaseSuspendUseCase<SetFavouriteData, Unit>
+    private val setAsFavouriteUseCase: @JvmSuppressWildcards BaseSuspendUseCase<SetFavouriteData, Unit>,
 ) : PokemonFilterViewModel() {
 
     val screenState =
@@ -50,13 +50,13 @@ class FavouriteViewModel @Inject constructor(
             getFavourites().onEach { result ->
                 result.onSuccess { launchAssetRetrieval(it) }
             },
-            filterOptions
+            filterOptions,
         ) { favourites: Result<List<Pokemon>>, filterSettings: PokemonFilterOptions ->
             if (favourites.isSuccess) {
                 PokemonUiState.Success(
                     filterSettings.getFilteredList(
-                        favourites.getOrDefault(emptyList())
-                    )
+                        favourites.getOrDefault(emptyList()),
+                    ),
                 )
             } else {
                 PokemonUiState.Error
@@ -64,7 +64,7 @@ class FavouriteViewModel @Inject constructor(
         }.stateIn(
             viewModelScope,
             SharingStarted.WhileSubscribed(5_000L),
-            PokemonUiState.Loading
+            PokemonUiState.Loading,
         )
 
     fun updateFavourite(id: Int, isFavourite: Boolean) {
@@ -84,7 +84,7 @@ class FavouriteViewModel @Inject constructor(
                     pokemon.remoteSprite,
                     saveAssetUseCase = { id, url, fileName ->
                         saveRemoteImageUseCase(SaveImageData(id, url, fileName, true))
-                    }
+                    },
                 )
             }
         }

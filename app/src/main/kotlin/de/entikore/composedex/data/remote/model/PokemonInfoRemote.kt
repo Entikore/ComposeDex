@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Entikore
+ * Copyright 2024-2026 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,7 +32,7 @@ data class PokemonInfoRemote(
     val pokemon: PokemonRemote,
     val species: PokemonSpeciesRemote,
     val types: List<TypeRemote>,
-    var evolutionChain: Map<Int, List<ChainLink>> = emptyMap()
+    var evolutionChain: Map<Int, List<ChainLink>> = emptyMap(),
 )
 
 /**
@@ -42,5 +42,5 @@ fun PokemonInfoRemote.toEntity() = PokemonWithSpeciesTypesAndVarieties(
     pokemon = pokemon.toEntity(),
     species = species.toEntity(evolutionChain),
     types = types.map { it.toEntity() },
-    varieties = species.varieties.map { it.toEntity() }
+    varieties = species.varieties.map { it.toEntity() },
 )

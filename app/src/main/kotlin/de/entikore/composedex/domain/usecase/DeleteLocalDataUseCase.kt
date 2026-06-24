@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Entikore
+ * Copyright 2025-2026 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,7 +28,7 @@ import kotlinx.coroutines.Dispatchers
 class DeleteLocalDataUseCase(
     @ApplicationContext private val context: Context,
     private val localStorage: LocalStorage,
-    dispatcher: CoroutineDispatcher = Dispatchers.IO
+    dispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) : BaseSuspendUseCase<Unit, Unit>(dispatcher) {
 
     override suspend fun execute(params: Unit) {

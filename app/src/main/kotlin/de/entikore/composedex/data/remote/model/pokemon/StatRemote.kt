@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Entikore
+ * Copyright 2024-2026 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,8 +25,4 @@ import de.entikore.composedex.data.remote.model.common.NamedApiResource
  * @property effort The effort points (EV) the Pokémon has in the stat.
  * @property stat The stat the Pokémon has.
  */
-data class StatRemote(
-    @Json(name = "base_stat") val baseStat: Int,
-    val effort: Int,
-    val stat: NamedApiResource
-)
+data class StatRemote(@Json(name = "base_stat") val baseStat: Int, val effort: Int, val stat: NamedApiResource)

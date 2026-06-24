@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Entikore
+ * Copyright 2025-2026 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -45,21 +45,21 @@ import de.entikore.composedex.ui.navigation.destination.drawerScreens
 fun ComposeDexDrawer(
     currentlySelected: ComposeDexDestination?,
     onDestinationClick: (route: ComposeDexDestination) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     ModalDrawerSheet(
         drawerShape = CutCornerShape(
             topEndPercent = integerResource(id = R.integer.small_cut_corner_shape_percentage),
-            bottomEndPercent = integerResource(R.integer.small_cut_corner_shape_percentage)
+            bottomEndPercent = integerResource(R.integer.small_cut_corner_shape_percentage),
         ),
-        modifier = modifier
+        modifier = modifier,
     ) {
         Column(
             verticalArrangement = Arrangement.SpaceBetween,
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
                 .fillMaxSize()
-                .padding(vertical = dimensionResource(id = R.dimen.standard_padding))
+                .padding(vertical = dimensionResource(id = R.dimen.standard_padding)),
         ) {
             DrawerHead(modifier = Modifier.padding(dimensionResource(id = R.dimen.large_padding)))
             DrawerBody(
@@ -67,7 +67,7 @@ fun ComposeDexDrawer(
                 currentlySelected,
                 Modifier
                     .fillMaxSize()
-                    .padding(dimensionResource(id = R.dimen.large_padding))
+                    .padding(dimensionResource(id = R.dimen.large_padding)),
             )
         }
     }
@@ -78,29 +78,29 @@ fun DrawerHead(modifier: Modifier = Modifier) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceEvenly,
-        modifier = modifier
+        modifier = modifier,
     ) {
         Text(
             text = stringResource(R.string.drawer_title),
-            style = MaterialTheme.typography.headlineLarge
+            style = MaterialTheme.typography.headlineLarge,
         )
         Row(
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.padding(vertical = dimensionResource(id = R.dimen.standard_padding))
+            modifier = Modifier.padding(vertical = dimensionResource(id = R.dimen.standard_padding)),
         ) {
             AsyncImage(
                 model = R.drawable.gengar,
                 contentDescription = stringResource(R.string.gengar_idle_animation),
                 modifier = Modifier
-                    .size(dimensionResource(id = R.dimen.idle_animation_foreground))
+                    .size(dimensionResource(id = R.dimen.idle_animation_foreground)),
             )
             Spacer(modifier = Modifier.padding(dimensionResource(id = R.dimen.medium_padding)))
             AsyncImage(
                 model = R.drawable.nidorino,
                 contentDescription = stringResource(R.string.nidorino_idle_animation),
                 modifier = Modifier
-                    .size(dimensionResource(id = R.dimen.idle_animation_background))
+                    .size(dimensionResource(id = R.dimen.idle_animation_background)),
             )
         }
     }
@@ -110,12 +110,12 @@ fun DrawerHead(modifier: Modifier = Modifier) {
 fun DrawerBody(
     onDestinationClick: (ComposeDexDestination) -> Unit,
     currentlySelected: ComposeDexDestination?,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceEvenly,
-        modifier = modifier
+        modifier = modifier,
     ) {
         drawerScreens.forEach { entry ->
 
@@ -125,25 +125,19 @@ fun DrawerBody(
                 selected = entry.javaClass == currentlySelected?.javaClass,
                 onClick = { onDestinationClick(entry) },
                 modifier = Modifier
-                    .padding(dimensionResource(id = R.dimen.small_padding))
+                    .padding(dimensionResource(id = R.dimen.small_padding)),
             )
         }
     }
 }
 
 @Composable
-fun DrawerEntry(
-    icon: Int,
-    name: String,
-    selected: Boolean,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier
-) {
+fun DrawerEntry(icon: Int, name: String, selected: Boolean, onClick: () -> Unit, modifier: Modifier = Modifier) {
     NavigationDrawerItem(
         label = {
             Text(
                 text = name,
-                fontStyle = MaterialTheme.typography.labelMedium.fontStyle
+                fontStyle = MaterialTheme.typography.labelMedium.fontStyle,
             )
         },
         selected = selected,
@@ -153,14 +147,14 @@ fun DrawerEntry(
                 contentDescription = "",
                 modifier = Modifier
                     .size(dimensionResource(id = R.dimen.nav_icon_size))
-                    .padding(start = dimensionResource(id = R.dimen.large_padding))
+                    .padding(start = dimensionResource(id = R.dimen.large_padding)),
             )
         },
         onClick = onClick,
         modifier = modifier.cutCornerShapeBorder(
             cutCornerPercentage = integerResource(id = R.integer.default_cut_corner_shape_percentage),
             borderWidth = dimensionResource(R.dimen.default_border),
-            borderColor = MaterialTheme.colorScheme.primaryContainer
-        )
+            borderColor = MaterialTheme.colorScheme.primaryContainer,
+        ),
     )
 }

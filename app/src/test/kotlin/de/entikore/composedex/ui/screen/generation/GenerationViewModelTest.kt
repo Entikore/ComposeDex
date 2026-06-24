@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Entikore
+ * Copyright 2025-2026 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -74,7 +74,7 @@ class GenerationViewModelTest {
             getGenerationUseCase,
             getPokemonOfGenerationUseCase,
             saveRemoteImageUseCase,
-            setAsFavouriteUseCase
+            setAsFavouriteUseCase,
         )
 
         val expectedState = GenerationScreenUiState.Success()
@@ -100,12 +100,12 @@ class GenerationViewModelTest {
             getGenerationUseCase,
             getPokemonOfGenerationUseCase,
             saveRemoteImageUseCase,
-            setAsFavouriteUseCase
+            setAsFavouriteUseCase,
         )
 
         val expectedState = GenerationScreenUiState.Success(
             generations = listOf(generationI, generationII, generationVI),
-            selectedGeneration = SelectedGenerationUiState.NoGenerationSelected
+            selectedGeneration = SelectedGenerationUiState.NoGenerationSelected,
         )
 
         viewModel.screenState.test {
@@ -119,47 +119,48 @@ class GenerationViewModelTest {
     }
 
     @Test
-    fun `search for a generation by name exposes Success SelectedGenerationUiState with expected Generation`() = runTest {
-        val generationI = getGenerationRemote(GEN_I_FILE).toEntity().asExternalModel()
-        val lapras = getPokemonInfoRemote(getTestModel(POKEMON_LAPRAS_NAME)).toEntity().asExternalModel()
-        val ditto = getPokemonInfoRemote(getTestModel(POKEMON_DITTO_NAME)).toEntity().asExternalModel()
-        fakeGenerationRepository.addGenerations(generationI)
-        fakeGenerationRepository.addPokemon(lapras, ditto)
+    fun `search for a generation by name exposes Success SelectedGenerationUiState with expected Generation`() =
+        runTest {
+            val generationI = getGenerationRemote(GEN_I_FILE).toEntity().asExternalModel()
+            val lapras = getPokemonInfoRemote(getTestModel(POKEMON_LAPRAS_NAME)).toEntity().asExternalModel()
+            val ditto = getPokemonInfoRemote(getTestModel(POKEMON_DITTO_NAME)).toEntity().asExternalModel()
+            fakeGenerationRepository.addGenerations(generationI)
+            fakeGenerationRepository.addPokemon(lapras, ditto)
 
-        viewModel = GenerationViewModel(
-            getGenerationsUseCase,
-            getGenerationUseCase,
-            getPokemonOfGenerationUseCase,
-            saveRemoteImageUseCase,
-            setAsFavouriteUseCase
-        )
-
-        val expectedState = GenerationScreenUiState.Success(
-            generations = listOf(generationI),
-            selectedGeneration = SelectedGenerationUiState.Success(
-                selectedGeneration = generationI,
-                pokemonState = PokemonUiState.Success(listOf(lapras, ditto)),
-                showLoadingItem = true
+            viewModel = GenerationViewModel(
+                getGenerationsUseCase,
+                getGenerationUseCase,
+                getPokemonOfGenerationUseCase,
+                saveRemoteImageUseCase,
+                setAsFavouriteUseCase,
             )
-        )
 
-        viewModel.screenState.test {
-            var stateResult = awaitItem()
-            assertThat(stateResult).isInstanceOf(GenerationScreenUiState.Loading::class.java)
+            val expectedState = GenerationScreenUiState.Success(
+                generations = listOf(generationI),
+                selectedGeneration = SelectedGenerationUiState.Success(
+                    selectedGeneration = generationI,
+                    pokemonState = PokemonUiState.Success(listOf(lapras, ditto)),
+                    showLoadingItem = true,
+                ),
+            )
 
-            stateResult = awaitItem()
-            assertThat(stateResult).isInstanceOf(GenerationScreenUiState.Success::class.java)
-            assertThat(
-                stateResult
-            ).isEqualTo(expectedState.copy(selectedGeneration = SelectedGenerationUiState.NoGenerationSelected))
+            viewModel.screenState.test {
+                var stateResult = awaitItem()
+                assertThat(stateResult).isInstanceOf(GenerationScreenUiState.Loading::class.java)
 
-            viewModel.searchForGeneration(generationI.id.toString())
+                stateResult = awaitItem()
+                assertThat(stateResult).isInstanceOf(GenerationScreenUiState.Success::class.java)
+                assertThat(
+                    stateResult,
+                ).isEqualTo(expectedState.copy(selectedGeneration = SelectedGenerationUiState.NoGenerationSelected))
 
-            stateResult = awaitItem()
-            assertThat(stateResult).isInstanceOf(GenerationScreenUiState.Success::class.java)
-            assertThat(stateResult).isEqualTo(expectedState)
+                viewModel.searchForGeneration(generationI.id.toString())
+
+                stateResult = awaitItem()
+                assertThat(stateResult).isInstanceOf(GenerationScreenUiState.Success::class.java)
+                assertThat(stateResult).isEqualTo(expectedState)
+            }
         }
-    }
 
     @Test
     fun `search for an unknown generation by name exposes Error SelectedGenerationUiState`() = runTest {
@@ -171,12 +172,12 @@ class GenerationViewModelTest {
             getGenerationUseCase,
             getPokemonOfGenerationUseCase,
             saveRemoteImageUseCase,
-            setAsFavouriteUseCase
+            setAsFavouriteUseCase,
         )
 
         val expectedState = GenerationScreenUiState.Success(
             generations = listOf(generationI),
-            selectedGeneration = SelectedGenerationUiState.Error
+            selectedGeneration = SelectedGenerationUiState.Error,
         )
 
         viewModel.screenState.test {
@@ -186,7 +187,7 @@ class GenerationViewModelTest {
             stateResult = awaitItem()
             assertThat(stateResult).isInstanceOf(GenerationScreenUiState.Success::class.java)
             assertThat(
-                stateResult
+                stateResult,
             ).isEqualTo(expectedState.copy(selectedGeneration = SelectedGenerationUiState.NoGenerationSelected))
 
             viewModel.searchForGeneration(GEN_II_NAME)

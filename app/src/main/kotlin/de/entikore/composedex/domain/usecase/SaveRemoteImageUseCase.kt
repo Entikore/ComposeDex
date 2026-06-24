@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Entikore
+ * Copyright 2025-2026 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,7 +41,7 @@ class SaveRemoteImageUseCase @Inject constructor(
     @ApplicationContext private val context: Context,
     private val pokemonRepository: PokemonRepository,
     httpClientBuilder: OkHttpClient.Builder,
-    private val dispatcher: CoroutineDispatcher = Dispatchers.IO
+    private val dispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) : BaseSuspendUseCase<SaveImageData, String>(dispatcher) {
 
     private var client: OkHttpClient = httpClientBuilder.build()
@@ -125,9 +125,4 @@ class SaveRemoteImageUseCase @Inject constructor(
  * @property fileName The desired file name for the saved image.
  * @property isSprite A flag indicating whether the image is a sprite (true) or artwork (false). Defaults to false.
  */
-data class SaveImageData(
-    val id: Int,
-    val imageAddress: String,
-    val fileName: String,
-    val isSprite: Boolean = false
-)
+data class SaveImageData(val id: Int, val imageAddress: String, val fileName: String, val isSprite: Boolean = false)

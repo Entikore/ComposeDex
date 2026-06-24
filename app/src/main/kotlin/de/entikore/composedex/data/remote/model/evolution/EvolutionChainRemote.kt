@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Entikore
+ * Copyright 2024-2026 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,5 +31,5 @@ import de.entikore.composedex.data.remote.model.common.NamedApiResource
 data class EvolutionChainRemote(
     @Json(name = "baby_trigger_item") val babyTriggerItem: NamedApiResource? = null,
     val chain: ChainRemote,
-    val id: Int
+    val id: Int,
 )

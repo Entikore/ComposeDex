@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Entikore
+ * Copyright 2024-2026 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -81,7 +81,7 @@ fun TypeScreen(
     openDrawer: () -> Unit,
     navigateToPokemon: (String) -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: TypeViewModel = hiltViewModel()
+    viewModel: TypeViewModel = hiltViewModel(),
 ) {
     val selectedType by viewModel.selectedType.collectAsState()
     val screenState by viewModel.screenState.collectAsState()
@@ -96,8 +96,8 @@ fun TypeScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
         modifier = modifier.background(
-            getTypeBackgroundColor(type = selectedType)
-        )
+            getTypeBackgroundColor(type = selectedType),
+        ),
     ) {
         TypeScreenTopBar(
             filterOptions,
@@ -106,13 +106,13 @@ fun TypeScreen(
             onNameFilterChange,
             onCheckBoxFilterChange,
             onShapeFilterChange,
-            Modifier.background(getTypePrimaryColor(selectedType))
+            Modifier.background(getTypePrimaryColor(selectedType)),
         )
         TypeScreenContent(
             screenState,
             searchType,
             updateFavourite,
-            navigateToPokemon
+            navigateToPokemon,
         )
     }
 }
@@ -125,7 +125,7 @@ private fun TypeScreenTopBar(
     onNameFilterChange: (text: String) -> Unit,
     onCheckBoxFilterChange: (option: String, newValue: Boolean) -> Unit,
     onShapeFilterChange: (shape: PokemonShape) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     TopBarWithSearchbarAndFilter(
         title = stringResource(R.string.type_screen_top_bar),
@@ -137,7 +137,7 @@ private fun TypeScreenTopBar(
         changeFilter = onCheckBoxFilterChange,
         modifier = modifier,
         shapeFilter = filterOptions.shapeFilter,
-        changeShapeFilter = onShapeFilterChange
+        changeShapeFilter = onShapeFilterChange,
     )
 }
 
@@ -147,12 +147,12 @@ fun TypeScreenContent(
     searchType: (String) -> Unit,
     updateFavourite: (Int, Boolean) -> Unit,
     navigateToPokemon: (String) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
-        modifier = modifier.fillMaxSize()
+        modifier = modifier.fillMaxSize(),
     ) {
         when (screenState) {
             TypeScreenUiState.Error -> {
@@ -160,9 +160,9 @@ fun TypeScreenContent(
                     errorMessage = stringResource(R.string.error_fetching_types),
                     Modifier.testTag(
                         stringResource(
-                            R.string.test_tag_typescreen_error
-                        )
-                    )
+                            R.string.test_tag_typescreen_error,
+                        ),
+                    ),
                 )
             }
 
@@ -178,9 +178,9 @@ fun TypeScreenContent(
                             searchType,
                             Modifier.testTag(
                                 stringResource(
-                                    R.string.test_tag_typescreen_success_overview
-                                )
-                            )
+                                    R.string.test_tag_typescreen_success_overview,
+                                ),
+                            ),
                         )
                     }
 
@@ -189,7 +189,7 @@ fun TypeScreenContent(
                             selectedTypeUiState = screenState.selectedType,
                             searchType = searchType,
                             navigateToPokemon = navigateToPokemon,
-                            updateFavourite = updateFavourite
+                            updateFavourite = updateFavourite,
                         )
                     }
                 }
@@ -202,7 +202,7 @@ fun TypeScreenContent(
 private fun TypeOverview(types: List<Type>, searchType: (String) -> Unit, modifier: Modifier = Modifier) {
     LazyColumn(
         verticalArrangement = Arrangement.SpaceEvenly,
-        modifier = modifier.fillMaxSize()
+        modifier = modifier.fillMaxSize(),
     ) {
         items(types) {
             ClickableColumnItemWithIcon(
@@ -213,12 +213,12 @@ private fun TypeOverview(types: List<Type>, searchType: (String) -> Unit, modifi
                 onClick = searchType,
                 modifier = Modifier.padding(
                     horizontal = dimensionResource(id = R.dimen.medium_padding),
-                    vertical = dimensionResource(id = R.dimen.small_padding)
-                )
+                    vertical = dimensionResource(id = R.dimen.small_padding),
+                ),
             ) {
                 TypeIcon(
                     it.name,
-                    modifier = Modifier.padding(start = dimensionResource(id = R.dimen.large_padding))
+                    modifier = Modifier.padding(start = dimensionResource(id = R.dimen.large_padding)),
                 )
             }
         }
@@ -231,18 +231,18 @@ private fun TypeDetail(
     searchType: (String) -> Unit,
     navigateToPokemon: (String) -> Unit,
     updateFavourite: (Int, Boolean) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
-        modifier = modifier
+        modifier = modifier,
     ) {
         when (selectedTypeUiState) {
             SelectedTypeUiState.Loading -> LoadingAnimation(
                 modifier = Modifier.testTag(
-                    stringResource(R.string.test_tag_typescreen_success_detail_loading)
-                )
+                    stringResource(R.string.test_tag_typescreen_success_detail_loading),
+                ),
             )
 
             is SelectedTypeUiState.Success -> {
@@ -253,15 +253,15 @@ private fun TypeDetail(
                     searchType = searchType,
                     navigateToPokemon = navigateToPokemon,
                     updateFavourite = updateFavourite,
-                    modifier = Modifier.testTag(stringResource(R.string.test_tag_typescreen_success_detail_success))
+                    modifier = Modifier.testTag(stringResource(R.string.test_tag_typescreen_success_detail_success)),
                 )
             }
 
             else -> ErrorMessage(
                 errorMessage = stringResource(R.string.error_fetching_type),
                 Modifier.testTag(
-                    stringResource(R.string.test_tag_typescreen_success_detail_error)
-                )
+                    stringResource(R.string.test_tag_typescreen_success_detail_error),
+                ),
             )
         }
     }
@@ -275,7 +275,7 @@ private fun TypeDetailSuccess(
     searchType: (String) -> Unit,
     navigateToPokemon: (String) -> Unit,
     updateFavourite: (Int, Boolean) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = modifier) {
         PokemonTypeHeader(type, searchType, modifier = Modifier.weight(0.4f))
@@ -285,22 +285,18 @@ private fun TypeDetailSuccess(
             navigateToPokemon,
             updateFavourite,
             showLoading,
-            modifier = Modifier.weight(0.6f)
+            modifier = Modifier.weight(0.6f),
         )
     }
 }
 
 @Composable
-private fun PokemonTypeHeader(
-    type: Type,
-    searchType: (String) -> Unit,
-    modifier: Modifier = Modifier
-) {
+private fun PokemonTypeHeader(type: Type, searchType: (String) -> Unit, modifier: Modifier = Modifier) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier
             .fillMaxWidth()
-            .padding(dimensionResource(id = R.dimen.medium_padding))
+            .padding(dimensionResource(id = R.dimen.medium_padding)),
     ) {
         Box(
             modifier = Modifier
@@ -310,11 +306,11 @@ private fun PokemonTypeHeader(
                 .border(
                     border = BorderStroke(
                         width = dimensionResource(id = R.dimen.default_border),
-                        color = getTypeBorderColor(type.name)
+                        color = getTypeBorderColor(type.name),
                     ),
-                    shape = CutCornerShape(integerResource(R.integer.default_cut_corner_shape_percentage))
+                    shape = CutCornerShape(integerResource(R.integer.default_cut_corner_shape_percentage)),
                 )
-                .padding(dimensionResource(id = R.dimen.standard_padding))
+                .padding(dimensionResource(id = R.dimen.standard_padding)),
         ) {
             AsyncImage(
                 model = Icon(
@@ -325,11 +321,11 @@ private fun PokemonTypeHeader(
                         .zIndex(1f)
                         .align(Alignment.Center)
                         .aspectRatio(1f)
-                        .alpha(0.2f)
+                        .alpha(0.2f),
                 ),
                 contentDescription = stringResource(R.string.icon_description_type_icon, type.name),
                 modifier = Modifier
-                    .padding(dimensionResource(id = R.dimen.medium_padding))
+                    .padding(dimensionResource(id = R.dimen.medium_padding)),
             )
             Text(
                 text = type.name.replaceFirstChar { it.uppercaseChar() },
@@ -337,7 +333,7 @@ private fun PokemonTypeHeader(
                 color = getTypeBorderColor(type.name),
                 modifier = Modifier
                     .zIndex(2f)
-                    .align(Alignment.Center)
+                    .align(Alignment.Center),
             )
         }
 
@@ -348,7 +344,7 @@ private fun PokemonTypeHeader(
                 stringResource(R.string.type_info_half_damage_from) to type.halfDamageFrom,
                 stringResource(R.string.type_info_half_damage_to) to type.halfDamageTo,
                 stringResource(R.string.type_info_no_damage_from) to type.noDamageFrom,
-                stringResource(R.string.type_info_no_damage_to) to type.noDamageTo
+                stringResource(R.string.type_info_no_damage_to) to type.noDamageTo,
             )
 
         LazyColumn(
@@ -356,15 +352,15 @@ private fun PokemonTypeHeader(
             modifier = Modifier
                 .weight(0.8f)
                 .padding(
-                    dimensionResource(id = R.dimen.standard_padding)
-                )
+                    dimensionResource(id = R.dimen.standard_padding),
+                ),
         ) {
             items(list) {
                 if (it.second.isNotEmpty()) {
                     LazyTypeRowWithTopLabel(
                         typeNames = it.second,
                         labelText = it.first,
-                        onClick = searchType
+                        onClick = searchType,
                     )
                 }
             }
@@ -379,7 +375,7 @@ private fun PokemonTypeBody(
     navigateToPokemon: (String) -> Unit,
     updateFavourite: (Int, Boolean) -> Unit,
     showLoading: Boolean,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     when (pokemonState) {
         is PokemonUiState.Success -> {
@@ -387,15 +383,15 @@ private fun PokemonTypeBody(
             LazyVerticalGrid(
                 columns = GridCells.Adaptive(dimensionResource(R.dimen.grid_cell_size)),
                 modifier = modifier.testTag(
-                    stringResource(R.string.test_tag_typescreen_success_detail_sucess_pokemon_success)
-                )
+                    stringResource(R.string.test_tag_typescreen_success_detail_sucess_pokemon_success),
+                ),
             ) {
                 items(gridData) {
                     TypePokemonEntry(
                         pokemon = it,
                         selectedType = type.name,
                         updateFavourite = updateFavourite,
-                        navigateToPokemon = navigateToPokemon
+                        navigateToPokemon = navigateToPokemon,
                     )
                 }
                 if (showLoading) {
@@ -406,31 +402,31 @@ private fun PokemonTypeBody(
                             Modifier
                                 .padding(
                                     horizontal = dimensionResource(R.dimen.standard_padding),
-                                    vertical = dimensionResource(R.dimen.standard_padding)
+                                    vertical = dimensionResource(R.dimen.standard_padding),
                                 )
                                 .aspectRatio(1f)
                                 .background(
                                     getTypeBackgroundColor(type.name),
                                     shape = CutCornerShape(
-                                        integerResource(id = R.integer.medium_cut_corner_shape_percentage)
-                                    )
+                                        integerResource(id = R.integer.medium_cut_corner_shape_percentage),
+                                    ),
                                 )
                                 .border(
                                     width = dimensionResource(id = R.dimen.default_border),
                                     getTypeBorderColor(type.name),
                                     shape = CutCornerShape(
-                                        integerResource(id = R.integer.medium_cut_corner_shape_percentage)
-                                    )
-                                )
+                                        integerResource(id = R.integer.medium_cut_corner_shape_percentage),
+                                    ),
+                                ),
                         ) {
                             Row(
                                 horizontalArrangement = Arrangement.Center,
                                 verticalAlignment = Alignment.CenterVertically,
-                                modifier = Modifier.fillMaxSize()
+                                modifier = Modifier.fillMaxSize(),
                             ) {
                                 LoadingAnimation(
                                     circleSize = 12.dp,
-                                    travelDistance = 10.dp
+                                    travelDistance = 10.dp,
                                 )
                             }
                         }
@@ -443,22 +439,22 @@ private fun PokemonTypeBody(
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier.testTag(
-                    stringResource(R.string.test_tag_typescreen_success_detail_sucess_pokemon_loading)
-                )
+                    stringResource(R.string.test_tag_typescreen_success_detail_sucess_pokemon_loading),
+                ),
             ) { LoadingAnimation() }
 
         PokemonUiState.Error ->
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier.testTag(
-                    stringResource(R.string.test_tag_typescreen_success_detail_sucess_pokemon_error)
-                )
+                    stringResource(R.string.test_tag_typescreen_success_detail_sucess_pokemon_error),
+                ),
             ) {
                 ErrorMessage(
                     errorMessage = stringResource(
                         R.string.error_loading_pokemon_for_type,
-                        type.name
-                    )
+                        type.name,
+                    ),
                 )
             }
     }
@@ -471,13 +467,13 @@ private fun TypePokemonEntry(
     selectedType: String,
     updateFavourite: (Int, Boolean) -> Unit,
     navigateToPokemon: (String) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val favouriteModifier: Modifier =
         modifier
             .padding(
                 horizontal = dimensionResource(R.dimen.standard_padding),
-                vertical = dimensionResource(R.dimen.standard_padding)
+                vertical = dimensionResource(R.dimen.standard_padding),
             )
             .aspectRatio(1f)
             .background(
@@ -486,9 +482,9 @@ private fun TypePokemonEntry(
                     HeartShape()
                 } else {
                     CutCornerShape(
-                        integerResource(R.integer.medium_cut_corner_shape_percentage)
+                        integerResource(R.integer.medium_cut_corner_shape_percentage),
                     )
-                }
+                },
             )
             .border(
                 width = dimensionResource(R.dimen.default_border),
@@ -497,18 +493,18 @@ private fun TypePokemonEntry(
                     HeartShape()
                 } else {
                     CutCornerShape(
-                        integerResource(R.integer.medium_cut_corner_shape_percentage)
+                        integerResource(R.integer.medium_cut_corner_shape_percentage),
                     )
-                }
+                },
             )
             .clip(
                 shape = if (pokemon.isFavourite) {
                     HeartShape()
                 } else {
                     CutCornerShape(
-                        integerResource(R.integer.medium_cut_corner_shape_percentage)
+                        integerResource(R.integer.medium_cut_corner_shape_percentage),
                     )
-                }
+                },
             )
 
     Box(
@@ -518,10 +514,10 @@ private fun TypePokemonEntry(
             .combinedClickable(
                 onLongClick = {
                     updateFavourite(pokemon.id, !pokemon.isFavourite)
-                }
+                },
             ) {
                 navigateToPokemon(pokemon.name)
-            }
+            },
     ) {
         if (!pokemon.sprite.isNullOrEmpty()) {
             AsyncImage(
@@ -529,18 +525,18 @@ private fun TypePokemonEntry(
                 contentDescription = stringResource(R.string.image_description_sprite, pokemon.name),
                 Modifier
                     .padding(dimensionResource(R.dimen.standard_padding))
-                    .fillMaxSize()
+                    .fillMaxSize(),
             )
         } else {
             Column(
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier.fillMaxSize(),
             ) {
                 Text(
                     text = pokemon.name,
                     fontSize = MaterialTheme.typography.labelSmall.fontSize,
-                    modifier = Modifier.padding(dimensionResource(id = R.dimen.small_padding))
+                    modifier = Modifier.padding(dimensionResource(id = R.dimen.small_padding)),
                 )
                 LoadingAnimation(modifier = Modifier.padding(dimensionResource(id = R.dimen.small_padding)))
             }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Entikore
+ * Copyright 2024-2026 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,7 +36,7 @@ import de.entikore.composedex.R
 fun HorizontalPageIndicator(pagerState: PagerState, modifier: Modifier = Modifier) {
     FlowRow(
         horizontalArrangement = Arrangement.Center,
-        modifier = modifier
+        modifier = modifier,
     ) {
         repeat(pagerState.pageCount) { iteration ->
             val alpha =
@@ -47,7 +47,7 @@ fun HorizontalPageIndicator(pagerState: PagerState, modifier: Modifier = Modifie
                 modifier = Modifier
                     .size(dimensionResource(id = R.dimen.medium_indicator_size))
                     .padding(horizontal = dimensionResource(id = R.dimen.small_padding))
-                    .alpha(alpha)
+                    .alpha(alpha),
             )
         }
     }
@@ -58,7 +58,7 @@ fun HorizontalPageIndicator(pagerState: PagerState, modifier: Modifier = Modifie
 fun VerticalPageIndicator(pagerState: PagerState, modifier: Modifier = Modifier) {
     FlowColumn(
         verticalArrangement = Arrangement.Center,
-        modifier = modifier
+        modifier = modifier,
     ) {
         val times = pagerState.pageCount
         if (times > 1) {
@@ -70,7 +70,7 @@ fun VerticalPageIndicator(pagerState: PagerState, modifier: Modifier = Modifier)
                     modifier = Modifier
                         .size(dimensionResource(id = R.dimen.medium_indicator_size))
                         .padding(vertical = dimensionResource(id = R.dimen.small_padding))
-                        .alpha(alpha)
+                        .alpha(alpha),
                 )
             }
         }

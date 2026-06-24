@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Entikore
+ * Copyright 2024-2026 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,7 +37,7 @@ data class Type(
     val halfDamageFrom: List<String>,
     val halfDamageTo: List<String>,
     val noDamageFrom: List<String>,
-    val noDamageTo: List<String>
+    val noDamageTo: List<String>,
 ) {
 
     companion object {
@@ -75,7 +75,7 @@ data class Type(
             emptyList(),
             emptyList(),
             emptyList(),
-            emptyList()
+            emptyList(),
         )
     }
 }

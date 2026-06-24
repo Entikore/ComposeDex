@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Entikore
+ * Copyright 2024-2026 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -53,37 +53,34 @@ object RepositoryModule {
     @Provides
     fun providePokemonRepository(
         localDataSource: PokemonLocalDataSource,
-        remoteDataSource: RemoteDataSource
+        remoteDataSource: RemoteDataSource,
     ): PokemonRepository = OfflineFirstPokemonRepository(localDataSource, remoteDataSource)
 
     @Singleton
     @Provides
     fun provideGenerationRepository(
         localDataSource: GenerationLocalDataSource,
-        remoteDataSource: RemoteDataSource
+        remoteDataSource: RemoteDataSource,
     ): GenerationRepository = OfflineFirstGenerationRepository(localDataSource, remoteDataSource)
 
     @Singleton
     @Provides
     fun provideTypeRepository(
         localDataSource: TypeLocalDataSource,
-        remoteDataSource: RemoteDataSource
+        remoteDataSource: RemoteDataSource,
     ): TypeRepository = OfflineFirstTypeRepository(localDataSource, remoteDataSource)
 
     @Singleton
     @Provides
-    fun provideFavouriteRepository(
-        localDataSource: FavouriteLocalDataSource
-    ): FavouriteRepository = DefaultFavouriteRepository(localDataSource)
+    fun provideFavouriteRepository(localDataSource: FavouriteLocalDataSource): FavouriteRepository =
+        DefaultFavouriteRepository(localDataSource)
 
     @Singleton
     @Provides
-    fun provideLocalStorage(composeDexDatabase: ComposeDexDatabase): LocalStorage =
-        composeDexDatabase
+    fun provideLocalStorage(composeDexDatabase: ComposeDexDatabase): LocalStorage = composeDexDatabase
 
     @Singleton
     @Provides
-    fun provideAppSettingsRepository(
-        @ApplicationContext context: Context
-    ): AppSettingsRepository = DefaultAppSettingsRepository(context)
+    fun provideAppSettingsRepository(@ApplicationContext context: Context): AppSettingsRepository =
+        DefaultAppSettingsRepository(context)
 }

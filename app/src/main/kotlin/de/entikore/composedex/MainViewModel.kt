@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Entikore
+ * Copyright 2024-2026 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,13 +29,12 @@ import javax.inject.Inject
  * A view model that helps launch actions for the [MainActivity].
  */
 @HiltViewModel
-class MainViewModel @Inject constructor(appSettingsRepository: AppSettingsRepository) :
-    ViewModel() {
+class MainViewModel @Inject constructor(appSettingsRepository: AppSettingsRepository) : ViewModel() {
 
     val themeState: StateFlow<UserPreferences> =
         appSettingsRepository.getUserPreferences().stateIn(
             viewModelScope,
             SharingStarted.Eagerly,
-            UserPreferences()
+            UserPreferences(),
         )
 }

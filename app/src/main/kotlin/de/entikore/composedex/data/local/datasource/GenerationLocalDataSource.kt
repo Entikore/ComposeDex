@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Entikore
+ * Copyright 2025-2026 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,7 +30,7 @@ import kotlinx.coroutines.withContext
  */
 class GenerationLocalDataSource(
     private val database: ComposeDexDatabase,
-    private val dispatcher: CoroutineDispatcher = Dispatchers.IO
+    private val dispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) {
     private val generationDao: GenerationDao = database.generationDao()
 
@@ -42,14 +42,13 @@ class GenerationLocalDataSource(
 
     suspend fun insertPokemonForGeneration(
         generation: GenerationEntity,
-        fullPokemon: PokemonWithSpeciesTypesAndVarieties
-    ) =
-        withContext(dispatcher) {
-            database.insertPokemonAndAssociateWithGeneration(
-                generation,
-                fullPokemon
-            )
-        }
+        fullPokemon: PokemonWithSpeciesTypesAndVarieties,
+    ) = withContext(dispatcher) {
+        database.insertPokemonAndAssociateWithGeneration(
+            generation,
+            fullPokemon,
+        )
+    }
 
     fun getGenerationOverview(): Flow<GenerationOverviewEntity?> = generationDao.getOverview()
 

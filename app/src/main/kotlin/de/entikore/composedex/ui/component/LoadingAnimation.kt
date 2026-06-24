@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Entikore
+ * Copyright 2024-2026 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,16 +39,12 @@ import de.entikore.composedex.R
 import kotlinx.coroutines.delay
 
 @Composable
-fun LoadingAnimation(
-    modifier: Modifier = Modifier,
-    circleSize: Dp = 25.dp,
-    travelDistance: Dp = 20.dp
-) {
+fun LoadingAnimation(modifier: Modifier = Modifier, circleSize: Dp = 25.dp, travelDistance: Dp = 20.dp) {
     val circles =
         listOf(
             remember { Animatable(initialValue = 0f) },
             remember { Animatable(initialValue = 0f) },
-            remember { Animatable(initialValue = 0f) }
+            remember { Animatable(initialValue = 0f) },
         )
 
     circles.forEachIndexed { index, animatable ->
@@ -66,8 +62,8 @@ fun LoadingAnimation(
                         0.0f at 600 using LinearOutSlowInEasing
                         0.0f at 1200 using LinearOutSlowInEasing
                     },
-                    repeatMode = RepeatMode.Restart
-                )
+                    repeatMode = RepeatMode.Restart,
+                ),
             )
         }
     }
@@ -78,7 +74,7 @@ fun LoadingAnimation(
     Row(
         modifier = modifier,
         horizontalArrangement = Arrangement.Center,
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         circleValues.forEach { value ->
             Image(
@@ -87,7 +83,7 @@ fun LoadingAnimation(
                 modifier =
                 Modifier
                     .size(circleSize)
-                    .graphicsLayer { translationY = -value * distance }
+                    .graphicsLayer { translationY = -value * distance },
             )
         }
     }

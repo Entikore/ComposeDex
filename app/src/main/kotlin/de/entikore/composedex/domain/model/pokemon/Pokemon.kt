@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Entikore
+ * Copyright 2024-2026 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -46,7 +46,7 @@ data class Pokemon(
     val remoteCry: String?,
     val cry: String?,
     val isFavourite: Boolean,
-    val shape: PokemonShape
+    val shape: PokemonShape,
 ) {
     fun isDefault() = name == defaultName
 }
@@ -58,14 +58,12 @@ enum class EvolutionRank(val uiString: String) {
     BABY("Baby"),
     BASIC("Basic"),
     STAGE1("Stage 1"),
-    STAGE2("Stage 2")
+    STAGE2("Stage 2"),
 }
 
-fun Pokemon.wasPokemonUpdated(new: Pokemon): Boolean {
-    return !(
-        this.isFavourite != new.isFavourite ||
-            this.artwork != new.artwork ||
-            this.cry != new.cry ||
-            this.sprite != new.sprite
-        )
-}
+fun Pokemon.wasPokemonUpdated(new: Pokemon): Boolean = !(
+    this.isFavourite != new.isFavourite ||
+        this.artwork != new.artwork ||
+        this.cry != new.cry ||
+        this.sprite != new.sprite
+    )

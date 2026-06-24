@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Entikore
+ * Copyright 2025-2026 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,13 +28,11 @@ import kotlinx.coroutines.withContext
  */
 class FavouriteLocalDataSource(
     private val pokemonDao: PokemonDao,
-    private val dispatcher: CoroutineDispatcher = Dispatchers.IO
+    private val dispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) {
-    suspend fun updateIsFavourite(pokemonId: Int, isFavourite: Boolean) =
-        withContext(dispatcher) {
-            pokemonDao.updateFavourite(FavouriteUpdate(pokemonId, isFavourite))
-        }
+    suspend fun updateIsFavourite(pokemonId: Int, isFavourite: Boolean) = withContext(dispatcher) {
+        pokemonDao.updateFavourite(FavouriteUpdate(pokemonId, isFavourite))
+    }
 
-    fun getAllFavourites(): Flow<List<PokemonWithSpeciesTypesAndVarieties>> =
-        pokemonDao.getAllFavourites()
+    fun getAllFavourites(): Flow<List<PokemonWithSpeciesTypesAndVarieties>> = pokemonDao.getAllFavourites()
 }

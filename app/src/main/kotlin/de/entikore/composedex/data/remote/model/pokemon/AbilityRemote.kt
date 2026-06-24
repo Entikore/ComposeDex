@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Entikore
+ * Copyright 2024-2026 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,8 +25,4 @@ import de.entikore.composedex.data.remote.model.common.NamedApiResource
  * @property isHidden Whether or not this is a hidden ability.
  * @property slot The slot this ability occupies in this Pokémon species.
  */
-data class AbilityRemote(
-    val ability: NamedApiResource,
-    @Json(name = "is_hidden") val isHidden: Boolean,
-    val slot: Int
-)
+data class AbilityRemote(val ability: NamedApiResource, @Json(name = "is_hidden") val isHidden: Boolean, val slot: Int)

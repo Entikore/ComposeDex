@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Entikore
+ * Copyright 2025-2026 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -70,7 +70,7 @@ class TypeViewModelTest {
             typeUseCase,
             getPokemonOfTypeUseCase,
             saveRemoteImageUseCase,
-            setAsFavouriteUseCase
+            setAsFavouriteUseCase,
         )
 
         val expectedState = TypeScreenUiState.Success()
@@ -97,12 +97,12 @@ class TypeViewModelTest {
             typeUseCase,
             getPokemonOfTypeUseCase,
             saveRemoteImageUseCase,
-            setAsFavouriteUseCase
+            setAsFavouriteUseCase,
         )
 
         val expectedState = TypeScreenUiState.Success(
             types = listOf(iceType, normalType, grassType, poisonType),
-            selectedType = SelectedTypeUiState.NoTypeSelected
+            selectedType = SelectedTypeUiState.NoTypeSelected,
         )
 
         viewModel.screenState.test {
@@ -128,7 +128,7 @@ class TypeViewModelTest {
             typeUseCase,
             getPokemonOfTypeUseCase,
             saveRemoteImageUseCase,
-            setAsFavouriteUseCase
+            setAsFavouriteUseCase,
         )
 
         val expectedState = TypeScreenUiState.Success(
@@ -136,8 +136,8 @@ class TypeViewModelTest {
             selectedType = SelectedTypeUiState.Success(
                 selectedType = iceType,
                 pokemonState = PokemonUiState.Success(emptyList()),
-                showLoadingItem = true
-            )
+                showLoadingItem = true,
+            ),
         )
 
         viewModel.screenState.test {
@@ -152,7 +152,7 @@ class TypeViewModelTest {
             stateResult = awaitItem()
             assertThat(stateResult).isInstanceOf(TypeScreenUiState.Success::class.java)
             assertThat(stateResult).isEqualTo(
-                expectedState
+                expectedState,
             )
         }
     }
@@ -167,12 +167,12 @@ class TypeViewModelTest {
             typeUseCase,
             getPokemonOfTypeUseCase,
             saveRemoteImageUseCase,
-            setAsFavouriteUseCase
+            setAsFavouriteUseCase,
         )
 
         val expectedState = TypeScreenUiState.Success(
             types = listOf(iceType),
-            selectedType = SelectedTypeUiState.NoTypeSelected
+            selectedType = SelectedTypeUiState.NoTypeSelected,
         )
 
         viewModel.screenState.test {
@@ -189,8 +189,8 @@ class TypeViewModelTest {
             assertThat(stateResult).isEqualTo(
                 expectedState.copy(
                     selectedType =
-                    SelectedTypeUiState.Error
-                )
+                    SelectedTypeUiState.Error,
+                ),
             )
         }
     }

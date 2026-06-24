@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Entikore
+ * Copyright 2025-2026 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -47,39 +47,37 @@ class FetchGenerationUseCaseTest {
     }
 
     @Test
-    fun `get generation by name results in successful Result Success with searched generation`() =
-        runTest {
-            val generationI = getGenerationRemote(GEN_I_FILE).toEntity().asExternalModel()
-            val generationII = getGenerationRemote(GEN_II_FILE).toEntity().asExternalModel()
-            val generationVI = getGenerationRemote(GEN_VI_FILE).toEntity().asExternalModel()
-            getGenerationByXSuccessful(
-                expectedGeneration = generationI,
-                useCaseParam = generationI.name,
-                generationI,
-                generationII,
-                generationVI
-            )
-        }
+    fun `get generation by name results in successful Result Success with searched generation`() = runTest {
+        val generationI = getGenerationRemote(GEN_I_FILE).toEntity().asExternalModel()
+        val generationII = getGenerationRemote(GEN_II_FILE).toEntity().asExternalModel()
+        val generationVI = getGenerationRemote(GEN_VI_FILE).toEntity().asExternalModel()
+        getGenerationByXSuccessful(
+            expectedGeneration = generationI,
+            useCaseParam = generationI.name,
+            generationI,
+            generationII,
+            generationVI,
+        )
+    }
 
     @Test
-    fun `get generation by id results in successful Result with searched generation`() =
-        runTest {
-            val generationI = getGenerationRemote(GEN_I_FILE).toEntity().asExternalModel()
-            val generationII = getGenerationRemote(GEN_II_FILE).toEntity().asExternalModel()
-            val generationVI = getGenerationRemote(GEN_VI_FILE).toEntity().asExternalModel()
-            getGenerationByXSuccessful(
-                expectedGeneration = generationVI,
-                useCaseParam = generationVI.id.toString(),
-                generationI,
-                generationII,
-                generationVI
-            )
-        }
+    fun `get generation by id results in successful Result with searched generation`() = runTest {
+        val generationI = getGenerationRemote(GEN_I_FILE).toEntity().asExternalModel()
+        val generationII = getGenerationRemote(GEN_II_FILE).toEntity().asExternalModel()
+        val generationVI = getGenerationRemote(GEN_VI_FILE).toEntity().asExternalModel()
+        getGenerationByXSuccessful(
+            expectedGeneration = generationVI,
+            useCaseParam = generationVI.id.toString(),
+            generationI,
+            generationII,
+            generationVI,
+        )
+    }
 
     private suspend fun getGenerationByXSuccessful(
         expectedGeneration: Generation,
         useCaseParam: String,
-        vararg testData: Generation
+        vararg testData: Generation,
     ) {
         repository.addGenerations(*testData)
 
@@ -102,7 +100,7 @@ class FetchGenerationUseCaseTest {
             val actualGeneration = awaitItem()
             assertThat(actualGeneration.isFailure).isTrue()
             assertThat(actualGeneration.exceptionOrNull()?.message).isEqualTo(
-                GENERATION_WITH_NAME_NOT_FOUND
+                GENERATION_WITH_NAME_NOT_FOUND,
             )
             awaitComplete()
         }
@@ -118,7 +116,7 @@ class FetchGenerationUseCaseTest {
             useCaseParam = generationI.name,
             generationI,
             generationII,
-            generationVI
+            generationVI,
         )
     }
 
@@ -132,14 +130,11 @@ class FetchGenerationUseCaseTest {
             useCaseParam = generationII.id.toString(),
             generationI,
             generationII,
-            generationVI
+            generationVI,
         )
     }
 
-    private suspend fun getGenerationByXException(
-        useCaseParam: String,
-        vararg testData: Generation
-    ) {
+    private suspend fun getGenerationByXException(useCaseParam: String, vararg testData: Generation) {
         repository.addGenerations(*testData)
         repository.setReturnError(true)
 
@@ -147,7 +142,7 @@ class FetchGenerationUseCaseTest {
             val actualGeneration = awaitItem()
             assertThat(actualGeneration.isFailure).isTrue()
             assertThat(actualGeneration.exceptionOrNull()?.message).isEqualTo(
-                EXPECTED_TEST_EXCEPTION
+                EXPECTED_TEST_EXCEPTION,
             )
             awaitComplete()
         }

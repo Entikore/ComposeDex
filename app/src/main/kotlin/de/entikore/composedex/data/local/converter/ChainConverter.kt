@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Entikore
+ * Copyright 2024-2026 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,18 +33,14 @@ class ChainConverter @Inject constructor(val moshi: Moshi) {
             Integer::class.java,
             Types.newParameterizedType(
                 List::class.java,
-                ChainLink::class.java
-            )
+                ChainLink::class.java,
+            ),
         )
     private val chainAdapter = moshi.adapter<Map<Int, List<ChainLink>>>(chainType)
 
     @TypeConverter
-    fun chainFromJson(string: String): Map<Int, List<ChainLink>> {
-        return chainAdapter.fromJson(string).orEmpty()
-    }
+    fun chainFromJson(string: String): Map<Int, List<ChainLink>> = chainAdapter.fromJson(string).orEmpty()
 
     @TypeConverter
-    fun chainToJson(stats: Map<Int, List<ChainLink>>): String {
-        return chainAdapter.toJson(stats)
-    }
+    fun chainToJson(stats: Map<Int, List<ChainLink>>): String = chainAdapter.toJson(stats)
 }

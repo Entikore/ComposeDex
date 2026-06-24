@@ -53,15 +53,15 @@ class GenerationViewModel @Inject constructor(
     getGenerationUseCase: FetchGenerationUseCase,
     getPokemonOfGenerationUseCase: FetchPokemonOfGenerationUseCase,
     private val saveRemoteImageUseCase: @JvmSuppressWildcards BaseSuspendUseCase<SaveImageData, String>,
-    private val setAsFavouriteUseCase: @JvmSuppressWildcards BaseSuspendUseCase<SetFavouriteData, Unit>
+    private val setAsFavouriteUseCase: @JvmSuppressWildcards BaseSuspendUseCase<SetFavouriteData, Unit>,
 ) : PokemonFilterViewModel() {
 
-    private val _selectedGenerationFlow = MutableStateFlow<String?>(null)
+    private val selectedGenerationFlow = MutableStateFlow<String?>(null)
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val screenState: StateFlow<GenerationScreenUiState> = combine(
         getGenerationsUseCase(),
-        _selectedGenerationFlow.flatMapLatest { selectedGeneration ->
+        selectedGenerationFlow.flatMapLatest { selectedGeneration ->
             if (selectedGeneration == null) {
                 flowOf(SelectedGenerationUiState.NoGenerationSelected)
             } else {
@@ -70,26 +70,26 @@ class GenerationViewModel @Inject constructor(
                     getPokemonOfGenerationUseCase(selectedGeneration).onEach { result ->
                         result.onSuccess { launchAssetRetrieval(it) }
                     },
-                    ::buildSelectedGenerationUiState
+                    ::buildSelectedGenerationUiState,
                 )
             }
         },
-        ::buildGenerationScreenUiState
+        ::buildGenerationScreenUiState,
     ).combine(filterOptions) { uiState: GenerationScreenUiState, filterSettings: PokemonFilterOptions ->
         uiState.withFilteredPokemonList(
             uiState.getPokemonList()?.let {
                 filterSettings.getFilteredList(it)
-            }
+            },
         )
     }.stateIn(
         viewModelScope,
         SharingStarted.WhileSubscribed(5_000L),
-        GenerationScreenUiState.Loading
+        GenerationScreenUiState.Loading,
     )
 
     fun searchForGeneration(generationId: String) {
         Timber.d("Search for generation $generationId")
-        _selectedGenerationFlow.value = generationId
+        selectedGenerationFlow.value = generationId
     }
 
     fun updateFavourite(id: Int, isFavourite: Boolean) {
@@ -107,7 +107,7 @@ class GenerationViewModel @Inject constructor(
                     pokemon.remoteSprite,
                     saveAssetUseCase = { id, url, fileName ->
                         saveRemoteImageUseCase(SaveImageData(id, url, fileName, true))
-                    }
+                    },
                 )
             }
         }
@@ -115,46 +115,45 @@ class GenerationViewModel @Inject constructor(
 
     private fun buildSelectedGenerationUiState(
         generation: Result<Generation>,
-        pokemon: Result<List<Pokemon>>
-    ): SelectedGenerationUiState {
-        return when {
-            generation.isFailure -> SelectedGenerationUiState.Error
-            generation.isSuccess -> {
-                val pokemonUiState = when {
-                    pokemon.isFailure -> PokemonUiState.Error
-                    pokemon.isSuccess -> {
-                        PokemonUiState.Success(
-                            pokemon.getOrDefault(emptyList()).sortedBy { it.id }
-                        )
-                    }
+        pokemon: Result<List<Pokemon>>,
+    ): SelectedGenerationUiState = when {
+        generation.isFailure -> SelectedGenerationUiState.Error
 
-                    else -> PokemonUiState.Loading
+        generation.isSuccess -> {
+            val pokemonUiState = when {
+                pokemon.isFailure -> PokemonUiState.Error
+
+                pokemon.isSuccess -> {
+                    PokemonUiState.Success(
+                        pokemon.getOrDefault(emptyList()).sortedBy { it.id },
+                    )
                 }
-                SelectedGenerationUiState.Success(
-                    selectedGeneration = generation.getOrThrow(),
-                    pokemonState = pokemonUiState,
-                    showLoadingItem = pokemonUiState.stillLoading(generation.getOrThrow().numberOfPokemon)
-                )
-            }
 
-            else -> SelectedGenerationUiState.Loading
+                else -> PokemonUiState.Loading
+            }
+            SelectedGenerationUiState.Success(
+                selectedGeneration = generation.getOrThrow(),
+                pokemonState = pokemonUiState,
+                showLoadingItem = pokemonUiState.stillLoading(generation.getOrThrow().numberOfPokemon),
+            )
         }
+
+        else -> SelectedGenerationUiState.Loading
     }
 
     private fun buildGenerationScreenUiState(
         generations: Result<List<Generation>>,
-        selectedGenerationUiState: SelectedGenerationUiState
-    ): GenerationScreenUiState {
-        return when {
-            generations.isFailure -> GenerationScreenUiState.Error
-            generations.isSuccess -> {
-                GenerationScreenUiState.Success(
-                    generations = generations.getOrDefault(emptyList()),
-                    selectedGeneration = selectedGenerationUiState
-                )
-            }
+        selectedGenerationUiState: SelectedGenerationUiState,
+    ): GenerationScreenUiState = when {
+        generations.isFailure -> GenerationScreenUiState.Error
 
-            else -> GenerationScreenUiState.Loading
+        generations.isSuccess -> {
+            GenerationScreenUiState.Success(
+                generations = generations.getOrDefault(emptyList()),
+                selectedGeneration = selectedGenerationUiState,
+            )
         }
+
+        else -> GenerationScreenUiState.Loading
     }
 }

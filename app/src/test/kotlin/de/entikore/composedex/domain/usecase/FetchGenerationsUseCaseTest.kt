@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Entikore
+ * Copyright 2025-2026 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -56,7 +56,7 @@ class FetchGenerationsUseCaseTest {
             val allGenerationsResult = awaitItem()
             assertThat(allGenerationsResult.isSuccess).isTrue()
             assertThat(
-                (allGenerationsResult.getOrThrow())
+                (allGenerationsResult.getOrThrow()),
             ).containsExactly(generationI, generationII, generationVI)
             awaitComplete()
         }
@@ -84,7 +84,7 @@ class FetchGenerationsUseCaseTest {
             val allGenerationsResult = awaitItem()
             assertThat(allGenerationsResult.isFailure).isTrue()
             assertThat((allGenerationsResult.exceptionOrNull())?.message).isEqualTo(
-                EXPECTED_TEST_EXCEPTION
+                EXPECTED_TEST_EXCEPTION,
             )
             awaitComplete()
         }

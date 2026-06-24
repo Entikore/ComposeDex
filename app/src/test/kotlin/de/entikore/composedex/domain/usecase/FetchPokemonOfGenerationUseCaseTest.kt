@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Entikore
+ * Copyright 2025-2026 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -90,18 +90,19 @@ class FetchPokemonOfGenerationUseCaseTest {
     }
 
     @Test
-    fun `get pokemon of generation results in successful Result with empty list if no pokemon of generation`() = runTest {
-        val generationI = getGenerationRemote(GEN_I_FILE).toEntity().asExternalModel()
-        val generationII = getGenerationRemote(GEN_II_FILE).toEntity().asExternalModel()
-        val lapras = getPokemonInfoRemote(getTestModel(POKEMON_LAPRAS_NAME)).toEntity().asExternalModel()
-        val ditto = getPokemonInfoRemote(getTestModel(POKEMON_DITTO_NAME)).toEntity().asExternalModel()
+    fun `get pokemon of generation results in successful Result with empty list if no pokemon of generation`() =
+        runTest {
+            val generationI = getGenerationRemote(GEN_I_FILE).toEntity().asExternalModel()
+            val generationII = getGenerationRemote(GEN_II_FILE).toEntity().asExternalModel()
+            val lapras = getPokemonInfoRemote(getTestModel(POKEMON_LAPRAS_NAME)).toEntity().asExternalModel()
+            val ditto = getPokemonInfoRemote(getTestModel(POKEMON_DITTO_NAME)).toEntity().asExternalModel()
 
-        repository.addGenerations(generationI, generationII)
-        repository.addPokemon(lapras, ditto)
+            repository.addGenerations(generationI, generationII)
+            repository.addPokemon(lapras, ditto)
 
-        getPokemonOfGenerationSuccessful(generationII.name, emptyList())
-        getPokemonOfGenerationSuccessful(generationII.id.toString(), emptyList())
-    }
+            getPokemonOfGenerationSuccessful(generationII.name, emptyList())
+            getPokemonOfGenerationSuccessful(generationII.id.toString(), emptyList())
+        }
 
     @Test
     fun `get pokemon of generation results in error Result on any exception`() = runTest {
@@ -116,7 +117,7 @@ class FetchPokemonOfGenerationUseCaseTest {
             val actualPokemon = awaitItem()
             assertThat(actualPokemon.isFailure).isTrue()
             assertThat(actualPokemon.exceptionOrNull()?.message).isEqualTo(
-                EXPECTED_TEST_EXCEPTION
+                EXPECTED_TEST_EXCEPTION,
             )
             awaitComplete()
         }

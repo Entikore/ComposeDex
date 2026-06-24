@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Entikore
+ * Copyright 2024-2026 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,11 +35,11 @@ fun LazyTypeRowWithTopLabel(
     labelText: String,
     onClick: (String) -> Unit,
     modifier: Modifier = Modifier,
-    onLongClick: (String) -> Unit = {}
+    onLongClick: (String) -> Unit = {},
 ) {
     Column(horizontalAlignment = Alignment.Start, modifier = modifier) {
         BorderedLabel(
-            labelText = labelText
+            labelText = labelText,
         )
         Spacer(modifier = Modifier.padding(vertical = dimensionResource(id = R.dimen.small_padding)))
         TypeRow(typeNames, onClick = onClick, onLongClick = onLongClick)
@@ -52,12 +52,12 @@ fun TypeRow(
     typeNames: List<String>,
     modifier: Modifier = Modifier,
     onClick: (String) -> Unit = {},
-    onLongClick: (String) -> Unit = {}
+    onLongClick: (String) -> Unit = {},
 ) {
     LazyRow(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Start,
-        modifier = modifier.fillMaxWidth()
+        modifier = modifier.fillMaxWidth(),
     ) {
         items(typeNames) { type ->
             TypeIcon(
@@ -65,12 +65,12 @@ fun TypeRow(
                     .padding(
                         start = dimensionResource(id = R.dimen.small_padding),
                         end = dimensionResource(id = R.dimen.small_padding),
-                        top = dimensionResource(id = R.dimen.small_padding)
+                        top = dimensionResource(id = R.dimen.small_padding),
                     )
                     .size(dimensionResource(id = R.dimen.type_icon_size)),
                 type = type,
                 onClick = onClick,
-                onLongClick = onLongClick
+                onLongClick = onLongClick,
             )
         }
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Entikore
+ * Copyright 2024-2026 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@ import de.entikore.composedex.domain.model.pokemon.Variety
 data class VarietyEntity(
     @PrimaryKey(autoGenerate = false) val varietyName: String,
     val isDefault: Boolean,
-    val localArtwork: String?
+    val localArtwork: String?,
 )
 
 fun VarietyEntity.asExternalModel(): Variety = Variety(varietyName, isDefault, null)

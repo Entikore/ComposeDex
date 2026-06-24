@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Entikore
+ * Copyright 2025-2026 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,12 +26,10 @@ sealed interface PokemonUiState {
     data object Loading : PokemonUiState
 }
 
-fun PokemonUiState.stillLoading(allPokemon: Int): Boolean {
-    return when (this) {
-        is PokemonUiState.Success -> {
-            this.pokemon.size != allPokemon
-        }
-
-        else -> true
+fun PokemonUiState.stillLoading(allPokemon: Int): Boolean = when (this) {
+    is PokemonUiState.Success -> {
+        this.pokemon.size != allPokemon
     }
+
+    else -> true
 }

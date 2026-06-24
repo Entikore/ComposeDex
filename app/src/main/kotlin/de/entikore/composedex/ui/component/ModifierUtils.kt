@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Entikore
+ * Copyright 2024-2026 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,27 +22,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 
-fun Modifier.cutCornerShapeBackgroundWithBorder(
-    shape: Int,
-    color: Color,
-    borderWidth: Dp,
-    borderColor: Color
-) = this.background(
-    color,
-    CutCornerShape(shape)
-).cutCornerShapeBorder(
-    cutCornerPercentage = shape,
-    borderWidth = borderWidth,
-    borderColor = borderColor
-)
+fun Modifier.cutCornerShapeBackgroundWithBorder(shape: Int, color: Color, borderWidth: Dp, borderColor: Color) =
+    this.background(
+        color,
+        CutCornerShape(shape),
+    ).cutCornerShapeBorder(
+        cutCornerPercentage = shape,
+        borderWidth = borderWidth,
+        borderColor = borderColor,
+    )
 
-fun Modifier.cutCornerShapeBorder(
-    cutCornerPercentage: Int,
-    borderWidth: Dp,
-    borderColor: Color
-): Modifier =
+fun Modifier.cutCornerShapeBorder(cutCornerPercentage: Int, borderWidth: Dp, borderColor: Color): Modifier =
     this.border(
         width = borderWidth,
         color = borderColor,
-        shape = CutCornerShape(cutCornerPercentage)
+        shape = CutCornerShape(cutCornerPercentage),
     )

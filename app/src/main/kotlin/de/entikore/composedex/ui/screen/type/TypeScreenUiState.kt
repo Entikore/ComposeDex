@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Entikore
+ * Copyright 2024-2026 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,7 +26,7 @@ sealed interface TypeScreenUiState {
 
     data class Success(
         val types: List<Type> = emptyList(),
-        val selectedType: SelectedTypeUiState = SelectedTypeUiState.NoTypeSelected
+        val selectedType: SelectedTypeUiState = SelectedTypeUiState.NoTypeSelected,
     ) : TypeScreenUiState
 
     data object Error : TypeScreenUiState
@@ -45,30 +45,28 @@ sealed interface SelectedTypeUiState {
     data class Success(
         val selectedType: Type,
         val pokemonState: PokemonUiState = PokemonUiState.Loading,
-        val showLoadingItem: Boolean = false
+        val showLoadingItem: Boolean = false,
     ) : SelectedTypeUiState
 }
 
-fun TypeScreenUiState.getPokemonList(): List<Pokemon>? {
-    return when (this) {
-        is TypeScreenUiState.Success -> {
-            when (this.selectedType) {
-                is SelectedTypeUiState.Success -> {
-                    when (val pokemonUiState = this.selectedType.pokemonState) {
-                        is PokemonUiState.Success -> {
-                            pokemonUiState.pokemon
-                        }
-
-                        else -> null
+fun TypeScreenUiState.getPokemonList(): List<Pokemon>? = when (this) {
+    is TypeScreenUiState.Success -> {
+        when (this.selectedType) {
+            is SelectedTypeUiState.Success -> {
+                when (val pokemonUiState = this.selectedType.pokemonState) {
+                    is PokemonUiState.Success -> {
+                        pokemonUiState.pokemon
                     }
+
+                    else -> null
                 }
-
-                else -> null
             }
-        }
 
-        else -> null
+            else -> null
+        }
     }
+
+    else -> null
 }
 
 fun TypeScreenUiState.withFilteredPokemonList(filteredList: List<Pokemon>?): TypeScreenUiState {
@@ -81,7 +79,7 @@ fun TypeScreenUiState.withFilteredPokemonList(filteredList: List<Pokemon>?): Typ
 
     return this.copy(
         selectedType = this.selectedType.copy(
-            pokemonState = this.selectedType.pokemonState.copy(filteredList)
-        )
+            pokemonState = this.selectedType.pokemonState.copy(filteredList),
+        ),
     )
 }

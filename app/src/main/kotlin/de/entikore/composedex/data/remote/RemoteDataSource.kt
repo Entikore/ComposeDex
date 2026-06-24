@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Entikore
+ * Copyright 2024-2026 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,51 +31,47 @@ import kotlinx.coroutines.withContext
 /**
  * Retrofit backed [ComposeDexApi].
  */
-class RemoteDataSource(
-    private val api: ComposeDexApi,
-    private val dispatcher: CoroutineDispatcher = Dispatchers.IO
-) : ApiHandler {
+class RemoteDataSource(private val api: ComposeDexApi, private val dispatcher: CoroutineDispatcher = Dispatchers.IO) :
+    ApiHandler {
     suspend fun getPokemonInfoRemoteBySpeciesName(name: String): ApiResponse<PokemonInfoRemote> =
         withContext(dispatcher) {
             return@withContext try {
                 val initialPokemonInfo = getSpeciesWithPokemonTypeAndVarieties(name)
                 ApiResponse.success(
-                    fetchAndProcessEvolutionChain(initialPokemonInfo)
+                    fetchAndProcessEvolutionChain(initialPokemonInfo),
                 )
             } catch (exception: RemoteDataSourceException) {
                 ApiResponse.error(
                     ERROR_POKEMON_NOT_FOUND.format(name),
-                    exception
+                    exception,
                 )
             }
         }
 
-    suspend fun getPokemonInfoRemoteByName(name: String): ApiResponse<PokemonInfoRemote> =
-        withContext(dispatcher) {
-            return@withContext try {
-                val initialPokemonInfo = getPokemonWithSpeciesAndType(name)
-                ApiResponse.success(
-                    fetchAndProcessEvolutionChain(initialPokemonInfo)
-                )
-            } catch (exception: RemoteDataSourceException) {
-                ApiResponse.error(
-                    ERROR_POKEMON_NOT_FOUND.format(name),
-                    exception
-                )
-            }
+    suspend fun getPokemonInfoRemoteByName(name: String): ApiResponse<PokemonInfoRemote> = withContext(dispatcher) {
+        return@withContext try {
+            val initialPokemonInfo = getPokemonWithSpeciesAndType(name)
+            ApiResponse.success(
+                fetchAndProcessEvolutionChain(initialPokemonInfo),
+            )
+        } catch (exception: RemoteDataSourceException) {
+            ApiResponse.error(
+                ERROR_POKEMON_NOT_FOUND.format(name),
+                exception,
+            )
         }
+    }
 
-    suspend fun getPokemonInfoRemoteById(id: Int): ApiResponse<PokemonInfoRemote> =
-        withContext(dispatcher) {
-            return@withContext try {
-                val initialPokemonInfo = getPokemonWithSpeciesAndType(id)
-                ApiResponse.success(
-                    fetchAndProcessEvolutionChain(initialPokemonInfo)
-                )
-            } catch (exception: RemoteDataSourceException) {
-                ApiResponse.error(ERROR_POKEMON_ID_NOT_FOUND.format(id), exception)
-            }
+    suspend fun getPokemonInfoRemoteById(id: Int): ApiResponse<PokemonInfoRemote> = withContext(dispatcher) {
+        return@withContext try {
+            val initialPokemonInfo = getPokemonWithSpeciesAndType(id)
+            ApiResponse.success(
+                fetchAndProcessEvolutionChain(initialPokemonInfo),
+            )
+        } catch (exception: RemoteDataSourceException) {
+            ApiResponse.error(ERROR_POKEMON_ID_NOT_FOUND.format(id), exception)
         }
+    }
 
     suspend fun getPokemonTypes(): ApiResponse<TypeListRemote> = withContext(dispatcher) {
         return@withContext try {
@@ -86,15 +82,14 @@ class RemoteDataSource(
         }
     }
 
-    suspend fun getPokemonTypeByName(name: String): ApiResponse<TypeRemote> =
-        withContext(dispatcher) {
-            return@withContext try {
-                val type = handleApi { api.getPokemonTypeByName(name) }.getSuccessOrThrow()
-                ApiResponse.success(type)
-            } catch (exception: RemoteDataSourceException) {
-                ApiResponse.error(ERROR_TYPE_NOT_FOUND.format(name), exception)
-            }
+    suspend fun getPokemonTypeByName(name: String): ApiResponse<TypeRemote> = withContext(dispatcher) {
+        return@withContext try {
+            val type = handleApi { api.getPokemonTypeByName(name) }.getSuccessOrThrow()
+            ApiResponse.success(type)
+        } catch (exception: RemoteDataSourceException) {
+            ApiResponse.error(ERROR_TYPE_NOT_FOUND.format(name), exception)
         }
+    }
 
     suspend fun getGenerations(): ApiResponse<GenerationListRemote> = withContext(dispatcher) {
         return@withContext try {
@@ -105,36 +100,34 @@ class RemoteDataSource(
         }
     }
 
-    suspend fun getGenerationByName(name: String): ApiResponse<GenerationRemote> =
-        withContext(dispatcher) {
-            return@withContext try {
-                val generation = handleApi { api.getGenerationByName(name) }.getSuccessOrThrow()
-                ApiResponse.success(generation)
-            } catch (exception: RemoteDataSourceException) {
-                ApiResponse.error(
-                    ERROR_GENERATION_NOT_FOUND.format(name),
-                    exception
-                )
-            }
+    suspend fun getGenerationByName(name: String): ApiResponse<GenerationRemote> = withContext(dispatcher) {
+        return@withContext try {
+            val generation = handleApi { api.getGenerationByName(name) }.getSuccessOrThrow()
+            ApiResponse.success(generation)
+        } catch (exception: RemoteDataSourceException) {
+            ApiResponse.error(
+                ERROR_GENERATION_NOT_FOUND.format(name),
+                exception,
+            )
         }
+    }
 
-    suspend fun getGenerationById(id: Int): ApiResponse<GenerationRemote> =
-        withContext(dispatcher) {
-            return@withContext try {
-                val generation =
-                    handleApi { api.getGenerationById(id.toString()) }.getSuccessOrThrow()
-                ApiResponse.success(generation)
-            } catch (exception: RemoteDataSourceException) {
-                ApiResponse.error(
-                    ERROR_GENERATION_ID_NOT_FOUND.format(id),
-                    exception
-                )
-            }
+    suspend fun getGenerationById(id: Int): ApiResponse<GenerationRemote> = withContext(dispatcher) {
+        return@withContext try {
+            val generation =
+                handleApi { api.getGenerationById(id.toString()) }.getSuccessOrThrow()
+            ApiResponse.success(generation)
+        } catch (exception: RemoteDataSourceException) {
+            ApiResponse.error(
+                ERROR_GENERATION_ID_NOT_FOUND.format(id),
+                exception,
+            )
         }
+    }
 
     private suspend fun getPokemonWithSpeciesAndType(id: Int): PokemonInfoRemote {
         val pokemon = handleApi { api.getPokemonById(id) }.getSuccessOrThrow(
-            ERROR_POKEMON_ID_NOT_FOUND.format(id)
+            ERROR_POKEMON_ID_NOT_FOUND.format(id),
         )
         return getSpeciesAndTypes(pokemon)
     }
@@ -144,7 +137,7 @@ class RemoteDataSource(
         val pokemon =
             handleApi {
                 api.getPokemonByName(
-                    species.varieties.first { it.isDefault }.pokemon.name
+                    species.varieties.first { it.isDefault }.pokemon.name,
                 )
             }.getSuccessOrThrow()
         val types = mutableListOf<TypeRemote>().apply {
@@ -155,16 +148,12 @@ class RemoteDataSource(
         return PokemonInfoRemote(pokemon, species, types)
     }
 
-    private suspend fun getPokemonWithSpeciesAndType(
-        name: String
-    ): PokemonInfoRemote {
+    private suspend fun getPokemonWithSpeciesAndType(name: String): PokemonInfoRemote {
         val pokemon = handleApi { api.getPokemonByName(name) }.getSuccessOrThrow()
         return getSpeciesAndTypes(pokemon)
     }
 
-    private suspend fun getSpeciesAndTypes(
-        pokemon: PokemonRemote
-    ): PokemonInfoRemote {
+    private suspend fun getSpeciesAndTypes(pokemon: PokemonRemote): PokemonInfoRemote {
         val species =
             handleApi { api.getPokemonSpeciesByName(pokemon.species.name) }.getSuccessOrThrow()
         val types = mutableListOf<TypeRemote>().apply {
@@ -176,13 +165,13 @@ class RemoteDataSource(
     }
 
     private suspend fun fetchAndProcessEvolutionChain(
-        pokemonWithSpeciesAndTypesRemote: PokemonInfoRemote
+        pokemonWithSpeciesAndTypesRemote: PokemonInfoRemote,
     ): PokemonInfoRemote {
         var chain: EvolutionChainRemote? = null
         pokemonWithSpeciesAndTypesRemote.species.evolutionChain?.let {
             chain = handleApi {
                 api.getEvolutionChain(
-                    getUrlPath(pokemonWithSpeciesAndTypesRemote.species.evolutionChain.url)
+                    getUrlPath(pokemonWithSpeciesAndTypesRemote.species.evolutionChain.url),
                 )
             }.getSuccessOrThrow()
         }
@@ -192,14 +181,14 @@ class RemoteDataSource(
     private fun processChain(
         currentChainRemote: ChainRemote?,
         currentRank: Int,
-        evolutionMap: MutableMap<Int, MutableList<ChainLink>>
+        evolutionMap: MutableMap<Int, MutableList<ChainLink>>,
     ) {
         if (currentChainRemote == null) return
 
         val chainLink = ChainLink(
             currentChainRemote.species.name,
             getUrlPath(currentChainRemote.species.url),
-            currentChainRemote.isBaby
+            currentChainRemote.isBaby,
         )
         evolutionMap.computeIfAbsent(currentRank) { mutableListOf() }.add(chainLink)
 

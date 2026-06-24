@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Entikore
+ * Copyright 2024-2026 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -56,6 +56,5 @@ object RemoteModule {
         .connectionPool(ConnectionPool(IDLE_CONNECTION_COUNT, KEEP_ALIVE_DURATION, TimeUnit.MINUTES))
 
     @Provides
-    fun provideRemoteDataSource(composeDexApi: ComposeDexApi): RemoteDataSource =
-        RemoteDataSource(composeDexApi)
+    fun provideRemoteDataSource(composeDexApi: ComposeDexApi): RemoteDataSource = RemoteDataSource(composeDexApi)
 }

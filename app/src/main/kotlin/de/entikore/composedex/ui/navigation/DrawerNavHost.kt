@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Entikore
+ * Copyright 2025-2026 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -60,7 +60,7 @@ fun DrawerNavHost(
     snackBarHostState: SnackbarHostState,
     changeDrawerState: () -> Unit,
     showSnackbar: (String) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val backstack = remember { mutableStateListOf<ComposeDexDestination>(PokemonDestination()) }
     val currentScreenObjectForNavDisplay: ComposeDexDestination? = backstack.lastOrNull()
@@ -72,18 +72,18 @@ fun DrawerNavHost(
                 onDestinationClick = { route ->
                     changeDrawerState()
                     backstack.add(route)
-                }
+                },
             )
         },
         drawerState = drawerState,
-        gesturesEnabled = true
+        gesturesEnabled = true,
     ) {
         Scaffold(
             snackbarHost = {
                 SnackbarHost(snackBarHostState)
             },
             containerColor = MaterialTheme.colorScheme.background,
-            modifier = modifier.fillMaxSize()
+            modifier = modifier.fillMaxSize(),
         ) { padding ->
 
             NavDisplay(
@@ -92,7 +92,7 @@ fun DrawerNavHost(
                     rememberSceneSetupNavEntryDecorator(),
                     rememberSavedStateNavEntryDecorator(),
                     // Then add the view model store decorator
-                    rememberViewModelStoreNavEntryDecorator()
+                    rememberViewModelStoreNavEntryDecorator(),
                 ),
                 backStack = backstack,
                 onBack = { backstack.removeLastOrNull() },
@@ -111,7 +111,7 @@ fun DrawerNavHost(
                             modifier = Modifier
                                 .fillMaxSize()
                                 .testTag(stringResource(R.string.test_tag_compose_dex_destination_pokemon))
-                                .padding(padding)
+                                .padding(padding),
                         )
                     }
                     entry<FavouriteDestination> {
@@ -123,8 +123,8 @@ fun DrawerNavHost(
                             modifier = Modifier
                                 .fillMaxSize()
                                 .testTag(
-                                    stringResource(R.string.test_tag_compose_dex_destination_favourite)
-                                )
+                                    stringResource(R.string.test_tag_compose_dex_destination_favourite),
+                                ),
                         )
                     }
                     entry<GenerationDestination> {
@@ -136,8 +136,8 @@ fun DrawerNavHost(
                             modifier = Modifier
                                 .fillMaxSize()
                                 .testTag(
-                                    stringResource(R.string.test_tag_compose_dex_destination_generation)
-                                )
+                                    stringResource(R.string.test_tag_compose_dex_destination_generation),
+                                ),
                         )
                     }
                     entry<TypeDestination> { typeDestination ->
@@ -154,8 +154,8 @@ fun DrawerNavHost(
                             modifier = Modifier
                                 .fillMaxSize()
                                 .testTag(
-                                    stringResource(R.string.test_tag_compose_dex_destination_type)
-                                )
+                                    stringResource(R.string.test_tag_compose_dex_destination_type),
+                                ),
                         )
                     }
                     entry<SettingsDestination> {
@@ -165,8 +165,8 @@ fun DrawerNavHost(
                             modifier = Modifier
                                 .fillMaxSize()
                                 .testTag(
-                                    stringResource(R.string.test_tag_compose_dex_destination_settings)
-                                )
+                                    stringResource(R.string.test_tag_compose_dex_destination_settings),
+                                ),
                         )
                     }
                 },

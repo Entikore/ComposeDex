@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Entikore
+ * Copyright 2024-2026 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,8 +15,6 @@
  */
 package de.entikore.composedex.domain.util
 
-fun <T> List<T>.replace(newValue: T, block: (T) -> Boolean): List<T> {
-    return map {
-        if (block(it)) newValue else it
-    }
+fun <T> List<T>.replace(newValue: T, block: (T) -> Boolean): List<T> = map {
+    if (block(it)) newValue else it
 }

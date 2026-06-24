@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Entikore
+ * Copyright 2024-2026 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,16 +25,12 @@ import de.entikore.composedex.data.remote.model.common.NamedApiResource
  * @property isDefault Whether this variety is the default variety.
  * @property pokemon The Pokémon variety.
  */
-data class VarietyRemote(
-    @Json(name = "is_default") val isDefault: Boolean,
-    val pokemon: NamedApiResource
-)
+data class VarietyRemote(@Json(name = "is_default") val isDefault: Boolean, val pokemon: NamedApiResource)
 
 /**
  * Converts a [VarietyRemote] to a [VarietyEntity].
  */
-fun VarietyRemote.toEntity() =
-    VarietyEntity(varietyName = pokemon.name, isDefault = isDefault, localArtwork = null)
+fun VarietyRemote.toEntity() = VarietyEntity(varietyName = pokemon.name, isDefault = isDefault, localArtwork = null)
 
 /**
  * Converts a list of [VarietyRemote] to a list of [VarietyEntity].

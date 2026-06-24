@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Entikore
+ * Copyright 2025-2026 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,8 +36,9 @@ sealed interface ComposeDexDestination : NavKey {
 data class PokemonDestination(
     override val icon: Int = R.drawable.ic_jiggly_pixel,
     override val uiName: String = "Pokemon",
-    val pokemonName: String? = null
-) : ComposeDexDestination, NavKey
+    val pokemonName: String? = null,
+) : ComposeDexDestination,
+    NavKey
 
 /**
  * Destination for [de.entikore.composedex.ui.screen.favourite.FavouriteDestination].
@@ -45,7 +46,7 @@ data class PokemonDestination(
 @Serializable
 data class FavouriteDestination(
     override val icon: Int = R.drawable.ic_star_pixel,
-    override val uiName: String = "Favourites"
+    override val uiName: String = "Favourites",
 ) : ComposeDexDestination
 
 /**
@@ -54,7 +55,7 @@ data class FavouriteDestination(
 @Serializable
 data class GenerationDestination(
     override val icon: Int = R.drawable.ic_balls_pixel,
-    override val uiName: String = "Generations"
+    override val uiName: String = "Generations",
 ) : ComposeDexDestination
 
 /**
@@ -64,7 +65,7 @@ data class GenerationDestination(
 data class TypeDestination(
     override val icon: Int = R.drawable.ic_eevee_pixel,
     override val uiName: String = "Types",
-    val typeName: String? = null
+    val typeName: String? = null,
 ) : ComposeDexDestination
 
 /**
@@ -73,7 +74,7 @@ data class TypeDestination(
 @Serializable
 data class SettingsDestination(
     override val icon: Int = R.drawable.ic_settings_pixel,
-    override val uiName: String = "Settings"
+    override val uiName: String = "Settings",
 ) : ComposeDexDestination
 
 val drawerScreens: List<ComposeDexDestination> =
@@ -82,5 +83,5 @@ val drawerScreens: List<ComposeDexDestination> =
         FavouriteDestination(),
         GenerationDestination(),
         TypeDestination(),
-        SettingsDestination()
+        SettingsDestination(),
     )

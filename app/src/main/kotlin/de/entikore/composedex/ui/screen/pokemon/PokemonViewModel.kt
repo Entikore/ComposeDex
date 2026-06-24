@@ -60,18 +60,18 @@ class PokemonViewModel @Inject constructor(
     private val setAsFavouriteUseCase: @JvmSuppressWildcards BaseSuspendUseCase<SetFavouriteData, Unit>,
     private val changeThemeUseCase: @JvmSuppressWildcards BaseSuspendUseCase<String, Unit>,
     private val exoPlayer: ExoPlayer,
-    private val tts: ComposeDexTTS
+    private val tts: ComposeDexTTS,
 ) : ViewModel() {
 
-    private val _selectedPokemonFlow = MutableStateFlow<String?>(null)
-    private val _selectedPokemon = MutableStateFlow(0)
-    private val _selectedType = MutableStateFlow("")
-    private val _displayedEvolutionType = MutableStateFlow("")
+    private val selectedPokemonFlow = MutableStateFlow<String?>(null)
+    private val selectedPokemon = MutableStateFlow(0)
+    private val selectedType = MutableStateFlow("")
+    private val displayedEvolutionType = MutableStateFlow("")
     private var lastThemeType: String? = null
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val screenState: StateFlow<PokemonScreenState> =
-        _selectedPokemonFlow
+        selectedPokemonFlow
             .flatMapLatest { pokemonParameter ->
                 if (pokemonParameter == null) {
                     flowOf(PokemonScreenState.NoPokemonSelected)
@@ -88,84 +88,79 @@ class PokemonViewModel @Inject constructor(
             }
             .stateIn(viewModelScope, SharingStarted.Lazily, PokemonScreenState.NoPokemonSelected)
 
-    private fun handlePokemonResult(result: Result<Pokemon>, name: String): Flow<PokemonScreenState> {
-        return when {
-            result.isFailure -> flowOf(
-                PokemonScreenState.Error(
-                    errorMessage = "$ERROR_LOADING_POKEMON $name"
-                )
+    private fun handlePokemonResult(result: Result<Pokemon>, name: String): Flow<PokemonScreenState> = when {
+        result.isFailure -> flowOf(
+            PokemonScreenState.Error(
+                errorMessage = "$ERROR_LOADING_POKEMON $name",
+            ),
+        )
+
+        result.isSuccess -> {
+            val pokemon = result.getOrThrow()
+
+            launchAssetRetrieval(pokemon)
+            updateInitialSelection(pokemon)
+
+            val evolvesFromFlow = lookUpEvolvesFromFlow(pokemon.evolvesFrom)
+            val evolvesToFlow = combine(
+                lookUpEvolvesToFlow(
+                    pokemon.defaultName,
+                    pokemon.evolutionChain,
+                ).toList(),
+                ::combineEvolvesTo,
+            )
+            val extraVarietiesFlow = combine(
+                lookUpVarietiesToFlow(
+                    pokemon.varieties.filter { it.varietyName != pokemon.name },
+                ).toList(),
+                ::combineVarieties,
             )
 
-            result.isSuccess -> {
-                val pokemon = result.getOrThrow()
-
-                launchAssetRetrieval(pokemon)
-                updateInitialSelection(pokemon)
-
-                val evolvesFromFlow = lookUpEvolvesFromFlow(pokemon.evolvesFrom)
-                val evolvesToFlow = combine(
-                    lookUpEvolvesToFlow(
-                        pokemon.defaultName,
-                        pokemon.evolutionChain
-                    ).toList(),
-                    ::combineEvolvesTo
-                )
-                val extraVarietiesFlow = combine(
-                    lookUpVarietiesToFlow(
-                        pokemon.varieties.filter { it.varietyName != pokemon.name }
-                    ).toList(),
-                    ::combineVarieties
-                )
-
-                val detailsFlow = combine(
-                    evolvesFromFlow,
-                    evolvesToFlow,
-                    extraVarietiesFlow
-                ) { evolvesFrom, evolvesTo, extraVarieties ->
-                    EnrichedPokemonData(evolvesFrom, evolvesTo, extraVarieties)
-                }
-
-                combine(
-                    detailsFlow,
-                    _selectedPokemon,
-                    _selectedType,
-                    _displayedEvolutionType
-                ) { details, varietyIndex, typeName, evolutionText ->
-                    val (evolvesFrom, evolvesTo, extraVarieties) = details
-                    val allVarieties = (listOf(pokemon) + extraVarieties).sortedBy { it.id }
-                    val selectedVariety = allVarieties.elementAtOrNull(varietyIndex)
-                        ?: allVarieties.first()
-                    val selectedType = selectedVariety.types.firstOrNull { it.name == typeName }
-                        ?: selectedVariety.types.first()
-
-                    PokemonScreenState.Success(
-                        selectedPokemon = selectedVariety,
-                        varieties = allVarieties,
-                        evolvesFrom = evolvesFrom,
-                        evolvesTo = evolvesTo,
-                        selectedType = selectedType,
-                        displayedEvolution = evolutionText
-                    )
-                }
+            val detailsFlow = combine(
+                evolvesFromFlow,
+                evolvesToFlow,
+                extraVarietiesFlow,
+            ) { evolvesFrom, evolvesTo, extraVarieties ->
+                EnrichedPokemonData(evolvesFrom, evolvesTo, extraVarieties)
             }
 
-            else -> flowOf(PokemonScreenState.Loading)
+            combine(
+                detailsFlow,
+                selectedPokemon,
+                selectedType,
+                displayedEvolutionType,
+            ) { details, varietyIndex, typeName, evolutionText ->
+                val (evolvesFrom, evolvesTo, extraVarieties) = details
+                val allVarieties = (listOf(pokemon) + extraVarieties).sortedBy { it.id }
+                val selectedVariety = allVarieties.elementAtOrNull(varietyIndex)
+                    ?: allVarieties.first()
+                val selectedType = selectedVariety.types.firstOrNull { it.name == typeName }
+                    ?: selectedVariety.types.first()
+
+                PokemonScreenState.Success(
+                    selectedPokemon = selectedVariety,
+                    varieties = allVarieties,
+                    evolvesFrom = evolvesFrom,
+                    evolvesTo = evolvesTo,
+                    selectedType = selectedType,
+                    displayedEvolution = evolutionText,
+                )
+            }
         }
+
+        else -> flowOf(PokemonScreenState.Loading)
     }
 
     private data class EnrichedPokemonData(
         val evolvesFrom: PokemonPreview?,
         val evolvesTo: List<PokemonPreview>,
-        val extraVarieties: List<Pokemon>
+        val extraVarieties: List<Pokemon>,
     )
 
-    private fun combineEvolvesTo(vararg previews: PokemonPreview?): List<PokemonPreview> {
-        return previews.filterNotNull().toList()
-    }
+    private fun combineEvolvesTo(vararg previews: PokemonPreview?): List<PokemonPreview> =
+        previews.filterNotNull().toList()
 
-    private fun combineVarieties(vararg varieties: Pokemon?): List<Pokemon> {
-        return varieties.filterNotNull().toList()
-    }
+    private fun combineVarieties(vararg varieties: Pokemon?): List<Pokemon> = varieties.filterNotNull().toList()
 
     init {
         exoPlayer.repeatMode = Player.REPEAT_MODE_OFF
@@ -179,7 +174,7 @@ class PokemonViewModel @Inject constructor(
 
     fun lookUpPokemon(name: String) {
         Timber.d("Search for pokemon $name")
-        _selectedPokemonFlow.value = name
+        selectedPokemonFlow.value = name
     }
 
     fun updateFavourite(id: Int, isFavourite: Boolean) {
@@ -189,17 +184,17 @@ class PokemonViewModel @Inject constructor(
 
     fun selectVariety(pokemonIndex: Int) {
         Timber.d("Select variety with index $pokemonIndex")
-        _selectedPokemon.value = pokemonIndex
+        selectedPokemon.value = pokemonIndex
     }
 
     fun selectType(typeName: String) {
         Timber.d("Select type $typeName")
-        _selectedType.value = typeName
+        selectedType.value = typeName
     }
 
     fun changeDisplayedEvolutionText(text: String) {
         Timber.d("Change displayed evolution text to $text")
-        _displayedEvolutionType.value = text
+        displayedEvolutionType.value = text
     }
 
     fun playSound(soundUri: String?) {
@@ -234,8 +229,8 @@ class PokemonViewModel @Inject constructor(
     private fun updateInitialSelection(pokemon: Pokemon) {
         val index = pokemon.varieties.indexOfFirst { it.varietyName == pokemon.name }
             .takeIf { it != -1 } ?: 0
-        if (_selectedPokemon.value != index) {
-            _selectedPokemon.value = index
+        if (selectedPokemon.value != index) {
+            selectedPokemon.value = index
         }
     }
 
@@ -249,7 +244,7 @@ class PokemonViewModel @Inject constructor(
                     pokemon.remoteSprite,
                     saveAssetUseCase = { id, url, fileName ->
                         saveRemoteImageUseCase(SaveImageData(id, url, fileName, true))
-                    }
+                    },
                 )
             } else {
                 retrieveAsset(
@@ -259,7 +254,7 @@ class PokemonViewModel @Inject constructor(
                     pokemon.remoteArtwork,
                     saveAssetUseCase = { id, url, fileName ->
                         saveRemoteImageUseCase(SaveImageData(id, url, fileName, false))
-                    }
+                    },
                 )
                 retrieveAsset(
                     pokemon.id,
@@ -268,52 +263,50 @@ class PokemonViewModel @Inject constructor(
                     pokemon.remoteCry,
                     saveAssetUseCase = { id, url, fileName ->
                         saveRemoteCryUseCase(SaveSoundData(id, url, fileName))
-                    }
+                    },
                 )
             }
         }
     }
 
-    private fun lookUpEvolvesFromFlow(name: String): Flow<PokemonPreview?> {
-        return if (name.isEmpty()) {
-            flowOf(null)
-        } else {
-            getPokemonUseCase(name).map { result ->
-                val evolutionText =
-                    "Evolves from ${name.replaceFirstChar { char -> char.uppercaseChar() }}"
-                result.fold(
-                    onSuccess = { pokemon ->
-                        launchAssetRetrieval(pokemon, isSprite = true)
-                        PokemonPreview(
-                            name = name,
-                            url = pokemon.remoteSprite,
-                            types = pokemon.types,
-                            sprite = pokemon.sprite ?: "",
-                            evolutionText = evolutionText,
-                            isLoading = pokemon.sprite == null
-                        )
-                    },
-                    onFailure = { throwable ->
-                        Timber.e(throwable, "Error loading Pokemon $name")
-                        null
-                    }
-                ) ?: PokemonPreview(
-                    name = name,
-                    isLoading = true,
-                    evolutionText = evolutionText
-                )
-            }
+    private fun lookUpEvolvesFromFlow(name: String): Flow<PokemonPreview?> = if (name.isEmpty()) {
+        flowOf(null)
+    } else {
+        getPokemonUseCase(name).map { result ->
+            val evolutionText =
+                "Evolves from ${name.replaceFirstChar { char -> char.uppercaseChar() }}"
+            result.fold(
+                onSuccess = { pokemon ->
+                    launchAssetRetrieval(pokemon, isSprite = true)
+                    PokemonPreview(
+                        name = name,
+                        url = pokemon.remoteSprite,
+                        types = pokemon.types,
+                        sprite = pokemon.sprite ?: "",
+                        evolutionText = evolutionText,
+                        isLoading = pokemon.sprite == null,
+                    )
+                },
+                onFailure = { throwable ->
+                    Timber.e(throwable, "Error loading Pokemon $name")
+                    null
+                },
+            ) ?: PokemonPreview(
+                name = name,
+                isLoading = true,
+                evolutionText = evolutionText,
+            )
         }
     }
 
     private fun lookUpEvolvesToFlow(
         pokemonName: String,
-        evolutionChain: Map<Int, List<ChainLink>>
+        evolutionChain: Map<Int, List<ChainLink>>,
     ): Array<Flow<PokemonPreview?>> {
         val evolvesToList = evolutionChain[
             evolutionChain.entries.firstOrNull { (_, chainLinks) ->
                 chainLinks.any { it.name == pokemonName }
-            }?.key?.plus(1)
+            }?.key?.plus(1),
         ] ?: return Array(1) { flowOf(null) }
         return Array(size = evolvesToList.size) {
             val name = evolvesToList[it].name
@@ -329,17 +322,17 @@ class PokemonViewModel @Inject constructor(
                             sprite = pokemon.sprite ?: "",
                             url = pokemon.remoteSprite,
                             evolutionText = evolutionText,
-                            isLoading = pokemon.sprite == null
+                            isLoading = pokemon.sprite == null,
                         )
                     },
                     onFailure = { throwable ->
                         Timber.e(throwable, "Error loading Pokemon $name")
                         null
-                    }
+                    },
                 ) ?: PokemonPreview(
                     name = name,
                     evolutionText = evolutionText,
-                    isLoading = true
+                    isLoading = true,
                 )
             }
         }
@@ -366,10 +359,10 @@ class PokemonViewModel @Inject constructor(
                     onFailure = { throwable ->
                         Timber.e(
                             throwable,
-                            "Fetching variety ${varieties[it].varietyName} was not successful"
+                            "Fetching variety ${varieties[it].varietyName} was not successful",
                         )
                         null
-                    }
+                    },
                 )
             }
         }

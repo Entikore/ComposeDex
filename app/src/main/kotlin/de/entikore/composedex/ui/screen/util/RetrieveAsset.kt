@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Entikore
+ * Copyright 2024-2026 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,7 +26,7 @@ suspend fun retrieveAsset(
     name: String,
     localAsset: String?,
     remoteAsset: String?,
-    saveAssetUseCase: suspend (id: Int, url: String, fileName: String) -> String
+    saveAssetUseCase: suspend (id: Int, url: String, fileName: String) -> String,
 ): String {
     var uri = ""
     if (localAsset != null) {

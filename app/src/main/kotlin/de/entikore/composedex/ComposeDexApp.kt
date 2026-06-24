@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Entikore
+ * Copyright 2025-2026 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,7 +29,7 @@ fun ComposeDexApp(typeTheme: TypeThemeConfig, isInDarkTheme: Boolean) {
             drawerState = appState.drawerState,
             snackBarHostState = appState.snackbarHostState,
             changeDrawerState = appState::changeDrawerState,
-            showSnackbar = appState::showSnackbar
+            showSnackbar = appState::showSnackbar,
         )
     }
 }

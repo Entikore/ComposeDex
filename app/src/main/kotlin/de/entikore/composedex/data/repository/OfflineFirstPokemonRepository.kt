@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Entikore
+ * Copyright 2025-2026 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,10 +38,10 @@ import timber.log.Timber
  */
 class OfflineFirstPokemonRepository(
     private val localDataSource: PokemonLocalDataSource,
-    private val remoteDataSource: RemoteDataSource
+    private val remoteDataSource: RemoteDataSource,
 ) : PokemonRepository {
-    override fun getPokemonByName(name: String): Flow<Pokemon> {
-        return localDataSource.getPokemonWithSpeciesTypesAndVarietiesByName(name).map {
+    override fun getPokemonByName(name: String): Flow<Pokemon> =
+        localDataSource.getPokemonWithSpeciesTypesAndVarietiesByName(name).map {
             it!!.asExternalModel()
         }.retryWhen { cause, attempt ->
             if (cause is NullPointerException && attempt < RETRY_COUNT) {
@@ -49,17 +49,18 @@ class OfflineFirstPokemonRepository(
                 when (val remotePokemon = remoteDataSource.getPokemonInfoRemoteByName(name)) {
                     is ApiResponse.Error<PokemonInfoRemote> -> {
                     }
+
                     is ApiResponse.Success<PokemonInfoRemote> -> {
                         val entityModel = PokemonWithSpeciesTypesAndVarieties(
                             remotePokemon.data.pokemon.toEntity(),
                             remotePokemon.data.species.toEntity(
-                                remotePokemon.data.evolutionChain
+                                remotePokemon.data.evolutionChain,
                             ),
                             remotePokemon.data.types.toEntity(),
-                            remotePokemon.data.species.varieties.toEntity()
+                            remotePokemon.data.species.varieties.toEntity(),
                         )
                         localDataSource.insertPokemonWithSpeciesTypesAndVarieties(
-                            entityModel
+                            entityModel,
                         )
                     }
                 }
@@ -69,30 +70,30 @@ class OfflineFirstPokemonRepository(
                 false
             }
         }
-    }
 
-    override fun getPokemonById(id: Int): Flow<Pokemon> {
-        return localDataSource.getPokemonWithSpeciesTypesAndVarietiesById(id).map {
+    override fun getPokemonById(id: Int): Flow<Pokemon> =
+        localDataSource.getPokemonWithSpeciesTypesAndVarietiesById(id).map {
             it!!.asExternalModel()
         }.retryWhen { cause, attempt ->
             if (cause is NullPointerException && attempt < RETRY_COUNT) {
                 Timber.d(
-                    "Attempt $attempt of $RETRY_COUNT to fetch pokemon with id $id, failed previously because: $cause"
+                    "Attempt $attempt of $RETRY_COUNT to fetch pokemon with id $id, failed previously because: $cause",
                 )
                 when (val remotePokemon = remoteDataSource.getPokemonInfoRemoteById(id)) {
                     is ApiResponse.Error<PokemonInfoRemote> -> {
                     }
+
                     is ApiResponse.Success<PokemonInfoRemote> -> {
                         val entityModel = PokemonWithSpeciesTypesAndVarieties(
                             remotePokemon.data.pokemon.toEntity(),
                             remotePokemon.data.species.toEntity(
-                                remotePokemon.data.evolutionChain
+                                remotePokemon.data.evolutionChain,
                             ),
                             remotePokemon.data.types.toEntity(),
-                            remotePokemon.data.species.varieties.toEntity()
+                            remotePokemon.data.species.varieties.toEntity(),
                         )
                         localDataSource.insertPokemonWithSpeciesTypesAndVarieties(
-                            entityModel
+                            entityModel,
                         )
                     }
                 }
@@ -102,7 +103,6 @@ class OfflineFirstPokemonRepository(
                 false
             }
         }
-    }
 
     override suspend fun updatePokemonSprite(id: Int, sprite: String) {
         Timber.d("Update pokemon sprite with id $id to new value: $sprite")

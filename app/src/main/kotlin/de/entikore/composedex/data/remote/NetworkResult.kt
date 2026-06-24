@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Entikore
+ * Copyright 2024-2026 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,18 +40,14 @@ sealed class NetworkResult<T : Any> {
     data class Exception<T : Any>(val e: Throwable) : NetworkResult<T>()
 }
 
-fun <T : Any> NetworkResult<T>.getSuccessOrThrow(): T {
-    return when (this) {
-        is NetworkResult.Success -> data
-        else -> throw RemoteDataSourceException("NetworkResult is not Success")
-    }
+fun <T : Any> NetworkResult<T>.getSuccessOrThrow(): T = when (this) {
+    is NetworkResult.Success -> data
+    else -> throw RemoteDataSourceException("NetworkResult is not Success")
 }
 
-fun <T : Any> NetworkResult<T>.getSuccessOrThrow(message: String): T {
-    return when (this) {
-        is NetworkResult.Success -> data
-        else -> throw RemoteDataSourceException(message)
-    }
+fun <T : Any> NetworkResult<T>.getSuccessOrThrow(message: String): T = when (this) {
+    is NetworkResult.Success -> data
+    else -> throw RemoteDataSourceException(message)
 }
 
 /**
@@ -67,21 +63,17 @@ fun <T : Any> NetworkResult<T>.getSuccessOrThrow(message: String): T {
  */
 @Suppress("TooGenericExceptionCaught")
 interface ApiHandler {
-    suspend fun <T : Any> handleApi(
-        execute: suspend () -> Response<T>
-    ): NetworkResult<T> {
-        return try {
-            val response = execute()
-            val body = response.body()
-            if (response.isSuccessful && body != null) {
-                NetworkResult.Success(response.code(), body)
-            } else {
-                NetworkResult.Error(code = response.code(), errorMsg = response.errorBody().toString())
-            }
-        } catch (e: HttpException) {
-            NetworkResult.Error(e.code(), e.message())
-        } catch (e: Throwable) {
-            NetworkResult.Exception(e)
+    suspend fun <T : Any> handleApi(execute: suspend () -> Response<T>): NetworkResult<T> = try {
+        val response = execute()
+        val body = response.body()
+        if (response.isSuccessful && body != null) {
+            NetworkResult.Success(response.code(), body)
+        } else {
+            NetworkResult.Error(code = response.code(), errorMsg = response.errorBody().toString())
         }
+    } catch (e: HttpException) {
+        NetworkResult.Error(e.code(), e.message())
+    } catch (e: Throwable) {
+        NetworkResult.Exception(e)
     }
 }

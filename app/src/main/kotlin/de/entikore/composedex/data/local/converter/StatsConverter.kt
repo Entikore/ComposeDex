@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Entikore
+ * Copyright 2024-2026 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,12 +31,8 @@ class StatsConverter @Inject constructor(val moshi: Moshi) {
     private val statsAdapter = moshi.adapter<Map<String, Int>>(statsType)
 
     @TypeConverter
-    fun statsFromJson(string: String): Map<String, Int> {
-        return statsAdapter.fromJson(string).orEmpty()
-    }
+    fun statsFromJson(string: String): Map<String, Int> = statsAdapter.fromJson(string).orEmpty()
 
     @TypeConverter
-    fun statsToJson(stats: Map<String, Int>): String {
-        return statsAdapter.toJson(stats)
-    }
+    fun statsToJson(stats: Map<String, Int>): String = statsAdapter.toJson(stats)
 }

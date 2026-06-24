@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Entikore
+ * Copyright 2024-2026 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,15 +33,14 @@ data class GenerationRemote(
     val id: Int,
     @Json(name = "main_region") val mainRegion: NamedApiResource,
     val name: String,
-    @Json(name = "pokemon_species") val pokemonSpecies: List<NamedApiResource>
+    @Json(name = "pokemon_species") val pokemonSpecies: List<NamedApiResource>,
 )
 
 /**
  * Converts a [GenerationRemote] to a [GenerationEntity].
  */
-fun GenerationRemote.toEntity() =
-    GenerationEntity(
-        generationId = id,
-        generationName = name,
-        pokemonInGeneration = pokemonSpecies.map { it.name }
-    )
+fun GenerationRemote.toEntity() = GenerationEntity(
+    generationId = id,
+    generationName = name,
+    pokemonInGeneration = pokemonSpecies.map { it.name },
+)

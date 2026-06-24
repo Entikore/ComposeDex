@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Entikore
+ * Copyright 2024-2026 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -57,7 +57,7 @@ fun FavouriteScreen(
     openDrawer: () -> Unit,
     navigateToPokemon: (String) -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: FavouriteViewModel = hiltViewModel()
+    viewModel: FavouriteViewModel = hiltViewModel(),
 ) {
     val screenState by viewModel.screenState.collectAsState()
     val filterOptions by viewModel.filterOptions.collectAsState()
@@ -69,14 +69,14 @@ fun FavouriteScreen(
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
-        modifier = modifier
+        modifier = modifier,
     ) {
         FavouriteScreenTopBar(
             filterOptions,
             openDrawer,
             onNameFilterChange,
             onCheckBoxFilterChange,
-            onShapeFilterChange
+            onShapeFilterChange,
         )
         FavouriteScreenContent(screenState, updateFavourite, navigateToPokemon)
     }
@@ -89,7 +89,7 @@ private fun FavouriteScreenTopBar(
     onNameFilterChange: (text: String) -> Unit,
     onCheckBoxFilterChange: (option: String, newValue: Boolean) -> Unit,
     onShapeFilterChange: (shape: PokemonShape) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     TopBarWithFilter(
         title = stringResource(R.string.favourites_screen_top_bar),
@@ -100,7 +100,7 @@ private fun FavouriteScreenTopBar(
         changeFilter = onCheckBoxFilterChange,
         shapeFilter = filterOptions.shapeFilter,
         changeShapeFilter = onShapeFilterChange,
-        modifier = modifier
+        modifier = modifier,
     )
 }
 
@@ -109,21 +109,21 @@ fun FavouriteScreenContent(
     screenState: PokemonUiState,
     updateFavourite: (id: Int, isFavourite: Boolean) -> Unit,
     navigateToPokemon: (String) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
-        modifier = modifier.fillMaxSize()
+        modifier = modifier.fillMaxSize(),
     ) {
         when (screenState) {
             PokemonUiState.Error -> ErrorMessage(
                 errorMessage = stringResource(R.string.error_fetching_favourite_pokemon),
-                modifier = Modifier.testTag(stringResource(R.string.test_tag_favourite_screen_error))
+                modifier = Modifier.testTag(stringResource(R.string.test_tag_favourite_screen_error)),
             )
 
             PokemonUiState.Loading -> LoadingAnimation(
-                modifier = Modifier.testTag(stringResource(R.string.test_tag_favourite_screen_loading))
+                modifier = Modifier.testTag(stringResource(R.string.test_tag_favourite_screen_loading)),
             )
 
             is PokemonUiState.Success -> {
@@ -133,8 +133,8 @@ fun FavouriteScreenContent(
                 LazyColumn(
                     verticalArrangement = Arrangement.Top,
                     modifier = Modifier.testTag(
-                        stringResource(R.string.test_tag_favourite_screen_success)
-                    )
+                        stringResource(R.string.test_tag_favourite_screen_success),
+                    ),
                 ) {
                     items(screenState.pokemon) {
                         PokemonColumnItem(
@@ -142,12 +142,12 @@ fun FavouriteScreenContent(
                             backgroundBrush = createGradientBrush(
                                 it.types.map { type ->
                                     getTypeBackgroundColor(type.name)
-                                }
+                                },
                             ),
                             borderBrush = createGradientBrush(
                                 it.types.map { type ->
                                     getTypeBorderColor(type.name)
-                                }
+                                },
                             ),
                             textColor = getTypePrimaryColor(it.types.first().name),
                             navigateToPokemon = navigateToPokemon,
@@ -157,8 +157,8 @@ fun FavouriteScreenContent(
                                 .height(dimensionResource(id = R.dimen.preview_size))
                                 .padding(
                                     horizontal = dimensionResource(id = R.dimen.standard_padding),
-                                    vertical = dimensionResource(id = R.dimen.medium_padding)
-                                )
+                                    vertical = dimensionResource(id = R.dimen.medium_padding),
+                                ),
                         )
                     }
                 }
@@ -180,16 +180,16 @@ private fun NoFavourites(modifier: Modifier = Modifier) {
             .border(
                 width = dimensionResource(id = R.dimen.default_border),
                 Color.Black,
-                shape = CutCornerShape(integerResource(R.integer.default_cut_corner_shape_percentage))
-            )
+                shape = CutCornerShape(integerResource(R.integer.default_cut_corner_shape_percentage)),
+            ),
     ) {
         Text(
             stringResource(R.string.no_favourite_pokemon_selected),
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(
-                    dimensionResource(R.dimen.standard_padding)
-                )
+                    dimensionResource(R.dimen.standard_padding),
+                ),
         )
     }
 }

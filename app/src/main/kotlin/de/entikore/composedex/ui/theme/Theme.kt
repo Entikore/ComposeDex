@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Entikore
+ * Copyright 2024-2026 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -441,7 +441,7 @@ private val FightingLightScheme = lightColorScheme(
     surfaceContainerLow = fightingSurfaceContainerLowLight,
     surfaceContainer = fightingSurfaceContainerLight,
     surfaceContainerHigh = fightingSurfaceContainerHighLight,
-    surfaceContainerHighest = fightingSurfaceContainerHighestLight
+    surfaceContainerHighest = fightingSurfaceContainerHighestLight,
 )
 
 private val FightingDarkScheme = darkColorScheme(
@@ -479,7 +479,7 @@ private val FightingDarkScheme = darkColorScheme(
     surfaceContainerLow = fightingSurfaceContainerLowDark,
     surfaceContainer = fightingSurfaceContainerDark,
     surfaceContainerHigh = fightingSurfaceContainerHighDark,
-    surfaceContainerHighest = fightingSurfaceContainerHighestDark
+    surfaceContainerHighest = fightingSurfaceContainerHighestDark,
 )
 
 private val FireLightScheme = lightColorScheme(
@@ -517,7 +517,7 @@ private val FireLightScheme = lightColorScheme(
     surfaceContainerLow = fireSurfaceContainerLowLight,
     surfaceContainer = fireSurfaceContainerLight,
     surfaceContainerHigh = fireSurfaceContainerHighLight,
-    surfaceContainerHighest = fireSurfaceContainerHighestLight
+    surfaceContainerHighest = fireSurfaceContainerHighestLight,
 )
 
 private val FireDarkScheme = darkColorScheme(
@@ -555,7 +555,7 @@ private val FireDarkScheme = darkColorScheme(
     surfaceContainerLow = fireSurfaceContainerLowDark,
     surfaceContainer = fireSurfaceContainerDark,
     surfaceContainerHigh = fireSurfaceContainerHighDark,
-    surfaceContainerHighest = fireSurfaceContainerHighestDark
+    surfaceContainerHighest = fireSurfaceContainerHighestDark,
 )
 
 private val FlyingLightScheme = lightColorScheme(
@@ -593,7 +593,7 @@ private val FlyingLightScheme = lightColorScheme(
     surfaceContainerLow = flyingSurfaceContainerLowLight,
     surfaceContainer = flyingSurfaceContainerLight,
     surfaceContainerHigh = flyingSurfaceContainerHighLight,
-    surfaceContainerHighest = flyingSurfaceContainerHighestLight
+    surfaceContainerHighest = flyingSurfaceContainerHighestLight,
 )
 
 private val FlyingDarkScheme = darkColorScheme(
@@ -631,7 +631,7 @@ private val FlyingDarkScheme = darkColorScheme(
     surfaceContainerLow = flyingSurfaceContainerLowDark,
     surfaceContainer = flyingSurfaceContainerDark,
     surfaceContainerHigh = flyingSurfaceContainerHighDark,
-    surfaceContainerHighest = flyingSurfaceContainerHighestDark
+    surfaceContainerHighest = flyingSurfaceContainerHighestDark,
 )
 
 private val GhostLightScheme = lightColorScheme(
@@ -669,7 +669,7 @@ private val GhostLightScheme = lightColorScheme(
     surfaceContainerLow = ghostSurfaceContainerLowLight,
     surfaceContainer = ghostSurfaceContainerLight,
     surfaceContainerHigh = ghostSurfaceContainerHighLight,
-    surfaceContainerHighest = ghostSurfaceContainerHighestLight
+    surfaceContainerHighest = ghostSurfaceContainerHighestLight,
 )
 
 private val GhostDarkScheme = darkColorScheme(
@@ -707,7 +707,7 @@ private val GhostDarkScheme = darkColorScheme(
     surfaceContainerLow = ghostSurfaceContainerLowDark,
     surfaceContainer = ghostSurfaceContainerDark,
     surfaceContainerHigh = ghostSurfaceContainerHighDark,
-    surfaceContainerHighest = ghostSurfaceContainerHighestDark
+    surfaceContainerHighest = ghostSurfaceContainerHighestDark,
 )
 
 private val GrassLightScheme = lightColorScheme(
@@ -745,7 +745,7 @@ private val GrassLightScheme = lightColorScheme(
     surfaceContainerLow = grassSurfaceContainerLowLight,
     surfaceContainer = grassSurfaceContainerLight,
     surfaceContainerHigh = grassSurfaceContainerHighLight,
-    surfaceContainerHighest = grassSurfaceContainerHighestLight
+    surfaceContainerHighest = grassSurfaceContainerHighestLight,
 )
 
 private val GrassDarkScheme = darkColorScheme(
@@ -783,7 +783,7 @@ private val GrassDarkScheme = darkColorScheme(
     surfaceContainerLow = grassSurfaceContainerLowDark,
     surfaceContainer = grassSurfaceContainerDark,
     surfaceContainerHigh = grassSurfaceContainerHighDark,
-    surfaceContainerHighest = grassSurfaceContainerHighestDark
+    surfaceContainerHighest = grassSurfaceContainerHighestDark,
 )
 
 private val GroundLightScheme = lightColorScheme(
@@ -821,7 +821,7 @@ private val GroundLightScheme = lightColorScheme(
     surfaceContainerLow = groundSurfaceContainerLowLight,
     surfaceContainer = groundSurfaceContainerLight,
     surfaceContainerHigh = groundSurfaceContainerHighLight,
-    surfaceContainerHighest = groundSurfaceContainerHighestLight
+    surfaceContainerHighest = groundSurfaceContainerHighestLight,
 )
 
 private val GroundDarkScheme = darkColorScheme(
@@ -859,7 +859,7 @@ private val GroundDarkScheme = darkColorScheme(
     surfaceContainerLow = groundSurfaceContainerLowDark,
     surfaceContainer = groundSurfaceContainerDark,
     surfaceContainerHigh = groundSurfaceContainerHighDark,
-    surfaceContainerHighest = groundSurfaceContainerHighestDark
+    surfaceContainerHighest = groundSurfaceContainerHighestDark,
 )
 
 private val IceLightScheme = lightColorScheme(
@@ -897,7 +897,7 @@ private val IceLightScheme = lightColorScheme(
     surfaceContainerLow = iceSurfaceContainerLowLight,
     surfaceContainer = iceSurfaceContainerLight,
     surfaceContainerHigh = iceSurfaceContainerHighLight,
-    surfaceContainerHighest = iceSurfaceContainerHighestLight
+    surfaceContainerHighest = iceSurfaceContainerHighestLight,
 )
 
 private val IceDarkScheme = darkColorScheme(
@@ -935,7 +935,7 @@ private val IceDarkScheme = darkColorScheme(
     surfaceContainerLow = iceSurfaceContainerLowDark,
     surfaceContainer = iceSurfaceContainerDark,
     surfaceContainerHigh = iceSurfaceContainerHighDark,
-    surfaceContainerHighest = iceSurfaceContainerHighestDark
+    surfaceContainerHighest = iceSurfaceContainerHighestDark,
 )
 
 private val NormalLightScheme = lightColorScheme(
@@ -973,7 +973,7 @@ private val NormalLightScheme = lightColorScheme(
     surfaceContainerLow = normalSurfaceContainerLowLight,
     surfaceContainer = normalSurfaceContainerLight,
     surfaceContainerHigh = normalSurfaceContainerHighLight,
-    surfaceContainerHighest = normalSurfaceContainerHighestLight
+    surfaceContainerHighest = normalSurfaceContainerHighestLight,
 )
 
 private val NormalDarkScheme = darkColorScheme(
@@ -1011,7 +1011,7 @@ private val NormalDarkScheme = darkColorScheme(
     surfaceContainerLow = normalSurfaceContainerLowDark,
     surfaceContainer = normalSurfaceContainerDark,
     surfaceContainerHigh = normalSurfaceContainerHighDark,
-    surfaceContainerHighest = normalSurfaceContainerHighestDark
+    surfaceContainerHighest = normalSurfaceContainerHighestDark,
 )
 
 private val PoisonLightScheme = lightColorScheme(
@@ -1049,7 +1049,7 @@ private val PoisonLightScheme = lightColorScheme(
     surfaceContainerLow = poisonSurfaceContainerLowLight,
     surfaceContainer = poisonSurfaceContainerLight,
     surfaceContainerHigh = poisonSurfaceContainerHighLight,
-    surfaceContainerHighest = poisonSurfaceContainerHighestLight
+    surfaceContainerHighest = poisonSurfaceContainerHighestLight,
 )
 
 private val PoisonDarkScheme = darkColorScheme(
@@ -1087,7 +1087,7 @@ private val PoisonDarkScheme = darkColorScheme(
     surfaceContainerLow = poisonSurfaceContainerLowDark,
     surfaceContainer = poisonSurfaceContainerDark,
     surfaceContainerHigh = poisonSurfaceContainerHighDark,
-    surfaceContainerHighest = poisonSurfaceContainerHighestDark
+    surfaceContainerHighest = poisonSurfaceContainerHighestDark,
 )
 
 private val PsychicLightScheme = lightColorScheme(
@@ -1125,7 +1125,7 @@ private val PsychicLightScheme = lightColorScheme(
     surfaceContainerLow = psychicSurfaceContainerLowLight,
     surfaceContainer = psychicSurfaceContainerLight,
     surfaceContainerHigh = psychicSurfaceContainerHighLight,
-    surfaceContainerHighest = psychicSurfaceContainerHighestLight
+    surfaceContainerHighest = psychicSurfaceContainerHighestLight,
 )
 
 private val PsychicDarkScheme = darkColorScheme(
@@ -1163,7 +1163,7 @@ private val PsychicDarkScheme = darkColorScheme(
     surfaceContainerLow = psychicSurfaceContainerLowDark,
     surfaceContainer = psychicSurfaceContainerDark,
     surfaceContainerHigh = psychicSurfaceContainerHighDark,
-    surfaceContainerHighest = psychicSurfaceContainerHighestDark
+    surfaceContainerHighest = psychicSurfaceContainerHighestDark,
 )
 
 private val RockLightScheme = lightColorScheme(
@@ -1201,7 +1201,7 @@ private val RockLightScheme = lightColorScheme(
     surfaceContainerLow = rockSurfaceContainerLowLight,
     surfaceContainer = rockSurfaceContainerLight,
     surfaceContainerHigh = rockSurfaceContainerHighLight,
-    surfaceContainerHighest = rockSurfaceContainerHighestLight
+    surfaceContainerHighest = rockSurfaceContainerHighestLight,
 )
 
 private val RockDarkScheme = darkColorScheme(
@@ -1239,7 +1239,7 @@ private val RockDarkScheme = darkColorScheme(
     surfaceContainerLow = rockSurfaceContainerLowDark,
     surfaceContainer = rockSurfaceContainerDark,
     surfaceContainerHigh = rockSurfaceContainerHighDark,
-    surfaceContainerHighest = rockSurfaceContainerHighestDark
+    surfaceContainerHighest = rockSurfaceContainerHighestDark,
 )
 
 private val SteelLightScheme = lightColorScheme(
@@ -1489,14 +1489,14 @@ private val themeConfigs = mapOf(
     TypeThemeConfig.PSYCHIC to { isDarkMode: Boolean -> if (isDarkMode) PsychicDarkScheme else PsychicLightScheme },
     TypeThemeConfig.ROCK to { isDarkMode: Boolean -> if (isDarkMode) RockDarkScheme else RockLightScheme },
     TypeThemeConfig.STEEL to { isDarkMode: Boolean -> if (isDarkMode) SteelDarkScheme else SteelLightScheme },
-    TypeThemeConfig.WATER to { isDarkMode: Boolean -> if (isDarkMode) WaterDarkScheme else WaterLightScheme }
+    TypeThemeConfig.WATER to { isDarkMode: Boolean -> if (isDarkMode) WaterDarkScheme else WaterLightScheme },
 )
 
 @Composable
 fun ComposeDexTheme(
     appTheme: TypeThemeConfig,
     isDarkMode: Boolean = isSystemInDarkTheme(),
-    content: @Composable () -> Unit
+    content: @Composable () -> Unit,
 ) {
     val colorScheme = themeConfigs[appTheme]?.invoke(isDarkMode)
         ?: if (isDarkMode) DarkColorScheme else LightColorScheme
@@ -1510,6 +1510,6 @@ fun ComposeDexTheme(
     MaterialTheme(
         colorScheme = colorScheme,
         typography = AppTypography,
-        content = content
+        content = content,
     )
 }

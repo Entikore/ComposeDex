@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Entikore
+ * Copyright 2024-2026 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,18 +23,19 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.flow
 
-class FakeFavouriteRepository : FavouriteRepository, FailableFakeRepository() {
+class FakeFavouriteRepository :
+    FailableFakeRepository(),
+    FavouriteRepository {
 
     private val favouritePokemon = MutableStateFlow<List<Pokemon>>(emptyList())
 
-    override fun getFavourites(): Flow<List<Pokemon>> =
-        if (shouldReturnError) {
-            flow {
-                throw TestException(EXPECTED_TEST_EXCEPTION)
-            }
-        } else {
-            favouritePokemon.asStateFlow()
+    override fun getFavourites(): Flow<List<Pokemon>> = if (shouldReturnError) {
+        flow {
+            throw TestException(EXPECTED_TEST_EXCEPTION)
         }
+    } else {
+        favouritePokemon.asStateFlow()
+    }
 
     override suspend fun updateIsFavourite(id: Int, isFavourite: Boolean) {
         val currentFavourites = favouritePokemon.value.toMutableList()

@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Entikore
+ * Copyright 2024-2026 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,24 +40,23 @@ data class TypeRemote(
     @Json(name = "move_damage_class") val moveDamageClass: NamedApiResource?,
     val name: String,
     val names: List<Name>,
-    val pokemon: List<TypePokemon>
+    val pokemon: List<TypePokemon>,
 )
 
 /**
  * Converts a [TypeRemote] to a [TypeEntity].
  */
-fun TypeRemote.toEntity() =
-    TypeEntity(
-        typeId = id,
-        typeName = name,
-        pokemonOfType = pokemon.map { pokemon -> pokemon.pokemon.name },
-        doubleDamageFrom = damageRelations.doubleDamageFrom.map { it.name },
-        doubleDamageTo = damageRelations.doubleDamageTo.map { it.name },
-        halfDamageFrom = damageRelations.halfDamageFrom.map { it.name },
-        halfDamageTo = damageRelations.halfDamageTo.map { it.name },
-        noDamageFrom = damageRelations.noDamageFrom.map { it.name },
-        noDamageTo = damageRelations.noDamageTo.map { it.name }
-    )
+fun TypeRemote.toEntity() = TypeEntity(
+    typeId = id,
+    typeName = name,
+    pokemonOfType = pokemon.map { pokemon -> pokemon.pokemon.name },
+    doubleDamageFrom = damageRelations.doubleDamageFrom.map { it.name },
+    doubleDamageTo = damageRelations.doubleDamageTo.map { it.name },
+    halfDamageFrom = damageRelations.halfDamageFrom.map { it.name },
+    halfDamageTo = damageRelations.halfDamageTo.map { it.name },
+    noDamageFrom = damageRelations.noDamageFrom.map { it.name },
+    noDamageTo = damageRelations.noDamageTo.map { it.name },
+)
 
 /**
  * Converts a list of [TypeRemote] to a list of [TypeEntity].

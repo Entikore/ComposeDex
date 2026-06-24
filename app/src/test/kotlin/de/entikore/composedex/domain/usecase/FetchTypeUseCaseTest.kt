@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Entikore
+ * Copyright 2025-2026 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -72,7 +72,7 @@ class FetchTypeUseCaseTest {
             val actualType = awaitItem()
             assertThat(actualType.isFailure).isTrue()
             assertThat(actualType.exceptionOrNull()?.message).isEqualTo(
-                TYPE_WITH_NAME_NOT_FOUND
+                TYPE_WITH_NAME_NOT_FOUND,
             )
             awaitComplete()
         }

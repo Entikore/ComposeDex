@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Entikore
+ * Copyright 2024-2026 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,7 +28,9 @@ import org.junit.jupiter.api.extension.ExtensionContext
 
 @ExperimentalCoroutinesApi
 class MainCoroutineRule(private val testDispatcher: TestDispatcher = StandardTestDispatcher()) :
-    AfterEachCallback, BeforeEachCallback, InstantTaskExecutorRule() {
+    InstantTaskExecutorRule(),
+    AfterEachCallback,
+    BeforeEachCallback {
 
     override fun beforeEach(context: ExtensionContext?) {
         Dispatchers.setMain(testDispatcher)

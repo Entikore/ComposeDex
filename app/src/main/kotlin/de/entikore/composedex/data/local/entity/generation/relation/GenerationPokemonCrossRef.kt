@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Entikore
+ * Copyright 2024-2026 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,9 +31,9 @@ import de.entikore.composedex.data.local.entity.pokemon.PokemonEntity
  */
 @Entity(
     tableName = "generation_pokemon",
-    primaryKeys = ["generationPokemonCrossRefGenerationId", "generationPokemonCrossRefPokemonId"]
+    primaryKeys = ["generationPokemonCrossRefGenerationId", "generationPokemonCrossRefPokemonId"],
 )
 data class GenerationPokemonCrossRef(
     val generationPokemonCrossRefGenerationId: Int,
-    @ColumnInfo(index = true) val generationPokemonCrossRefPokemonId: Int
+    @ColumnInfo(index = true) val generationPokemonCrossRefPokemonId: Int,
 )

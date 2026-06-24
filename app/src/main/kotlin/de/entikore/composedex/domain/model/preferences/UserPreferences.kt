@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Entikore
+ * Copyright 2024-2026 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@ import de.entikore.composedex.domain.model.type.Type
  */
 data class UserPreferences(
     val appThemeConfig: AppThemeConfig = AppThemeConfig.MODE_AUTO,
-    val typeThemeConfig: TypeThemeConfig = TypeThemeConfig.COLORLESS
+    val typeThemeConfig: TypeThemeConfig = TypeThemeConfig.COLORLESS,
 )
 
 /**
@@ -39,7 +39,8 @@ data class UserPreferences(
 enum class AppThemeConfig {
     MODE_DAY,
     MODE_NIGHT,
-    MODE_AUTO;
+    MODE_AUTO,
+    ;
 
     companion object {
         fun fromOrdinal(ordinal: Int) = entries[ordinal]
@@ -71,7 +72,8 @@ enum class TypeThemeConfig {
     PSYCHIC,
     ROCK,
     STEEL,
-    WATER;
+    WATER,
+    ;
 
     companion object {
         fun fromOrdinal(ordinal: Int) = TypeThemeConfig.entries[ordinal]
@@ -94,10 +96,9 @@ enum class TypeThemeConfig {
             Type.PSYCHIC to PSYCHIC,
             Type.ROCK to ROCK,
             Type.STEEL to STEEL,
-            Type.WATER to WATER
+            Type.WATER to WATER,
         )
 
-        fun fromTypeString(typeName: String): TypeThemeConfig =
-            typeThemeConfigMap[typeName] ?: COLORLESS
+        fun fromTypeString(typeName: String): TypeThemeConfig = typeThemeConfigMap[typeName] ?: COLORLESS
     }
 }

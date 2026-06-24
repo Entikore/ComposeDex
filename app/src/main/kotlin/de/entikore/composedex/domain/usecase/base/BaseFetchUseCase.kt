@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Entikore
+ * Copyright 2025-2026 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,19 +30,15 @@ import kotlinx.coroutines.flow.flowOn
  *
  * This class is designed to be implemented by concrete use cases.
  */
-abstract class BaseFetchUseCase<in P, out R>(
-    private val dispatcher: CoroutineDispatcher = Dispatchers.IO
-) {
+abstract class BaseFetchUseCase<in P, out R>(private val dispatcher: CoroutineDispatcher = Dispatchers.IO) {
 
     protected abstract fun execute(params: P): Flow<Result<R>>
 
-    operator fun invoke(params: P): Flow<Result<R>> {
-        return flow {
-            emitAll(execute(params))
-        }.flowOn(
-            dispatcher
-        )
-    }
+    operator fun invoke(params: P): Flow<Result<R>> = flow {
+        emitAll(execute(params))
+    }.flowOn(
+        dispatcher,
+    )
 
     operator fun invoke(): Flow<Result<R>> {
         @Suppress("UNCHECKED_CAST")

@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Entikore
+ * Copyright 2024-2026 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,5 +29,5 @@ import de.entikore.composedex.data.remote.model.common.NamedApiResource
 data class ChainRemote(
     @Json(name = "evolves_to") val evolvesTo: List<ChainRemote>,
     @Json(name = "is_baby") val isBaby: Boolean,
-    val species: NamedApiResource
+    val species: NamedApiResource,
 )

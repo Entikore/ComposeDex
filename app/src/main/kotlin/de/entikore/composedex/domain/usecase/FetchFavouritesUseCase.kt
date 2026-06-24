@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Entikore
+ * Copyright 2025-2026 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,8 +30,7 @@ import javax.inject.Inject
 @Suppress("TooGenericExceptionCaught")
 class FetchFavouritesUseCase @Inject constructor(
     private val repository: FavouriteRepository,
-    dispatcher: CoroutineDispatcher = Dispatchers.IO
-) :
-    BaseFetchUseCase<Unit, List<Pokemon>>(dispatcher) {
+    dispatcher: CoroutineDispatcher = Dispatchers.IO,
+) : BaseFetchUseCase<Unit, List<Pokemon>>(dispatcher) {
     override fun execute(params: Unit) = repository.getFavourites().distinctUntilChanged().asResult()
 }

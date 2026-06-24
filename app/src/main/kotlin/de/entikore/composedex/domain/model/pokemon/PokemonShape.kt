@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Entikore
+ * Copyright 2024-2026 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,7 +33,8 @@ enum class PokemonShape {
     HUMANOID,
     BUG_WINGS,
     ARMOR,
-    UNDEFINED;
+    UNDEFINED,
+    ;
 
     companion object {
 
@@ -53,10 +54,9 @@ enum class PokemonShape {
             HEADS.name.lowercase() to HEADS,
             HUMANOID.name.lowercase() to HUMANOID,
             BUG_WINGS.name.lowercase() to BUG_WINGS,
-            ARMOR.name.lowercase() to ARMOR
+            ARMOR.name.lowercase() to ARMOR,
         )
 
-        fun getShape(shape: String): PokemonShape =
-            shapeMap[shape.lowercase()] ?: UNDEFINED
+        fun getShape(shape: String): PokemonShape = shapeMap[shape.lowercase()] ?: UNDEFINED
     }
 }

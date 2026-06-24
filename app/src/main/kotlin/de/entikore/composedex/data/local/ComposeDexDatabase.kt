@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Entikore
+ * Copyright 2025-2026 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -58,13 +58,15 @@ import de.entikore.composedex.domain.repository.LocalStorage
         TypeEntity::class,
         TypeOverviewEntity::class,
         TypePokemonCrossRef::class,
-        VarietyEntity::class
+        VarietyEntity::class,
     ],
     version = 1,
-    exportSchema = false
+    exportSchema = false,
 )
 @TypeConverters(TypesConverter::class, StatsConverter::class, ChainConverter::class)
-abstract class ComposeDexDatabase : RoomDatabase(), LocalStorage {
+abstract class ComposeDexDatabase :
+    RoomDatabase(),
+    LocalStorage {
 
     abstract fun generationDao(): GenerationDao
 
@@ -85,15 +87,15 @@ abstract class ComposeDexDatabase : RoomDatabase(), LocalStorage {
         pokemon: PokemonEntity,
         species: SpeciesEntity,
         types: List<TypeEntity>,
-        varieties: List<VarietyEntity>
+        varieties: List<VarietyEntity>,
     ) {
         varieties.forEach { variety ->
             varietyDao().insert(variety)
             pokemonDao().insertVarietyCrossRef(
                 PokemonVarietyCrossRef(
                     pokemon.pokemonId,
-                    variety.varietyName
-                )
+                    variety.varietyName,
+                ),
             )
         }
 
@@ -102,8 +104,8 @@ abstract class ComposeDexDatabase : RoomDatabase(), LocalStorage {
             pokemonDao().insertTypeCrossRef(
                 PokemonTypeCrossRef(
                     pokemon.pokemonId,
-                    type.typeId
-                )
+                    type.typeId,
+                ),
             )
         }
 
@@ -111,36 +113,33 @@ abstract class ComposeDexDatabase : RoomDatabase(), LocalStorage {
         pokemonDao().insertSpeciesCrossRef(
             PokemonSpeciesCrossRef(
                 pokemon.pokemonId,
-                species.speciesId
-            )
+                species.speciesId,
+            ),
         )
 
         pokemonDao().insert(pokemon)
     }
 
     @Transaction
-    suspend fun insertPokemonAndAssociateWithType(
-        typeId: Int,
-        fullPokemon: PokemonWithSpeciesTypesAndVarieties,
-    ) {
+    suspend fun insertPokemonAndAssociateWithType(typeId: Int, fullPokemon: PokemonWithSpeciesTypesAndVarieties) {
         insertPokemonWithSpeciesTypesAndVarieties(
             fullPokemon.pokemon,
             fullPokemon.species,
             fullPokemon.types,
-            fullPokemon.varieties
+            fullPokemon.varieties,
         )
         typeDao().insertPokemonCrossRef(
             TypePokemonCrossRef(
                 typeId,
-                fullPokemon.pokemon.pokemonId
-            )
+                fullPokemon.pokemon.pokemonId,
+            ),
         )
     }
 
     @Transaction
     suspend fun insertPokemonAndAssociateWithGeneration(
         generation: GenerationEntity,
-        fullPokemon: PokemonWithSpeciesTypesAndVarieties
+        fullPokemon: PokemonWithSpeciesTypesAndVarieties,
     ) {
         val generationDao = generationDao()
 
@@ -150,14 +149,14 @@ abstract class ComposeDexDatabase : RoomDatabase(), LocalStorage {
             fullPokemon.pokemon,
             fullPokemon.species,
             fullPokemon.types,
-            fullPokemon.varieties
+            fullPokemon.varieties,
         )
 
         generationDao.insertPokemonCrossRef(
             GenerationPokemonCrossRef(
                 generation.generationId,
-                fullPokemon.pokemon.pokemonId
-            )
+                fullPokemon.pokemon.pokemonId,
+            ),
         )
     }
 

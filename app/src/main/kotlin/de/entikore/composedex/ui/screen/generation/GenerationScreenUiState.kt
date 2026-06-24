@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Entikore
+ * Copyright 2024-2026 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,7 +26,7 @@ sealed interface GenerationScreenUiState {
 
     data class Success(
         val generations: List<Generation> = emptyList(),
-        val selectedGeneration: SelectedGenerationUiState = SelectedGenerationUiState.NoGenerationSelected
+        val selectedGeneration: SelectedGenerationUiState = SelectedGenerationUiState.NoGenerationSelected,
     ) : GenerationScreenUiState
     data object Error : GenerationScreenUiState
     data object Loading : GenerationScreenUiState
@@ -43,30 +43,28 @@ sealed interface SelectedGenerationUiState {
     data class Success(
         val selectedGeneration: Generation,
         val pokemonState: PokemonUiState = PokemonUiState.Loading,
-        val showLoadingItem: Boolean = false
+        val showLoadingItem: Boolean = false,
     ) : SelectedGenerationUiState
 }
 
-fun GenerationScreenUiState.getPokemonList(): List<Pokemon>? {
-    return when (this) {
-        is GenerationScreenUiState.Success -> {
-            when (this.selectedGeneration) {
-                is SelectedGenerationUiState.Success -> {
-                    when (val pokemonUiState = this.selectedGeneration.pokemonState) {
-                        is PokemonUiState.Success -> {
-                            pokemonUiState.pokemon
-                        }
-
-                        else -> null
+fun GenerationScreenUiState.getPokemonList(): List<Pokemon>? = when (this) {
+    is GenerationScreenUiState.Success -> {
+        when (this.selectedGeneration) {
+            is SelectedGenerationUiState.Success -> {
+                when (val pokemonUiState = this.selectedGeneration.pokemonState) {
+                    is PokemonUiState.Success -> {
+                        pokemonUiState.pokemon
                     }
+
+                    else -> null
                 }
-
-                else -> null
             }
-        }
 
-        else -> null
+            else -> null
+        }
     }
+
+    else -> null
 }
 
 fun GenerationScreenUiState.withFilteredPokemonList(filteredList: List<Pokemon>?): GenerationScreenUiState {
@@ -79,7 +77,7 @@ fun GenerationScreenUiState.withFilteredPokemonList(filteredList: List<Pokemon>?
 
     return this.copy(
         selectedGeneration = this.selectedGeneration.copy(
-            pokemonState = this.selectedGeneration.pokemonState.copy(filteredList)
-        )
+            pokemonState = this.selectedGeneration.pokemonState.copy(filteredList),
+        ),
     )
 }

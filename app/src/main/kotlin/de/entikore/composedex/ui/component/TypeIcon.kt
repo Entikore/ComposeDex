@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Entikore
+ * Copyright 2024-2026 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -97,7 +97,7 @@ fun TypeIcon(
     modifier: Modifier = Modifier,
     selected: Boolean = true,
     onClick: (String) -> Unit = {},
-    onLongClick: (String) -> Unit = {}
+    onLongClick: (String) -> Unit = {},
 ) {
     val shape = CircleShape
     val borderColor = if (selected) getTypeBorderColor(type = type) else TYPE_TCG_COLORLESS_BORDER
@@ -116,9 +116,9 @@ fun TypeIcon(
                 onClickLabel = stringResource(R.string.label_type_icon_click),
                 onClick = { onClick(type) },
                 onLongClickLabel = stringResource(R.string.label_type_icon_long_click),
-                onLongClick = { onLongClick(type) }
+                onLongClick = { onLongClick(type) },
             )
-            .padding(dimensionResource(id = R.dimen.standard_padding))
+            .padding(dimensionResource(id = R.dimen.standard_padding)),
 
     )
 }
@@ -141,7 +141,7 @@ private val typeIcons = mapOf(
     Type.PSYCHIC to R.drawable.ic_psychic,
     Type.ROCK to R.drawable.ic_rock,
     Type.STEEL to R.drawable.ic_steel,
-    Type.WATER to R.drawable.ic_water
+    Type.WATER to R.drawable.ic_water,
 )
 
 @Composable
@@ -150,17 +150,11 @@ fun getTypeIcon(icon: String?): Painter {
     return painterResource(id = iconResId)
 }
 
-fun getTypePrimaryColor(type: String?): Color {
-    return typePrimaryColors[type] ?: TYPE_TCG_COLORLESS_PRIMARY
-}
+fun getTypePrimaryColor(type: String?): Color = typePrimaryColors[type] ?: TYPE_TCG_COLORLESS_PRIMARY
 
-fun getTypeBorderColor(type: String?): Color {
-    return typeBorderColors[type] ?: TYPE_TCG_COLORLESS_BORDER
-}
+fun getTypeBorderColor(type: String?): Color = typeBorderColors[type] ?: TYPE_TCG_COLORLESS_BORDER
 
-fun getTypeBackgroundColor(type: String?): Color {
-    return typeBackgroundColors[type] ?: TYPE_TCG_COLORLESS_BACKGROUND
-}
+fun getTypeBackgroundColor(type: String?): Color = typeBackgroundColors[type] ?: TYPE_TCG_COLORLESS_BACKGROUND
 
 private val typePrimaryColors = mapOf(
     Type.BUG to TYPE_BUG_PRIMARY,
@@ -180,7 +174,7 @@ private val typePrimaryColors = mapOf(
     Type.PSYCHIC to TYPE_PSYCHIC_PRIMARY,
     Type.ROCK to TYPE_ROCK_PRIMARY,
     Type.STEEL to TYPE_STEEL_PRIMARY,
-    Type.WATER to TYPE_WATER_PRIMARY
+    Type.WATER to TYPE_WATER_PRIMARY,
 )
 
 private val typeBorderColors = mapOf(
@@ -201,7 +195,7 @@ private val typeBorderColors = mapOf(
     Type.PSYCHIC to TYPE_PSYCHIC_BORDER,
     Type.ROCK to TYPE_ROCK_BORDER,
     Type.STEEL to TYPE_STEEL_BORDER,
-    Type.WATER to TYPE_WATER_BORDER
+    Type.WATER to TYPE_WATER_BORDER,
 )
 
 private val typeBackgroundColors = mapOf(
@@ -222,5 +216,5 @@ private val typeBackgroundColors = mapOf(
     Type.PSYCHIC to TYPE_PSYCHIC_BACKGROUND,
     Type.ROCK to TYPE_ROCK_BACKGROUND,
     Type.STEEL to TYPE_STEEL_BACKGROUND,
-    Type.WATER to TYPE_WATER_BACKGROUND
+    Type.WATER to TYPE_WATER_BACKGROUND,
 )

@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Entikore
+ * Copyright 2025-2026 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -73,7 +73,7 @@ interface GenerationDao : BaseDao<GenerationEntity> {
     @Query(
         "SELECT * FROM generation INNER JOIN generation_pokemon ON generation.generationId = generation_pokemon.generationPokemonCrossRefGenerationId" +
             " INNER JOIN pokemon ON pokemon.pokemonId = generation_pokemon.generationPokemonCrossRefPokemonId" +
-            " WHERE generation.generationName = :name"
+            " WHERE generation.generationName = :name",
     )
     fun getPokemonWithinGenerationByName(name: String): Flow<List<PokemonWithSpeciesTypesAndVarieties>>
 
@@ -88,7 +88,7 @@ interface GenerationDao : BaseDao<GenerationEntity> {
     @Query(
         "SELECT * FROM generation INNER JOIN generation_pokemon ON generation.generationId = generation_pokemon.generationPokemonCrossRefGenerationId" +
             " INNER JOIN pokemon ON pokemon.pokemonId = generation_pokemon.generationPokemonCrossRefPokemonId" +
-            " WHERE generation.generationId = :id"
+            " WHERE generation.generationId = :id",
     )
     fun getPokemonWithinGenerationById(id: Int): Flow<List<PokemonWithSpeciesTypesAndVarieties>>
 

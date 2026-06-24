@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Entikore
+ * Copyright 2024-2026 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,20 +33,19 @@ data class TypeEntity(
     val halfDamageFrom: List<String>,
     val halfDamageTo: List<String>,
     val noDamageFrom: List<String>,
-    val noDamageTo: List<String>
+    val noDamageTo: List<String>,
 )
 
-fun TypeEntity.asExternalModel() =
-    Type(
-        name = typeName,
-        pokemonOfType = pokemonOfType,
-        doubleDamageFrom = doubleDamageFrom,
-        doubleDamageTo = doubleDamageTo,
-        halfDamageFrom = halfDamageFrom,
-        halfDamageTo = halfDamageTo,
-        noDamageFrom = noDamageFrom,
-        noDamageTo = noDamageTo
-    )
+fun TypeEntity.asExternalModel() = Type(
+    name = typeName,
+    pokemonOfType = pokemonOfType,
+    doubleDamageFrom = doubleDamageFrom,
+    doubleDamageTo = doubleDamageTo,
+    halfDamageFrom = halfDamageFrom,
+    halfDamageTo = halfDamageTo,
+    noDamageFrom = noDamageFrom,
+    noDamageTo = noDamageTo,
+)
 
 @JvmName("typeListAsExternalModel")
 fun List<TypeEntity>.asExternalModel() = map(TypeEntity::asExternalModel).ifEmpty {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Entikore
+ * Copyright 2025-2026 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,9 +28,8 @@ import javax.inject.Inject
  */
 class ChangeTypeThemeUseCase @Inject constructor(
     private val repository: AppSettingsRepository,
-    dispatcher: CoroutineDispatcher = Dispatchers.IO
+    dispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) : BaseSuspendUseCase<String, Unit>(dispatcher) {
 
-    override suspend fun execute(params: String) =
-        repository.setTypeTheme(TypeThemeConfig.fromTypeString(params))
+    override suspend fun execute(params: String) = repository.setTypeTheme(TypeThemeConfig.fromTypeString(params))
 }

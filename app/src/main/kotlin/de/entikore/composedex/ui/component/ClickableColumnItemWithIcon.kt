@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Entikore
+ * Copyright 2024-2026 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -44,19 +44,19 @@ fun ClickableColumnItem(
     borderColor: Color,
     textColor: Color,
     onClick: (String) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Row(
         horizontalArrangement = Arrangement.Start,
         verticalAlignment = Alignment.CenterVertically,
-        modifier = modifier
+        modifier = modifier,
     ) {
         Button(
             onClick = { onClick(text) },
             shape = CutCornerShape(integerResource(id = R.integer.default_cut_corner_shape_percentage)),
             contentPadding = PaddingValues(
                 horizontal = dimensionResource(id = R.dimen.standard_padding),
-                vertical = dimensionResource(id = R.dimen.medium_padding)
+                vertical = dimensionResource(id = R.dimen.medium_padding),
             ),
             colors = ButtonDefaults.outlinedButtonColors(),
             border = BorderStroke(
@@ -65,15 +65,15 @@ fun ClickableColumnItem(
             ),
             modifier = Modifier.fillMaxWidth().background(
                 backgroundColor,
-                CutCornerShape(integerResource(id = R.integer.default_cut_corner_shape_percentage))
-            )
+                CutCornerShape(integerResource(id = R.integer.default_cut_corner_shape_percentage)),
+            ),
         ) {
             Text(
                 text = text,
                 fontStyle = MaterialTheme.typography.labelMedium.fontStyle,
                 color = textColor,
                 modifier = Modifier
-                    .padding(dimensionResource(id = R.dimen.large_padding))
+                    .padding(dimensionResource(id = R.dimen.large_padding)),
             )
         }
     }
@@ -87,19 +87,19 @@ fun ClickableColumnItemWithIcon(
     textColor: Color,
     onClick: (String) -> Unit,
     modifier: Modifier = Modifier,
-    icon: @Composable () -> Unit
+    icon: @Composable () -> Unit,
 ) {
     Row(
         horizontalArrangement = Arrangement.Start,
         verticalAlignment = Alignment.CenterVertically,
-        modifier = modifier
+        modifier = modifier,
     ) {
         Button(
             onClick = { onClick(text) },
             shape = CutCornerShape(integerResource(id = R.integer.default_cut_corner_shape_percentage)),
             contentPadding = PaddingValues(
                 horizontal = dimensionResource(id = R.dimen.standard_padding),
-                vertical = dimensionResource(id = R.dimen.medium_padding)
+                vertical = dimensionResource(id = R.dimen.medium_padding),
             ),
             colors = ButtonDefaults.outlinedButtonColors(),
             border = BorderStroke(
@@ -108,14 +108,14 @@ fun ClickableColumnItemWithIcon(
             ),
             modifier = Modifier.fillMaxWidth().background(
                 backgroundColor,
-                CutCornerShape(integerResource(id = R.integer.default_cut_corner_shape_percentage))
-            )
+                CutCornerShape(integerResource(id = R.integer.default_cut_corner_shape_percentage)),
+            ),
         ) {
             icon()
             Spacer(
                 modifier = Modifier
                     .size(dimensionResource(id = R.dimen.default_spacer))
-                    .weight(0.2f)
+                    .weight(0.2f),
             )
             Text(
                 text = text,
@@ -123,7 +123,7 @@ fun ClickableColumnItemWithIcon(
                 color = textColor,
                 modifier = Modifier
                     .weight(0.6f)
-                    .padding(end = dimensionResource(id = R.dimen.large_padding))
+                    .padding(end = dimensionResource(id = R.dimen.large_padding)),
             )
         }
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Entikore
+ * Copyright 2024-2026 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,9 +28,9 @@ import de.entikore.composedex.data.local.entity.type.TypeEntity
  */
 @Entity(
     tableName = "type_pokemon",
-    primaryKeys = ["typePokemonCrossRefTypeId", "typePokemonCrossRefPokemonId"]
+    primaryKeys = ["typePokemonCrossRefTypeId", "typePokemonCrossRefPokemonId"],
 )
 data class TypePokemonCrossRef(
     val typePokemonCrossRefTypeId: Int,
-    @ColumnInfo(index = true) val typePokemonCrossRefPokemonId: Int
+    @ColumnInfo(index = true) val typePokemonCrossRefPokemonId: Int,
 )
