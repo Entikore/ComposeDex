@@ -16,8 +16,8 @@ coreKtx = "1.19.0"
 coreSplash = "1.2.0"
 coroutineTest = "1.10.2"
 dataStore = "1.2.1"
-detekt = "1.23.8"
-detektCompose = "0.4.27"
+detekt = "2.0.0-alpha.5"
+detektCompose = "0.6.2"
 exoPlayer = "1.10.1"
 hiltAndroid = "2.59.2"
 hiltNavigation = "1.2.0"
@@ -87,7 +87,7 @@ androidx-arch-core = { group = "androidx.arch.core", name = "core-testing", vers
 
 coroutine-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "coroutineTest"}
 
-detekt-formatting = { group = "io.gitlab.arturbosch.detekt", name = "detekt-formatting", version.ref = "detekt" }
+detekt-formatting = { group = "dev.detekt", name = "detekt-rules-ktlint-wrapper", version.ref = "detekt" }
 detekt-compose = { group = "io.nlopez.compose.rules", name= "detekt", version.ref = "detektCompose" }
 
 hilt-android-testing = { group = "com.google.dagger", name = "hilt-android-testing", version.ref = "hiltAndroid"}
@@ -110,7 +110,7 @@ turbine = { group = "app.cash.turbine", name = "turbine", version.ref = "turbine
 android-application = { id = "com.android.application", version.ref = "androidGradlePlugin" }
 android-library = { id = "com.android.library", version.ref = "androidGradlePlugin" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlinAndroid" }
-detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
+detekt = { id = "dev.detekt", version.ref = "detekt" }
 hilt-android = { id = "com.google.dagger.hilt.android", version.ref = "hiltAndroid" }
 jetbrains-kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlinSerialization" }
 junit5 = { id = "de.mannodermaus.android-junit5", version.ref = "junit5Plugin" }
