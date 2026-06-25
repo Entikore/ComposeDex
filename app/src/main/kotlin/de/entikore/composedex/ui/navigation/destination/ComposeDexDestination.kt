@@ -37,8 +37,7 @@ data class PokemonDestination(
     override val icon: Int = R.drawable.ic_jiggly_pixel,
     override val uiName: String = "Pokemon",
     val pokemonName: String? = null,
-) : ComposeDexDestination,
-    NavKey
+) : ComposeDexDestination
 
 /**
  * Destination for [de.entikore.composedex.ui.screen.favourite.FavouriteDestination].
