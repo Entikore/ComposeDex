@@ -34,13 +34,11 @@ import de.entikore.sharedtestcode.TYPE_POISON_FILE
 import de.entikore.sharedtestcode.TestModelFactory.Companion.getPokemonInfoRemote
 import de.entikore.sharedtestcode.TestModelFactory.Companion.getTestModel
 import de.entikore.sharedtestcode.TestModelFactory.Companion.getTypeRemote
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 
-@OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(MainCoroutineRule::class)
 class FetchPokemonOfTypeUseCaseTest {
     private lateinit var repository: FakeTypeRepository

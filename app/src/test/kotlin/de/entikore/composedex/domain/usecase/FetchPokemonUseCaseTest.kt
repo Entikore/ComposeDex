@@ -32,13 +32,11 @@ import de.entikore.sharedtestcode.POKEMON_ODDISH_NAME
 import de.entikore.sharedtestcode.POKEMON_VILEPLUME_NAME
 import de.entikore.sharedtestcode.TestModelFactory.Companion.getPokemonInfoRemote
 import de.entikore.sharedtestcode.TestModelFactory.Companion.getTestModel
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 
-@OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(MainCoroutineRule::class)
 class FetchPokemonUseCaseTest {
     private lateinit var repository: FakePokemonRepository

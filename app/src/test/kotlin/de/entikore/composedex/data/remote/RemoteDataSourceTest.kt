@@ -54,7 +54,6 @@ import de.entikore.sharedtestcode.TestModelFactory.Companion.getTestModel
 import de.entikore.sharedtestcode.TestModelFactory.Companion.getTypeListRemote
 import de.entikore.sharedtestcode.TestModelFactory.Companion.getTypeRemote
 import de.entikore.sharedtestcode.TestModelFactory.Companion.readFileWithoutNewLineFromResources
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.TestDispatcher
 import kotlinx.coroutines.test.runTest
@@ -71,7 +70,6 @@ import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import java.util.stream.Stream
 
-@OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(MainCoroutineRule::class)
 class RemoteDataSourceTest {
 

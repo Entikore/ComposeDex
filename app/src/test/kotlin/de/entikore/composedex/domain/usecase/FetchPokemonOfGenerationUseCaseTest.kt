@@ -33,13 +33,11 @@ import de.entikore.sharedtestcode.POKEMON_LAPRAS_NAME
 import de.entikore.sharedtestcode.TestModelFactory.Companion.getGenerationRemote
 import de.entikore.sharedtestcode.TestModelFactory.Companion.getPokemonInfoRemote
 import de.entikore.sharedtestcode.TestModelFactory.Companion.getTestModel
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 
-@OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(MainCoroutineRule::class)
 class FetchPokemonOfGenerationUseCaseTest {
     private lateinit var repository: FakeGenerationRepository

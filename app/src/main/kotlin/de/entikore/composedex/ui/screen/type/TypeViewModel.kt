@@ -63,7 +63,6 @@ class TypeViewModel @Inject constructor(
     val selectedType: StateFlow<String> =
         _selectedType.asStateFlow()
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     private fun fetchSelectedTypeDetailsFlow(type: String): Flow<SelectedTypeUiState> = getTypeUseCase(type).combine(
         getPokemonOfTypeUseCase(type).onEach { result ->
             result.onSuccess { launchAssetRetrieval(it) }
