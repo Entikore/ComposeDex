@@ -8,7 +8,7 @@ on:
     tags: [ 'v*.*.*' ]
 
 env:
-  API: 35
+  API: 37
 
 jobs:
   build:
