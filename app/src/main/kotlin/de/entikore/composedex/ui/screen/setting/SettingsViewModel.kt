@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Entikore
+ * Copyright 2025-2026 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,7 +35,7 @@ import javax.inject.Inject
 class SettingsViewModel @Inject constructor(
     userPreferencesUseCase: GetUserPreferencesUseCase,
     private val changeLightDarkThemeUseCase: @JvmSuppressWildcards BaseSuspendUseCase<AppThemeConfig, Unit>,
-    private val deleteLocalData: @JvmSuppressWildcards BaseSuspendUseCase<Unit, Unit>
+    private val deleteLocalData: @JvmSuppressWildcards BaseSuspendUseCase<Unit, Unit>,
 ) : ViewModel() {
 
     val screenState = userPreferencesUseCase.invoke().map {
@@ -43,7 +43,7 @@ class SettingsViewModel @Inject constructor(
     }.stateIn(
         viewModelScope,
         SharingStarted.Eagerly,
-        SettingScreenUiState()
+        SettingScreenUiState(),
     )
 
     fun deleteCachedFiles() {

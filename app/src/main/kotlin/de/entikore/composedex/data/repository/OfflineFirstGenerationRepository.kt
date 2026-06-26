@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Entikore
+ * Copyright 2025-2026 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -47,97 +47,94 @@ import timber.log.Timber
  */
 class OfflineFirstGenerationRepository(
     private val localDataSource: GenerationLocalDataSource,
-    private val remoteDataSource: RemoteDataSource
+    private val remoteDataSource: RemoteDataSource,
 ) : GenerationRepository {
-    override fun getGenerations(): Flow<List<Generation>> =
-        localDataSource.getGenerationOverview()
-            .combine(localDataSource.getAllGenerations()) { overview, generations ->
-                if (generations.isNotEmpty() && generations.size == overview!!.names.size) {
-                    generations.map { it.asExternalModel() }
-                } else {
-                    throw LocalDataException("Not all generations in database")
-                }
-            }.retryWhen { cause, attempt ->
-                if ((cause is LocalDataException || cause is NullPointerException) && attempt < RETRY_COUNT) {
-                    Timber.d("Attempt $attempt of $RETRY_COUNT to fetch generations, failed previously because: $cause")
-                    val remoteGenerations = mutableListOf<GenerationEntity>()
-                    when (val generations = remoteDataSource.getGenerations()) {
-                        is ApiResponse.Success -> {
-                            localDataSource.insertGenerationOverview(generations.data.toEntity())
-                            generations.data.results.forEach {
-                                when (val generation = remoteDataSource.getGenerationByName(it.name)) {
-                                    is ApiResponse.Success -> {
-                                        remoteGenerations.add(generation.data.toEntity())
-                                    }
+    override fun getGenerations(): Flow<List<Generation>> = localDataSource.getGenerationOverview()
+        .combine(localDataSource.getAllGenerations()) { overview, generations ->
+            if (generations.isNotEmpty() && generations.size == overview!!.names.size) {
+                generations.map { it.asExternalModel() }
+            } else {
+                throw LocalDataException("Not all generations in database")
+            }
+        }.retryWhen { cause, attempt ->
+            if ((cause is LocalDataException || cause is NullPointerException) && attempt < RETRY_COUNT) {
+                Timber.d("Attempt $attempt of $RETRY_COUNT to fetch generations, failed previously because: $cause")
+                val remoteGenerations = mutableListOf<GenerationEntity>()
+                when (val generations = remoteDataSource.getGenerations()) {
+                    is ApiResponse.Success -> {
+                        localDataSource.insertGenerationOverview(generations.data.toEntity())
+                        generations.data.results.forEach {
+                            when (val generation = remoteDataSource.getGenerationByName(it.name)) {
+                                is ApiResponse.Success -> {
+                                    remoteGenerations.add(generation.data.toEntity())
+                                }
 
-                                    is ApiResponse.Error -> {
-                                        Timber.d("Error fetching generation ${it.name} ${generation.exception}")
-                                        throw generation.exception
-                                    }
+                                is ApiResponse.Error -> {
+                                    Timber.d("Error fetching generation ${it.name} ${generation.exception}")
+                                    throw generation.exception
                                 }
                             }
-                            for (generation in remoteGenerations) {
-                                localDataSource.insertGeneration(generation)
-                            }
                         }
-
-                        is ApiResponse.Error -> {
-                            Timber.d("Error fetching generations ${generations.exception}")
-                            throw generations.exception
+                        for (generation in remoteGenerations) {
+                            localDataSource.insertGeneration(generation)
                         }
                     }
-                    true
-                } else {
-                    Timber.d("Could not fetch generations: $cause")
-                    false
-                }
-            }
 
-    override fun getGenerationByName(name: String): Flow<Generation> {
-        return localDataSource
-            .getGenerationByName(name)
-            .map { generationEntity -> generationEntity!!.asExternalModel() }
-            .retryWhen { cause, attempt ->
-                if (cause is NullPointerException && attempt < RETRY_COUNT) {
-                    Timber.d(
-                        "Attempt $attempt of $RETRY_COUNT to fetch generation $name, failed previously because: $cause"
-                    )
-                    when (val generation = remoteDataSource.getGenerationByName(name)) {
-                        is ApiResponse.Error -> throw generation.exception
-                        is ApiResponse.Success -> {
-                            localDataSource.insertGeneration(generation.data.toEntity())
-                        }
+                    is ApiResponse.Error -> {
+                        Timber.d("Error fetching generations ${generations.exception}")
+                        throw generations.exception
                     }
-                    true
-                } else {
-                    Timber.d("Could not fetch generation by name $name: $cause")
-                    false
                 }
+                true
+            } else {
+                Timber.d("Could not fetch generations: $cause")
+                false
             }
-    }
+        }
 
-    override fun getGenerationById(id: Int): Flow<Generation> {
-        return localDataSource
-            .getGenerationById(id)
-            .map { generationEntity -> generationEntity!!.asExternalModel() }
-            .retryWhen { cause, attempt ->
-                if (cause is NullPointerException && attempt < RETRY_COUNT) {
-                    Timber.d(
-                        "Attempt $attempt of $RETRY_COUNT to fetch generation $id, failed previously because: $cause"
-                    )
-                    when (val generation = remoteDataSource.getGenerationById(id)) {
-                        is ApiResponse.Error -> throw generation.exception
-                        is ApiResponse.Success -> {
-                            localDataSource.insertGeneration(generation.data.toEntity())
-                        }
+    override fun getGenerationByName(name: String): Flow<Generation> = localDataSource
+        .getGenerationByName(name)
+        .map { generationEntity -> generationEntity!!.asExternalModel() }
+        .retryWhen { cause, attempt ->
+            if (cause is NullPointerException && attempt < RETRY_COUNT) {
+                Timber.d(
+                    "Attempt $attempt of $RETRY_COUNT to fetch generation $name, failed previously because: $cause",
+                )
+                when (val generation = remoteDataSource.getGenerationByName(name)) {
+                    is ApiResponse.Error -> throw generation.exception
+
+                    is ApiResponse.Success -> {
+                        localDataSource.insertGeneration(generation.data.toEntity())
                     }
-                    true
-                } else {
-                    Timber.d("Could not fetch generation by id $id: $cause")
-                    false
                 }
+                true
+            } else {
+                Timber.d("Could not fetch generation by name $name: $cause")
+                false
             }
-    }
+        }
+
+    override fun getGenerationById(id: Int): Flow<Generation> = localDataSource
+        .getGenerationById(id)
+        .map { generationEntity -> generationEntity!!.asExternalModel() }
+        .retryWhen { cause, attempt ->
+            if (cause is NullPointerException && attempt < RETRY_COUNT) {
+                Timber.d(
+                    "Attempt $attempt of $RETRY_COUNT to fetch generation $id, failed previously because: $cause",
+                )
+                when (val generation = remoteDataSource.getGenerationById(id)) {
+                    is ApiResponse.Error -> throw generation.exception
+
+                    is ApiResponse.Success -> {
+                        localDataSource.insertGeneration(generation.data.toEntity())
+                    }
+                }
+                true
+            } else {
+                Timber.d("Could not fetch generation by id $id: $cause")
+                false
+            }
+        }
 
     @OptIn(ExperimentalCoroutinesApi::class)
     override fun getPokemonOfGenerationByName(name: String): Flow<List<Pokemon>> {
@@ -147,10 +144,11 @@ class OfflineFirstGenerationRepository(
                     is ApiResponse.Error -> {
                         Timber.d("Fetch remote pokemon is ${generation.exception}")
                     }
+
                     is ApiResponse.Success -> {
                         val generationEntity = generation.data.toEntity()
                         val localPokemon = localDataSource.getPokemonOfGenerationByName(
-                            generationEntity.generationName
+                            generationEntity.generationName,
                         ).first()
                         val resultPokemon =
                             mutableListOf<Pokemon>().apply {
@@ -167,7 +165,7 @@ class OfflineFirstGenerationRepository(
                             remotePokemon?.let {
                                 localDataSource.insertPokemonForGeneration(
                                     generation = generationEntity,
-                                    it
+                                    it,
                                 )
                                 val externalPokemon = it.asExternalModel()
                                 if (!resultPokemon.contains(externalPokemon)) {
@@ -190,10 +188,11 @@ class OfflineFirstGenerationRepository(
                     is ApiResponse.Error -> {
                         Timber.d("Fetch remote pokemon is ${generation.exception}")
                     }
+
                     is ApiResponse.Success -> {
                         val generationEntity = generation.data.toEntity()
                         val localPokemon = localDataSource.getPokemonOfGenerationByName(
-                            generationEntity.generationName
+                            generationEntity.generationName,
                         ).first()
                         val resultPokemon =
                             mutableListOf<Pokemon>().apply {
@@ -210,7 +209,7 @@ class OfflineFirstGenerationRepository(
                             remotePokemon?.let {
                                 localDataSource.insertPokemonForGeneration(
                                     generation = generationEntity,
-                                    it
+                                    it,
                                 )
                                 val externalPokemon = it.asExternalModel()
                                 if (!resultPokemon.contains(externalPokemon)) {
@@ -225,20 +224,20 @@ class OfflineFirstGenerationRepository(
         return flowOf(remoteFlow, localFlow).flattenMerge()
     }
 
-    private suspend fun getRemotePokemonByName(name: String): PokemonWithSpeciesTypesAndVarieties? {
-        return when (val pokemon = remoteDataSource.getPokemonInfoRemoteBySpeciesName(name)) {
+    private suspend fun getRemotePokemonByName(name: String): PokemonWithSpeciesTypesAndVarieties? =
+        when (val pokemon = remoteDataSource.getPokemonInfoRemoteBySpeciesName(name)) {
             is ApiResponse.Success -> {
                 PokemonWithSpeciesTypesAndVarieties(
                     pokemon.data.pokemon.toEntity(),
                     pokemon.data.species.toEntity(pokemon.data.evolutionChain),
                     pokemon.data.types.toEntity(),
-                    pokemon.data.species.varieties.map { it.toEntity() }
+                    pokemon.data.species.varieties.map { it.toEntity() },
                 )
             }
+
             is ApiResponse.Error -> {
                 Timber.d("getPokemonInfoRemoteBySpeciesName was not successful: ${pokemon.exception}")
                 null
             }
         }
-    }
 }

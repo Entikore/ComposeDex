@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Entikore
+ * Copyright 2024-2026 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,14 +25,14 @@ val provider =
     GoogleFont.Provider(
         providerAuthority = "com.google.android.gms.fonts",
         providerPackage = "com.google.android.gms",
-        certificates = R.array.com_google_android_gms_fonts_certs
+        certificates = R.array.com_google_android_gms_fonts_certs,
     )
 
 val customFont = FontFamily(
     Font(
         googleFont = GoogleFont("Press Start 2P"),
         fontProvider = provider,
-    )
+    ),
 )
 
 val baseline = Typography()

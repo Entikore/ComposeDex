@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Entikore
+ * Copyright 2024-2026 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,9 +25,9 @@ data class SettingScreenUiState(
         listOf(
             RadioButtonItem(id = AppThemeConfig.MODE_DAY.ordinal, title = "Light Theme"),
             RadioButtonItem(id = AppThemeConfig.MODE_NIGHT.ordinal, title = "Dark Theme"),
-            RadioButtonItem(id = AppThemeConfig.MODE_AUTO.ordinal, title = "Auto")
+            RadioButtonItem(id = AppThemeConfig.MODE_AUTO.ordinal, title = "Auto"),
         ),
-    val selected: Int = 0
+    val selected: Int = 0,
 )
 
 /**

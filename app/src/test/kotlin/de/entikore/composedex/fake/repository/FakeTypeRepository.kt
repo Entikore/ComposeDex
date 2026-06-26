@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Entikore
+ * Copyright 2024-2026 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,9 @@ import de.entikore.composedex.util.TestException
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
-class FakeTypeRepository : TypeRepository, FailableFakeRepository() {
+class FakeTypeRepository :
+    FailableFakeRepository(),
+    TypeRepository {
     private var availablePokemonList: MutableList<Pokemon> = mutableListOf()
     private var availableTypeList: MutableList<Type> = mutableListOf()
 
@@ -33,28 +35,26 @@ class FakeTypeRepository : TypeRepository, FailableFakeRepository() {
         emit(availableTypeList)
     }
 
-    override fun getTypeByName(name: String): Flow<Type> =
-        flow {
-            if (shouldReturnError) {
-                throw TestException(EXPECTED_TEST_EXCEPTION)
-            }
-            emit(
-                availableTypeList.firstOrNull { it.name == name } ?: throw TestException(
-                    TYPE_WITH_NAME_NOT_FOUND
-                )
-            )
+    override fun getTypeByName(name: String): Flow<Type> = flow {
+        if (shouldReturnError) {
+            throw TestException(EXPECTED_TEST_EXCEPTION)
         }
+        emit(
+            availableTypeList.firstOrNull { it.name == name } ?: throw TestException(
+                TYPE_WITH_NAME_NOT_FOUND,
+            ),
+        )
+    }
 
-    override fun getPokemonOfType(name: String): Flow<List<Pokemon>> =
-        flow {
-            if (shouldReturnError) {
-                throw TestException(EXPECTED_TEST_EXCEPTION)
-            }
-            if (!(availableTypeList.any { it.name == name })) {
-                throw TestException(TYPE_WITH_NAME_NOT_FOUND)
-            }
-            emit(availablePokemonList.filter { it.types.any { type -> type.name == name } })
+    override fun getPokemonOfType(name: String): Flow<List<Pokemon>> = flow {
+        if (shouldReturnError) {
+            throw TestException(EXPECTED_TEST_EXCEPTION)
         }
+        if (!(availableTypeList.any { it.name == name })) {
+            throw TestException(TYPE_WITH_NAME_NOT_FOUND)
+        }
+        emit(availablePokemonList.filter { it.types.any { type -> type.name == name } })
+    }
 
     fun addPokemon(vararg pokemon: Pokemon) {
         availablePokemonList.addAll(pokemon)

@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Entikore
+ * Copyright 2024-2026 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,7 +34,6 @@ sealed interface ApiResponse<T> {
     companion object {
         fun <T> success(data: T): ApiResponse<T> = Success(data)
 
-        fun <T> error(userErrorMsg: String, exception: Throwable): ApiResponse<T> =
-            Error(userErrorMsg, exception)
+        fun <T> error(userErrorMsg: String, exception: Throwable): ApiResponse<T> = Error(userErrorMsg, exception)
     }
 }

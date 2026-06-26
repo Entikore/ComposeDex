@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Entikore
+ * Copyright 2025-2026 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,9 +26,7 @@ import kotlinx.coroutines.withContext
  *
  * This class is designed to be implemented by concrete use cases.
  */
-abstract class BaseSuspendUseCase<in P, out R>(
-    private val dispatcher: CoroutineDispatcher = Dispatchers.IO
-) {
+abstract class BaseSuspendUseCase<in P, out R>(private val dispatcher: CoroutineDispatcher = Dispatchers.IO) {
 
     protected abstract suspend fun execute(params: P): R
 

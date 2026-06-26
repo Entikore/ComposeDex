@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Entikore
+ * Copyright 2024-2026 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -57,7 +57,7 @@ fun TopBarWithSearchbarAndFilter(
     changeFilter: (String, Boolean) -> Unit,
     shapeFilter: Pair<List<PokemonShape>, PokemonShape>,
     changeShapeFilter: (shape: PokemonShape) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val showDropDownMenu = remember { mutableStateOf(false) }
 
@@ -65,14 +65,14 @@ fun TopBarWithSearchbarAndFilter(
         title = title,
         openDrawer = openDrawer,
         searchOnClick = searchOnClick,
-        modifier = modifier
+        modifier = modifier,
     ) {
         IconButton(
-            onClick = { showDropDownMenu.value = !showDropDownMenu.value }
+            onClick = { showDropDownMenu.value = !showDropDownMenu.value },
         ) {
             Icon(
                 painterResource(id = R.drawable.more_vert),
-                contentDescription = stringResource(R.string.open_drop_down_menu)
+                contentDescription = stringResource(R.string.open_drop_down_menu),
             )
         }
         DropDownMenuWithFilterOptions(
@@ -98,17 +98,17 @@ fun TopBarWithFilter(
     changeFilter: (String, Boolean) -> Unit,
     shapeFilter: Pair<List<PokemonShape>, PokemonShape>,
     changeShapeFilter: (shape: PokemonShape) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val showDropDownMenu = remember { mutableStateOf(false) }
 
     TopBar(title = title, openDrawer = openDrawer, modifier = modifier) {
         IconButton(
-            onClick = { showDropDownMenu.value = !showDropDownMenu.value }
+            onClick = { showDropDownMenu.value = !showDropDownMenu.value },
         ) {
             Icon(
                 painterResource(id = R.drawable.more_vert),
-                contentDescription = stringResource(R.string.description_show_more_options)
+                contentDescription = stringResource(R.string.description_show_more_options),
             )
         }
 
@@ -120,7 +120,7 @@ fun TopBarWithFilter(
             checkBoxItems = checkBoxItems,
             changeCheckBoxItem = changeFilter,
             shapeFiler = shapeFilter,
-            changeShapeFilter = changeShapeFilter
+            changeShapeFilter = changeShapeFilter,
         )
     }
 }
@@ -131,7 +131,7 @@ fun TopBarWithSearchbar(
     openDrawer: () -> Unit,
     searchOnClick: (String) -> Unit,
     modifier: Modifier = Modifier,
-    topBarEntry: (@Composable () -> Unit) = {}
+    topBarEntry: (@Composable () -> Unit) = {},
 ) {
     var searchWidgetState by remember { mutableStateOf(SearchWidgetState.CLOSED) }
     val updateSearchWidgetState: (SearchWidgetState) -> Unit = { searchWidgetState = it }
@@ -141,7 +141,7 @@ fun TopBarWithSearchbar(
             searchWidgetState = searchWidgetState,
             openSearch = updateSearchWidgetState,
             searchOnClick = searchOnClick,
-            modifier = modifier
+            modifier = modifier,
         )
     } else {
         TopBar(title, openDrawer, modifier) {
@@ -153,7 +153,7 @@ fun TopBarWithSearchbar(
                         } else {
                             updateSearchWidgetState(SearchWidgetState.OPENED)
                         }
-                    }
+                    },
                 ) {
                     Icon(painterResource(id = R.drawable.search), contentDescription = "")
                 }
@@ -170,14 +170,14 @@ fun TopBar(
     openDrawer: () -> Unit,
     modifier: Modifier = Modifier,
     backgroundColor: Color? = null,
-    action: @Composable () -> Unit = {}
+    action: @Composable () -> Unit = {},
 ) {
     TopAppBar(
         title = { Text(title) },
         navigationIcon = {
             IconButton(
                 onClick = { openDrawer() },
-                modifier = Modifier.testTag(stringResource(R.string.test_tag_open_drawer))
+                modifier = Modifier.testTag(stringResource(R.string.test_tag_open_drawer)),
             ) {
                 Icon(
                     painterResource(id = R.drawable.menu),
@@ -188,7 +188,7 @@ fun TopBar(
         actions = { action() },
         colors = backgroundColor?.let { TopAppBarDefaults.topAppBarColors(containerColor = it) }
             ?: TopAppBarDefaults.topAppBarColors(),
-        modifier = modifier
+        modifier = modifier,
     )
 }
 
@@ -197,14 +197,14 @@ fun ClosableSearchbar(
     searchWidgetState: SearchWidgetState,
     openSearch: (SearchWidgetState) -> Unit,
     searchOnClick: (String) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     var searchTextState by remember { mutableStateOf("") }
 
     Surface(
         modifier = modifier
             .fillMaxWidth()
-            .height(64.dp)
+            .height(64.dp),
     ) {
         TextField(
             colors = TextFieldDefaults.colors(
@@ -220,7 +220,7 @@ fun ClosableSearchbar(
                 focusedTrailingIconColor = TYPE_TCG_COLORLESS_BORDER,
                 unfocusedTrailingIconColor = TYPE_TCG_COLORLESS_BORDER,
                 focusedLeadingIconColor = TYPE_TCG_COLORLESS_BORDER,
-                unfocusedLeadingIconColor = TYPE_TCG_COLORLESS_BORDER
+                unfocusedLeadingIconColor = TYPE_TCG_COLORLESS_BORDER,
             ),
             modifier = Modifier.fillMaxWidth(),
             value = searchTextState,
@@ -228,7 +228,7 @@ fun ClosableSearchbar(
             placeholder = {
                 Text(
                     modifier = Modifier,
-                    text = "Search"
+                    text = "Search",
                 )
             },
             singleLine = true,
@@ -236,7 +236,7 @@ fun ClosableSearchbar(
             leadingIcon = {
                 Icon(
                     painterResource(id = R.drawable.search),
-                    contentDescription = stringResource(R.string.description_search_icon)
+                    contentDescription = stringResource(R.string.description_search_icon),
                 )
             },
             trailingIcon = {
@@ -250,11 +250,11 @@ fun ClosableSearchbar(
                         } else {
                             openSearch(SearchWidgetState.OPENED)
                         }
-                    }
+                    },
                 ) {
                     Icon(
                         painterResource(id = R.drawable.close),
-                        contentDescription = stringResource(R.string.description_delete_icon)
+                        contentDescription = stringResource(R.string.description_delete_icon),
                     )
                 }
             },
@@ -265,8 +265,8 @@ fun ClosableSearchbar(
                     searchOnClick(searchTextState)
                     openSearch(SearchWidgetState.CLOSED)
                 },
-                onDone = { openSearch(SearchWidgetState.CLOSED) }
-            )
+                onDone = { openSearch(SearchWidgetState.CLOSED) },
+            ),
         )
     }
 }
@@ -289,7 +289,7 @@ fun Searchbar(searchOnClick: (String) -> Unit, modifier: Modifier = Modifier) {
             focusedTrailingIconColor = TYPE_TCG_COLORLESS_BORDER,
             unfocusedTrailingIconColor = TYPE_TCG_COLORLESS_BORDER,
             focusedLeadingIconColor = TYPE_TCG_COLORLESS_BORDER,
-            unfocusedLeadingIconColor = TYPE_TCG_COLORLESS_BORDER
+            unfocusedLeadingIconColor = TYPE_TCG_COLORLESS_BORDER,
         ),
         modifier = modifier.fillMaxWidth(),
         value = searchTextState,
@@ -297,7 +297,7 @@ fun Searchbar(searchOnClick: (String) -> Unit, modifier: Modifier = Modifier) {
         placeholder = {
             Text(
                 modifier = Modifier,
-                text = "Search"
+                text = "Search",
             )
         },
         singleLine = true,
@@ -305,7 +305,7 @@ fun Searchbar(searchOnClick: (String) -> Unit, modifier: Modifier = Modifier) {
         leadingIcon = {
             Icon(
                 painterResource(id = R.drawable.search),
-                contentDescription = stringResource(R.string.description_search_icon)
+                contentDescription = stringResource(R.string.description_search_icon),
             )
         },
         trailingIcon = {
@@ -314,11 +314,11 @@ fun Searchbar(searchOnClick: (String) -> Unit, modifier: Modifier = Modifier) {
                     if (searchTextState.isNotEmpty() || searchTextState.isNotBlank()) {
                         searchTextState = ""
                     }
-                }
+                },
             ) {
                 Icon(
                     painterResource(id = R.drawable.close),
-                    contentDescription = stringResource(R.string.description_delete_icon)
+                    contentDescription = stringResource(R.string.description_delete_icon),
                 )
             }
         },
@@ -327,8 +327,8 @@ fun Searchbar(searchOnClick: (String) -> Unit, modifier: Modifier = Modifier) {
         KeyboardActions(
             onSearch = {
                 searchOnClick(searchTextState)
-            }
-        )
+            },
+        ),
     )
 }
 
@@ -337,5 +337,5 @@ fun Searchbar(searchOnClick: (String) -> Unit, modifier: Modifier = Modifier) {
  */
 enum class SearchWidgetState {
     OPENED,
-    CLOSED
+    CLOSED,
 }

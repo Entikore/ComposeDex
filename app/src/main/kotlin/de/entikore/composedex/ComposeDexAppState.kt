@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Entikore
+ * Copyright 2025-2026 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,7 +31,7 @@ import kotlinx.coroutines.launch
 data class ComposeDexAppState(
     val drawerState: DrawerState,
     private val scope: CoroutineScope,
-    val snackbarHostState: SnackbarHostState
+    val snackbarHostState: SnackbarHostState,
 ) {
 
     fun showSnackbar(message: String) {
@@ -51,11 +51,11 @@ data class ComposeDexAppState(
 fun rememberComposeDexAppState(
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
     coroutineScope: CoroutineScope = rememberCoroutineScope(),
-    drawerState: DrawerState = rememberDrawerState(DrawerValue.Closed)
+    drawerState: DrawerState = rememberDrawerState(DrawerValue.Closed),
 ) = remember(snackbarHostState, coroutineScope, drawerState) {
     ComposeDexAppState(
         snackbarHostState = snackbarHostState,
         scope = coroutineScope,
-        drawerState = drawerState
+        drawerState = drawerState,
     )
 }

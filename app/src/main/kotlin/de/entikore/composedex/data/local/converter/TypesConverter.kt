@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Entikore
+ * Copyright 2024-2026 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,12 +30,8 @@ class TypesConverter @Inject constructor(val moshi: Moshi) {
     private val typesAdapter = moshi.adapter<List<String>>(typesType)
 
     @TypeConverter
-    fun typesFromJson(string: String): List<String> {
-        return typesAdapter.fromJson(string).orEmpty()
-    }
+    fun typesFromJson(string: String): List<String> = typesAdapter.fromJson(string).orEmpty()
 
     @TypeConverter
-    fun typesToJson(types: List<String>): String {
-        return typesAdapter.toJson(types)
-    }
+    fun typesToJson(types: List<String>): String = typesAdapter.toJson(types)
 }

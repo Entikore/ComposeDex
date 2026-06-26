@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Entikore
+ * Copyright 2024-2026 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,15 +31,9 @@ object ActivityModule {
 
     @Provides
     @Singleton
-    fun provideExoPlayer(
-        @ApplicationContext context: Context
-    ): ExoPlayer {
-        return ExoPlayer.Builder(context).build()
-    }
+    fun provideExoPlayer(@ApplicationContext context: Context): ExoPlayer = ExoPlayer.Builder(context).build()
 
     @Provides
     @Singleton
-    fun provideComposeDexTTS(@ApplicationContext context: Context): ComposeDexTTS {
-        return ComposeDexTTS(context)
-    }
+    fun provideComposeDexTTS(@ApplicationContext context: Context): ComposeDexTTS = ComposeDexTTS(context)
 }

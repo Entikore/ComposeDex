@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Entikore
+ * Copyright 2025-2026 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,9 +31,7 @@ import javax.inject.Inject
  */
 class FetchPokemonOfTypeUseCase @Inject constructor(
     private val repository: TypeRepository,
-    dispatcher: CoroutineDispatcher = Dispatchers.IO
-) :
-    BaseFetchUseCase<String, List<Pokemon>>(dispatcher) {
-    override fun execute(params: String) =
-        repository.getPokemonOfType(params).distinctUntilChanged().asResult()
+    dispatcher: CoroutineDispatcher = Dispatchers.IO,
+) : BaseFetchUseCase<String, List<Pokemon>>(dispatcher) {
+    override fun execute(params: String) = repository.getPokemonOfType(params).distinctUntilChanged().asResult()
 }

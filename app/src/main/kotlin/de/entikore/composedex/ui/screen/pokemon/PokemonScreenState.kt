@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Entikore
+ * Copyright 2024-2026 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,7 +29,7 @@ sealed class PokemonScreenState {
         val selectedType: Type = selectedPokemon.types.first(),
         val evolvesFrom: PokemonPreview? = null,
         val evolvesTo: List<PokemonPreview> = emptyList(),
-        val varieties: List<Pokemon> = emptyList()
+        val varieties: List<Pokemon> = emptyList(),
     ) : PokemonScreenState()
     data class Error(val errorMessage: String) : PokemonScreenState()
     data object Loading : PokemonScreenState()
@@ -44,7 +44,7 @@ data class PokemonPreview(
     val types: List<Type> = emptyList(),
     val url: String = "",
     val evolutionText: String = "",
-    val isLoading: Boolean = false
+    val isLoading: Boolean = false,
 )
 
 /**
@@ -60,5 +60,5 @@ fun Pokemon.toPokemonPreview(evolvesTo: Boolean) = PokemonPreview(
     } else {
         "Evolves from ${name.replaceFirstChar { char -> char.uppercaseChar() }}"
     },
-    isLoading = true
+    isLoading = true,
 )

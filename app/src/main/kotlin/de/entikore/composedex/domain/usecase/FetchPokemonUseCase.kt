@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Entikore
+ * Copyright 2025-2026 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,9 +35,8 @@ import javax.inject.Inject
  */
 class FetchPokemonUseCase @Inject constructor(
     private val repository: PokemonRepository,
-    dispatcher: CoroutineDispatcher = Dispatchers.IO
-) :
-    BaseFetchUseCase<String, Pokemon>(dispatcher) {
+    dispatcher: CoroutineDispatcher = Dispatchers.IO,
+) : BaseFetchUseCase<String, Pokemon>(dispatcher) {
     override fun execute(params: String): Flow<Result<Pokemon>> {
         val id = params.trim().toIntOrNull()
         return if (id != null) {
@@ -47,7 +46,7 @@ class FetchPokemonUseCase @Inject constructor(
         } else {
             val normalizedParams = params.lowercase().trim()
             repository.getPokemonByName(
-                normalizedParams
+                normalizedParams,
             ).distinctUntilChanged(Pokemon::wasPokemonUpdated)
                 .map {
                     processSuccessResult(it)
@@ -55,17 +54,14 @@ class FetchPokemonUseCase @Inject constructor(
         }
     }
 
-    private fun processSuccessResult(result: Pokemon): Pokemon {
-        return result.copy(textEntries = processFlavorTextEntries(result.textEntries))
-    }
+    private fun processSuccessResult(result: Pokemon): Pokemon =
+        result.copy(textEntries = processFlavorTextEntries(result.textEntries))
 
     /**
      * Replace all whitespaces with a single whitespace and filter duplicate text entries.
      */
-    private fun processFlavorTextEntries(flavorTextEntries: List<String>): List<String> {
-        return flavorTextEntries
-            .map {
-                it.replace(whitespacePattern, " ").trim()
-            }.distinctBy { it.lowercase() }
-    }
+    private fun processFlavorTextEntries(flavorTextEntries: List<String>): List<String> = flavorTextEntries
+        .map {
+            it.replace(whitespacePattern, " ").trim()
+        }.distinctBy { it.lowercase() }
 }

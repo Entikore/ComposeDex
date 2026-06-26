@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Entikore
+ * Copyright 2024-2026 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -47,7 +47,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import de.entikore.composedex.R
 import de.entikore.composedex.domain.model.preferences.AppThemeConfig
 import de.entikore.composedex.ui.component.TopBar
@@ -62,7 +62,7 @@ fun SettingsScreen(
     openDrawer: () -> Unit,
     showSnackbar: (String) -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: SettingsViewModel = hiltViewModel()
+    viewModel: SettingsViewModel = hiltViewModel(),
 ) {
     val screenState by viewModel.screenState.collectAsState()
     val switchTheme = viewModel::switchTheme
@@ -71,7 +71,7 @@ fun SettingsScreen(
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
-        modifier = modifier
+        modifier = modifier,
     ) {
         SettingsScreenTopBar(openDrawer)
         SettingsScreenContent(screenState, switchTheme, deleteLocalData, showSnackbar)
@@ -89,22 +89,22 @@ fun SettingsScreenContent(
     switchTheme: (theme: AppThemeConfig) -> Unit,
     deleteLocalData: () -> Unit,
     showSnackbar: (String) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceEvenly,
         modifier = modifier
-            .fillMaxSize()
+            .fillMaxSize(),
     ) {
         Column(
             verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Text(
                 text = stringResource(R.string.settings_option_theme_settings),
                 style = MaterialTheme.typography.titleMedium,
-                color = MaterialTheme.colorScheme.onSurface
+                color = MaterialTheme.colorScheme.onSurface,
             )
             Spacer(modifier = Modifier.size(2.dp))
             RadioGroup(
@@ -113,18 +113,18 @@ fun SettingsScreenContent(
                 onItemSelect = { id -> switchTheme(AppThemeConfig.fromOrdinal(id)) },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 24.dp)
+                    .padding(horizontal = 24.dp),
             )
         }
 
         Column(
             verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Text(
                 text = stringResource(R.string.settings_option_delete_local_data),
                 style = MaterialTheme.typography.titleMedium,
-                color = MaterialTheme.colorScheme.onSurface
+                color = MaterialTheme.colorScheme.onSurface,
             )
             Spacer(modifier = Modifier.size(2.dp))
             OutlinedButton(
@@ -134,7 +134,7 @@ fun SettingsScreenContent(
                     showSnackbar("Deleting local data")
                     deleteLocalData()
                 },
-                colors = ButtonDefaults.outlinedButtonColors(containerColor = TYPE_TCG_COLORLESS_PRIMARY)
+                colors = ButtonDefaults.outlinedButtonColors(containerColor = TYPE_TCG_COLORLESS_PRIMARY),
             ) {
                 Text(text = "Delete")
             }
@@ -147,7 +147,7 @@ private fun RadioGroup(
     items: Iterable<RadioButtonItem>,
     selected: Int,
     onItemSelect: ((Int) -> Unit)?,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Column(
         modifier =
@@ -156,8 +156,8 @@ private fun RadioGroup(
             .border(
                 width = dimensionResource(id = R.dimen.default_border),
                 color = MaterialTheme.colorScheme.outline,
-                shape = CutCornerShape(5)
-            )
+                shape = CutCornerShape(5),
+            ),
     ) {
         items.forEach { item ->
             CustomRadioButtonItem(
@@ -166,7 +166,7 @@ private fun RadioGroup(
                 onClick = { onItemSelect?.invoke(item.id) },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .clip(CutCornerShape(integerResource(R.integer.medium_cut_corner_shape_percentage)))
+                    .clip(CutCornerShape(integerResource(R.integer.medium_cut_corner_shape_percentage))),
             )
         }
     }
@@ -177,7 +177,7 @@ private fun CustomRadioButtonItem(
     item: RadioButtonItem,
     selected: Boolean,
     onClick: ((Int) -> Unit)?,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Row(
         modifier =
@@ -185,24 +185,24 @@ private fun CustomRadioButtonItem(
             .selectable(
                 selected = selected,
                 onClick = { onClick?.invoke(item.id) },
-                role = Role.RadioButton
+                role = Role.RadioButton,
             )
             .padding(16.dp),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.Start
+        horizontalArrangement = Arrangement.Start,
     ) {
         Image(
             painter = painterResource(id = R.drawable.ic_ball_red),
             contentDescription = "Pokeball icon",
             modifier = Modifier
                 .size(16.dp)
-                .alpha(if (selected) 1f else 0.3f)
+                .alpha(if (selected) 1f else 0.3f),
         )
         Spacer(modifier = Modifier.width(8.dp))
         Text(
             text = item.title,
             style = MaterialTheme.typography.titleSmall,
-            color = MaterialTheme.colorScheme.onSurface
+            color = MaterialTheme.colorScheme.onSurface,
         )
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Entikore
+ * Copyright 2024-2026 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,10 +28,9 @@ import timber.log.Timber
  * choice of the user, no remote data source is needed.
  */
 class DefaultFavouriteRepository(private val localDataSource: FavouriteLocalDataSource) : FavouriteRepository {
-    override fun getFavourites(): Flow<List<Pokemon>> =
-        localDataSource.getAllFavourites().map {
-            it.map { pokemon -> pokemon.asExternalModel() }
-        }
+    override fun getFavourites(): Flow<List<Pokemon>> = localDataSource.getAllFavourites().map {
+        it.map { pokemon -> pokemon.asExternalModel() }
+    }
 
     override suspend fun updateIsFavourite(id: Int, isFavourite: Boolean) {
         Timber.d("Update favourite status for $id to $isFavourite")

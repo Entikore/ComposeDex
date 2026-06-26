@@ -56,35 +56,32 @@ class TypeViewModel @Inject constructor(
     private val getTypeUseCase: FetchTypeUseCase,
     private val getPokemonOfTypeUseCase: FetchPokemonOfTypeUseCase,
     private val saveRemoteImageUseCase: @JvmSuppressWildcards BaseSuspendUseCase<SaveImageData, String>,
-    private val setAsFavouriteUseCase: @JvmSuppressWildcards BaseSuspendUseCase<SetFavouriteData, Unit>
+    private val setAsFavouriteUseCase: @JvmSuppressWildcards BaseSuspendUseCase<SetFavouriteData, Unit>,
 ) : PokemonFilterViewModel() {
 
-    private val _selectedTypeFlow = MutableStateFlow("")
+    private val _selectedType = MutableStateFlow("")
     val selectedType: StateFlow<String> =
-        _selectedTypeFlow.asStateFlow()
+        _selectedType.asStateFlow()
 
-    @OptIn(ExperimentalCoroutinesApi::class)
-    private fun fetchSelectedTypeDetailsFlow(type: String): Flow<SelectedTypeUiState> {
-        return getTypeUseCase(type).combine(
-            getPokemonOfTypeUseCase(type).onEach { result ->
-                result.onSuccess { launchAssetRetrieval(it) }
-            },
-            ::buildSelectedTypeUiState
-        )
-    }
+    private fun fetchSelectedTypeDetailsFlow(type: String): Flow<SelectedTypeUiState> = getTypeUseCase(type).combine(
+        getPokemonOfTypeUseCase(type).onEach { result ->
+            result.onSuccess { launchAssetRetrieval(it) }
+        },
+        ::buildSelectedTypeUiState,
+    )
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val screenState: StateFlow<TypeScreenUiState> =
         combine(
             getTypesUseCase(),
-            _selectedTypeFlow.flatMapLatest { selectedType ->
+            _selectedType.flatMapLatest { selectedType ->
                 if (selectedType.isNotEmpty()) {
                     fetchSelectedTypeDetailsFlow(selectedType)
                 } else {
                     flowOf(SelectedTypeUiState.NoTypeSelected)
                 }
             },
-            ::buildTypeScreenUiState
+            ::buildTypeScreenUiState,
         ).combine(filterOptions) { uiState: TypeScreenUiState, filterSettings: PokemonFilterOptions ->
             val currentPokemonList = uiState.getPokemonList()
             val filteredList = currentPokemonList?.let { filterSettings.getFilteredList(it) }
@@ -92,12 +89,12 @@ class TypeViewModel @Inject constructor(
         }.stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5_000L),
-            initialValue = TypeScreenUiState.Loading
+            initialValue = TypeScreenUiState.Loading,
         )
 
     fun fetchType(typeName: String) {
         Timber.d("Search for type $typeName")
-        _selectedTypeFlow.value = typeName
+        _selectedType.value = typeName
     }
 
     fun updateFavourite(id: Int, isFavourite: Boolean) {
@@ -115,24 +112,23 @@ class TypeViewModel @Inject constructor(
                     pokemon.remoteSprite,
                     saveAssetUseCase = { id, url, fileName ->
                         saveRemoteImageUseCase(SaveImageData(id, url, fileName, true))
-                    }
+                    },
                 )
             }
         }
     }
 
-    private fun buildSelectedTypeUiState(
-        type: Result<Type>,
-        pokemon: Result<List<Pokemon>>
-    ): SelectedTypeUiState {
-        return when {
+    private fun buildSelectedTypeUiState(type: Result<Type>, pokemon: Result<List<Pokemon>>): SelectedTypeUiState =
+        when {
             type.isFailure -> SelectedTypeUiState.Error
+
             type.isSuccess -> {
                 val pokemonUiState = when {
                     pokemon.isFailure -> PokemonUiState.Error
+
                     pokemon.isSuccess -> {
                         PokemonUiState.Success(
-                            pokemon.getOrThrow().sortedBy { it.id }
+                            pokemon.getOrThrow().sortedBy { it.id },
                         )
                     }
 
@@ -141,34 +137,31 @@ class TypeViewModel @Inject constructor(
                 SelectedTypeUiState.Success(
                     selectedType = type.getOrThrow(),
                     pokemonState = pokemonUiState,
-                    showLoadingItem = pokemonUiState.stillLoading(type.getOrThrow().pokemonOfType.size)
+                    showLoadingItem = pokemonUiState.stillLoading(type.getOrThrow().pokemonOfType.size),
                 )
             }
 
             else -> SelectedTypeUiState.Loading
         }
-    }
 
     private fun buildTypeScreenUiState(
         types: Result<List<Type>>,
-        selectedTypeUiState: SelectedTypeUiState
-    ): TypeScreenUiState {
-        return when {
-            types.isFailure -> {
-                TypeScreenUiState.Error
-            }
+        selectedTypeUiState: SelectedTypeUiState,
+    ): TypeScreenUiState = when {
+        types.isFailure -> {
+            TypeScreenUiState.Error
+        }
 
-            types.isSuccess -> {
-                val success = Success(
-                    types = types.getOrThrow(),
-                    selectedType = selectedTypeUiState
-                )
-                success
-            }
+        types.isSuccess -> {
+            val success = Success(
+                types = types.getOrThrow(),
+                selectedType = selectedTypeUiState,
+            )
+            success
+        }
 
-            else -> {
-                TypeScreenUiState.Loading
-            }
+        else -> {
+            TypeScreenUiState.Loading
         }
     }
 }

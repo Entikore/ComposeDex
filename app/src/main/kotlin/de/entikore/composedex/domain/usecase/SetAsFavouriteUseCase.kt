@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Entikore
+ * Copyright 2025-2026 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,7 +26,7 @@ import javax.inject.Inject
  */
 class SetAsFavouriteUseCase @Inject constructor(
     private val repository: FavouriteRepository,
-    dispatcher: CoroutineDispatcher = Dispatchers.IO
+    dispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) : BaseSuspendUseCase<@JvmSuppressWildcards SetFavouriteData, @JvmSuppressWildcards Unit>(dispatcher) {
     override suspend fun execute(params: @JvmSuppressWildcards SetFavouriteData) =
         repository.updateIsFavourite(params.id, params.isFavourite)
@@ -42,7 +42,4 @@ class SetAsFavouriteUseCase @Inject constructor(
  * @property isFavourite    The desired favourite status of the Pokémon
  *                          (true for favourite, false otherwise).
  */
-data class SetFavouriteData(
-    val id: Int,
-    val isFavourite: Boolean
-)
+data class SetFavouriteData(val id: Int, val isFavourite: Boolean)

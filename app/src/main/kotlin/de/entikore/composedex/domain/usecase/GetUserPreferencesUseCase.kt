@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Entikore
+ * Copyright 2025-2026 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,9 +24,6 @@ import javax.inject.Inject
 /**
  * This use case  returns the latest [UserPreferences].
  */
-class GetUserPreferencesUseCase @Inject constructor(
-    private val repository: AppSettingsRepository
-) {
-    operator fun invoke(): Flow<UserPreferences> =
-        repository.getUserPreferences().distinctUntilChanged()
+class GetUserPreferencesUseCase @Inject constructor(private val repository: AppSettingsRepository) {
+    operator fun invoke(): Flow<UserPreferences> = repository.getUserPreferences().distinctUntilChanged()
 }

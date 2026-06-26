@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Entikore
+ * Copyright 2025-2026 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,13 +26,11 @@ import de.entikore.sharedtestcode.GEN_II_FILE
 import de.entikore.sharedtestcode.GEN_I_FILE
 import de.entikore.sharedtestcode.GEN_VI_FILE
 import de.entikore.sharedtestcode.TestModelFactory.Companion.getGenerationRemote
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 
-@OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(MainCoroutineRule::class)
 class FetchGenerationsUseCaseTest {
 
@@ -56,7 +54,7 @@ class FetchGenerationsUseCaseTest {
             val allGenerationsResult = awaitItem()
             assertThat(allGenerationsResult.isSuccess).isTrue()
             assertThat(
-                (allGenerationsResult.getOrThrow())
+                (allGenerationsResult.getOrThrow()),
             ).containsExactly(generationI, generationII, generationVI)
             awaitComplete()
         }
@@ -84,7 +82,7 @@ class FetchGenerationsUseCaseTest {
             val allGenerationsResult = awaitItem()
             assertThat(allGenerationsResult.isFailure).isTrue()
             assertThat((allGenerationsResult.exceptionOrNull())?.message).isEqualTo(
-                EXPECTED_TEST_EXCEPTION
+                EXPECTED_TEST_EXCEPTION,
             )
             awaitComplete()
         }

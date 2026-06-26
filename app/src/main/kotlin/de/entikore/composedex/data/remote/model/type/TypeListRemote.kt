@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Entikore
+ * Copyright 2024-2026 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,5 +30,4 @@ data class TypeListRemote(val count: Int, val results: List<NamedApiResource>)
  * Converts a [TypeListRemote] to a [TypeOverviewEntity].
  */
 @JvmName("typeListToEntities")
-fun TypeListRemote.toEntity() =
-    TypeOverviewEntity(count = results.size, names = results.map { it.name })
+fun TypeListRemote.toEntity() = TypeOverviewEntity(count = results.size, names = results.map { it.name })

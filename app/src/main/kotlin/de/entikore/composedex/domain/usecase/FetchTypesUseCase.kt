@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Entikore
+ * Copyright 2025-2026 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,11 +30,9 @@ import javax.inject.Inject
  */
 class FetchTypesUseCase @Inject constructor(
     private val repository: TypeRepository,
-    dispatcher: CoroutineDispatcher = Dispatchers.IO
-) :
-    BaseFetchUseCase<Unit, List<Type>>(dispatcher) {
-    override fun execute(params: Unit) =
-        repository.getTypes().distinctUntilChanged().map {
-            it.filter { processedType -> !Type.isUnsupportedType(processedType.name) }
-        }.asResult()
+    dispatcher: CoroutineDispatcher = Dispatchers.IO,
+) : BaseFetchUseCase<Unit, List<Type>>(dispatcher) {
+    override fun execute(params: Unit) = repository.getTypes().distinctUntilChanged().map {
+        it.filter { processedType -> !Type.isUnsupportedType(processedType.name) }
+    }.asResult()
 }

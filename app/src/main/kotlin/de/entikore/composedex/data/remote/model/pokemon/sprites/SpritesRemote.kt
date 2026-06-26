@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Entikore
+ * Copyright 2024-2026 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,5 +30,5 @@ data class SpritesRemote(
     @Json(name = "front_female") val frontFemale: String?,
     @Json(name = "front_shiny") val frontShiny: String?,
     @Json(name = "front_shiny_female") val frontShinyFemale: String?,
-    val other: OtherRemote
+    val other: OtherRemote,
 )

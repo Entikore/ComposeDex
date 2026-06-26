@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Entikore
+ * Copyright 2025-2026 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,13 +32,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
-import androidx.navigation3.runtime.entry
 import androidx.navigation3.runtime.entryProvider
-import androidx.navigation3.runtime.rememberSavedStateNavEntryDecorator
+import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
-import androidx.navigation3.ui.rememberSceneSetupNavEntryDecorator
 import de.entikore.composedex.R
 import de.entikore.composedex.ui.navigation.destination.ComposeDexDestination
 import de.entikore.composedex.ui.navigation.destination.FavouriteDestination
@@ -60,7 +58,7 @@ fun DrawerNavHost(
     snackBarHostState: SnackbarHostState,
     changeDrawerState: () -> Unit,
     showSnackbar: (String) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val backstack = remember { mutableStateListOf<ComposeDexDestination>(PokemonDestination()) }
     val currentScreenObjectForNavDisplay: ComposeDexDestination? = backstack.lastOrNull()
@@ -72,27 +70,26 @@ fun DrawerNavHost(
                 onDestinationClick = { route ->
                     changeDrawerState()
                     backstack.add(route)
-                }
+                },
             )
         },
         drawerState = drawerState,
-        gesturesEnabled = true
+        gesturesEnabled = true,
     ) {
         Scaffold(
             snackbarHost = {
                 SnackbarHost(snackBarHostState)
             },
             containerColor = MaterialTheme.colorScheme.background,
-            modifier = modifier.fillMaxSize()
+            modifier = modifier.fillMaxSize(),
         ) { padding ->
 
             NavDisplay(
                 entryDecorators = listOf(
                     // Add the default decorators for managing scenes and saving state
-                    rememberSceneSetupNavEntryDecorator(),
-                    rememberSavedStateNavEntryDecorator(),
+                    rememberSaveableStateHolderNavEntryDecorator(),
                     // Then add the view model store decorator
-                    rememberViewModelStoreNavEntryDecorator()
+                    rememberViewModelStoreNavEntryDecorator(),
                 ),
                 backStack = backstack,
                 onBack = { backstack.removeLastOrNull() },
@@ -111,7 +108,7 @@ fun DrawerNavHost(
                             modifier = Modifier
                                 .fillMaxSize()
                                 .testTag(stringResource(R.string.test_tag_compose_dex_destination_pokemon))
-                                .padding(padding)
+                                .padding(padding),
                         )
                     }
                     entry<FavouriteDestination> {
@@ -123,8 +120,8 @@ fun DrawerNavHost(
                             modifier = Modifier
                                 .fillMaxSize()
                                 .testTag(
-                                    stringResource(R.string.test_tag_compose_dex_destination_favourite)
-                                )
+                                    stringResource(R.string.test_tag_compose_dex_destination_favourite),
+                                ),
                         )
                     }
                     entry<GenerationDestination> {
@@ -136,8 +133,8 @@ fun DrawerNavHost(
                             modifier = Modifier
                                 .fillMaxSize()
                                 .testTag(
-                                    stringResource(R.string.test_tag_compose_dex_destination_generation)
-                                )
+                                    stringResource(R.string.test_tag_compose_dex_destination_generation),
+                                ),
                         )
                     }
                     entry<TypeDestination> { typeDestination ->
@@ -154,8 +151,8 @@ fun DrawerNavHost(
                             modifier = Modifier
                                 .fillMaxSize()
                                 .testTag(
-                                    stringResource(R.string.test_tag_compose_dex_destination_type)
-                                )
+                                    stringResource(R.string.test_tag_compose_dex_destination_type),
+                                ),
                         )
                     }
                     entry<SettingsDestination> {
@@ -165,8 +162,8 @@ fun DrawerNavHost(
                             modifier = Modifier
                                 .fillMaxSize()
                                 .testTag(
-                                    stringResource(R.string.test_tag_compose_dex_destination_settings)
-                                )
+                                    stringResource(R.string.test_tag_compose_dex_destination_settings),
+                                ),
                         )
                     }
                 },

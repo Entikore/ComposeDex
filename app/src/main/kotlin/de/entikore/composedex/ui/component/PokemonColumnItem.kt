@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Entikore
+ * Copyright 2024-2026 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -57,7 +57,7 @@ fun PokemonColumnItem(
     textColor: Color,
     navigateToPokemon: (String) -> Unit,
     updateFavourite: (id: Int, isFavourite: Boolean) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Row(
         horizontalArrangement = Arrangement.Start,
@@ -68,11 +68,11 @@ fun PokemonColumnItem(
             .border(
                 border = BorderStroke(
                     width = dimensionResource(id = R.dimen.default_border),
-                    brush = borderBrush
+                    brush = borderBrush,
                 ),
-                shape = CutCornerShape(integerResource(R.integer.default_cut_corner_shape_percentage))
+                shape = CutCornerShape(integerResource(R.integer.default_cut_corner_shape_percentage)),
             )
-            .clickable { navigateToPokemon(pokemon.name) }
+            .clickable { navigateToPokemon(pokemon.name) },
     ) {
         AsyncImage(
             model = pokemon.sprite,
@@ -80,14 +80,14 @@ fun PokemonColumnItem(
             modifier = Modifier
                 .weight(0.3f)
                 .padding(start = dimensionResource(id = R.dimen.medium_padding))
-                .fillMaxSize()
+                .fillMaxSize(),
         )
 
         Box(
             modifier = Modifier
                 .weight(0.6f)
                 .fillMaxHeight()
-                .padding(horizontal = dimensionResource(id = R.dimen.medium_padding))
+                .padding(horizontal = dimensionResource(id = R.dimen.medium_padding)),
         ) {
             LazyRow(
                 horizontalArrangement = Arrangement.Center,
@@ -95,7 +95,7 @@ fun PokemonColumnItem(
                 modifier = Modifier
                     .fillMaxSize()
                     .zIndex(1f)
-                    .align(Alignment.Center)
+                    .align(Alignment.Center),
             ) {
                 items(pokemon.types) {
                     AsyncImage(
@@ -106,11 +106,11 @@ fun PokemonColumnItem(
                             modifier = Modifier
                                 .fillMaxHeight()
                                 .aspectRatio(1f)
-                                .alpha(0.2f)
+                                .alpha(0.2f),
                         ),
                         contentDescription = stringResource(R.string.cD_type_icon_of, it.name),
                         modifier = Modifier
-                            .padding(dimensionResource(id = R.dimen.standard_padding))
+                            .padding(dimensionResource(id = R.dimen.standard_padding)),
                     )
                 }
             }
@@ -118,13 +118,13 @@ fun PokemonColumnItem(
                 text = stringResource(
                     R.string.generation_screen_pokemon_id_and_name,
                     pokemon.id,
-                    pokemon.name.replaceFirstChar { it.uppercaseChar() }
+                    pokemon.name.replaceFirstChar { it.uppercaseChar() },
                 ),
                 fontStyle = MaterialTheme.typography.labelMedium.fontStyle,
                 color = textColor,
                 modifier = Modifier
                     .zIndex(2f)
-                    .align(Alignment.Center)
+                    .align(Alignment.Center),
             )
         }
 
@@ -132,17 +132,17 @@ fun PokemonColumnItem(
             onClick = { updateFavourite(pokemon.id, !pokemon.isFavourite) },
             modifier = Modifier
                 .weight(0.1f)
-                .padding(end = dimensionResource(id = R.dimen.medium_padding))
+                .padding(end = dimensionResource(id = R.dimen.medium_padding)),
         ) {
             Icon(
                 painterResource(
-                    id = if (pokemon.isFavourite) R.drawable.ic_favourite else R.drawable.ic_favourite_border
+                    id = if (pokemon.isFavourite) R.drawable.ic_favourite else R.drawable.ic_favourite_border,
                 ),
                 contentDescription = stringResource(
                     R.string.cD_is_pokemon_marked_as_favourite,
-                    pokemon.name
+                    pokemon.name,
                 ),
-                tint = getTypeBorderColor(pokemon.types.first().name)
+                tint = getTypeBorderColor(pokemon.types.first().name),
             )
         }
     }

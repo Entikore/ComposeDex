@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Entikore
+ * Copyright 2024-2026 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,9 @@ import de.entikore.composedex.util.TestException
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
-class FakePokemonRepository : PokemonRepository, FailableFakeRepository() {
+class FakePokemonRepository :
+    FailableFakeRepository(),
+    PokemonRepository {
 
     private var availablePokemonList: MutableList<Pokemon> = mutableListOf()
 
@@ -32,8 +34,8 @@ class FakePokemonRepository : PokemonRepository, FailableFakeRepository() {
         }
         emit(
             availablePokemonList.firstOrNull { it.name == name } ?: throw TestException(
-                POKEMON_WITH_NAME_NOT_FOUND
-            )
+                POKEMON_WITH_NAME_NOT_FOUND,
+            ),
         )
     }
 
@@ -43,8 +45,8 @@ class FakePokemonRepository : PokemonRepository, FailableFakeRepository() {
         }
         emit(
             availablePokemonList.firstOrNull { it.id == id } ?: throw TestException(
-                POKEMON_WITH_ID_NOT_FOUND
-            )
+                POKEMON_WITH_ID_NOT_FOUND,
+            ),
         )
     }
 

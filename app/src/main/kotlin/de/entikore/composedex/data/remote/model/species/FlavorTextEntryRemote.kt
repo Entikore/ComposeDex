@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Entikore
+ * Copyright 2024-2026 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,7 +27,4 @@ import de.entikore.composedex.data.remote.model.common.NamedApiResource
  *                      replace with their visible decodable version.
  * @property language      The language this flavor text entry is in.
  */
-data class FlavorTextEntryRemote(
-    @Json(name = "flavor_text") val flavorText: String,
-    val language: NamedApiResource
-)
+data class FlavorTextEntryRemote(@Json(name = "flavor_text") val flavorText: String, val language: NamedApiResource)

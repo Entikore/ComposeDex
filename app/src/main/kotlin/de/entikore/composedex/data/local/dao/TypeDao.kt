@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Entikore
+ * Copyright 2025-2026 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -78,7 +78,7 @@ interface TypeDao : BaseDao<TypeEntity> {
     @RewriteQueriesToDropUnusedColumns
     @Query(
         "SELECT * FROM type INNER JOIN type_pokemon ON type.typeId = type_pokemon.typePokemonCrossRefTypeId" +
-            " INNER JOIN pokemon ON pokemon.pokemonId = type_pokemon.typePokemonCrossRefPokemonId WHERE type.typeName = :name"
+            " INNER JOIN pokemon ON pokemon.pokemonId = type_pokemon.typePokemonCrossRefPokemonId WHERE type.typeName = :name",
     )
     fun getPokemonWithType(name: String): Flow<List<PokemonWithSpeciesTypesAndVarieties>>
 }

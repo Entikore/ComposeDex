@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Entikore
+ * Copyright 2024-2026 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@ package de.entikore.composedex.domain.model.pokemon
 data class PokemonLabels(
     val baby: Pair<PokemonLabel, Boolean> = PokemonLabel.BABY to false,
     val legendary: Pair<PokemonLabel, Boolean> = PokemonLabel.LEGENDARY to false,
-    val mystical: Pair<PokemonLabel, Boolean> = PokemonLabel.MYSTICAL to false
+    val mystical: Pair<PokemonLabel, Boolean> = PokemonLabel.MYSTICAL to false,
 )
 
 /**
@@ -37,5 +37,5 @@ data class PokemonLabels(
 enum class PokemonLabel(val uiString: String) {
     BABY("Baby"),
     LEGENDARY("Legendary"),
-    MYSTICAL("Mystical")
+    MYSTICAL("Mystical"),
 }

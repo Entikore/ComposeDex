@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Entikore
+ * Copyright 2024-2026 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,5 +34,5 @@ data class DamageRelationsRemote(
     @Json(name = "half_damage_from") val halfDamageFrom: List<NamedApiResource>,
     @Json(name = "half_damage_to") val halfDamageTo: List<NamedApiResource>,
     @Json(name = "no_damage_from") val noDamageFrom: List<NamedApiResource>,
-    @Json(name = "no_damage_to") val noDamageTo: List<NamedApiResource>
+    @Json(name = "no_damage_to") val noDamageTo: List<NamedApiResource>,
 )

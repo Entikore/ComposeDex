@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Entikore
+ * Copyright 2024-2026 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,10 +24,7 @@ import de.entikore.composedex.data.remote.model.common.NamedApiResource
  * @property count The total number of resources available from this API.
  * @property results A list of named API resources.
  */
-data class GenerationListRemote(
-    val count: Int,
-    val results: List<NamedApiResource>
-)
+data class GenerationListRemote(val count: Int, val results: List<NamedApiResource>)
 
 /**
  * Converts a [GenerationListRemote] to a [GenerationOverviewEntity].

@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Entikore
+ * Copyright 2025-2026 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,52 +33,43 @@ import kotlinx.coroutines.withContext
  */
 class PokemonLocalDataSource(
     private val database: ComposeDexDatabase,
-    private val dispatcher: CoroutineDispatcher = Dispatchers.IO
+    private val dispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) {
     private val pokemonDao: PokemonDao = database.pokemonDao()
     private val varietyDao: VarietyDao = database.varietyDao()
 
     suspend fun insertPokemonWithSpeciesTypesAndVarieties(
-        pokemonWithSpeciesTypesAndVarieties: PokemonWithSpeciesTypesAndVarieties
-    ) =
-        withContext(dispatcher) {
-            database.insertPokemonWithSpeciesTypesAndVarieties(
-                pokemonWithSpeciesTypesAndVarieties.pokemon,
-                pokemonWithSpeciesTypesAndVarieties.species,
-                pokemonWithSpeciesTypesAndVarieties.types,
-                pokemonWithSpeciesTypesAndVarieties.varieties
-            )
-        }
+        pokemonWithSpeciesTypesAndVarieties: PokemonWithSpeciesTypesAndVarieties,
+    ) = withContext(dispatcher) {
+        database.insertPokemonWithSpeciesTypesAndVarieties(
+            pokemonWithSpeciesTypesAndVarieties.pokemon,
+            pokemonWithSpeciesTypesAndVarieties.species,
+            pokemonWithSpeciesTypesAndVarieties.types,
+            pokemonWithSpeciesTypesAndVarieties.varieties,
+        )
+    }
 
-    suspend fun updatePokemonArtwork(pokemonId: Int, artworkPath: String) =
-        withContext(dispatcher) {
-            return@withContext pokemonDao.updateArtwork(ArtworkUpdate(pokemonId, artworkPath))
-        }
+    suspend fun updatePokemonArtwork(pokemonId: Int, artworkPath: String) = withContext(dispatcher) {
+        return@withContext pokemonDao.updateArtwork(ArtworkUpdate(pokemonId, artworkPath))
+    }
 
-    suspend fun updatePokemonSprite(pokemonId: Int, spritePath: String) =
-        withContext(dispatcher) {
-            return@withContext pokemonDao.updateSprite(SpriteUpdate(pokemonId, spritePath))
-        }
+    suspend fun updatePokemonSprite(pokemonId: Int, spritePath: String) = withContext(dispatcher) {
+        return@withContext pokemonDao.updateSprite(SpriteUpdate(pokemonId, spritePath))
+    }
 
-    suspend fun updatePokemonCry(pokemonId: Int, cryPath: String) =
-        withContext(dispatcher) {
-            return@withContext pokemonDao.updateCry(CryUpdate(pokemonId, cryPath))
-        }
+    suspend fun updatePokemonCry(pokemonId: Int, cryPath: String) = withContext(dispatcher) {
+        return@withContext pokemonDao.updateCry(CryUpdate(pokemonId, cryPath))
+    }
 
-    suspend fun updateVarietyArtwork(varietyName: String, artworkPath: String) =
-        withContext(dispatcher) {
-            return@withContext varietyDao.updateArtwork(
-                VarietyArtworkUpdate(varietyName, artworkPath)
-            )
-        }
+    suspend fun updateVarietyArtwork(varietyName: String, artworkPath: String) = withContext(dispatcher) {
+        return@withContext varietyDao.updateArtwork(
+            VarietyArtworkUpdate(varietyName, artworkPath),
+        )
+    }
 
-    fun getPokemonWithSpeciesTypesAndVarietiesByName(
-        name: String
-    ): Flow<PokemonWithSpeciesTypesAndVarieties?> =
+    fun getPokemonWithSpeciesTypesAndVarietiesByName(name: String): Flow<PokemonWithSpeciesTypesAndVarieties?> =
         pokemonDao.getWithSpeciesTypesAndVarietiesByName(name)
 
-    fun getPokemonWithSpeciesTypesAndVarietiesById(
-        id: Int
-    ): Flow<PokemonWithSpeciesTypesAndVarieties?> =
+    fun getPokemonWithSpeciesTypesAndVarietiesById(id: Int): Flow<PokemonWithSpeciesTypesAndVarieties?> =
         pokemonDao.getWithSpeciesTypesAndVarietiesById(id)
 }

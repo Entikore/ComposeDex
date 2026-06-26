@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Entikore
+ * Copyright 2024-2026 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,11 +35,7 @@ import androidx.compose.ui.unit.LayoutDirection
  */
 @Suppress("MagicNumber")
 class HeartShape : Shape {
-    override fun createOutline(
-        size: Size,
-        layoutDirection: LayoutDirection,
-        density: Density
-    ): Outline {
+    override fun createOutline(size: Size, layoutDirection: LayoutDirection, density: Density): Outline {
         val path = Path().apply {
             val width = size.width
             val height = size.height
@@ -51,7 +47,7 @@ class HeartShape : Shape {
                 0f,
                 height / 15,
                 width / 28,
-                2 * height / 5
+                2 * height / 5,
             )
             cubicTo(
                 width / 14,
@@ -59,7 +55,7 @@ class HeartShape : Shape {
                 3 * width / 7,
                 5 * height / 6,
                 width / 2,
-                height
+                height,
             )
             cubicTo(
                 4 * width / 7,
@@ -67,7 +63,7 @@ class HeartShape : Shape {
                 13 * width / 14,
                 2 * height / 3,
                 27 * width / 28,
-                2 * height / 5
+                2 * height / 5,
             )
             cubicTo(
                 width,
@@ -75,7 +71,7 @@ class HeartShape : Shape {
                 9 * width / 14,
                 0f,
                 width / 2,
-                height / 5
+                height / 5,
             )
         }
         return Outline.Generic(path)

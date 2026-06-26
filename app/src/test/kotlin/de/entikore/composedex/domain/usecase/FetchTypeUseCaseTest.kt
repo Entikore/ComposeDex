@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Entikore
+ * Copyright 2025-2026 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,13 +27,11 @@ import de.entikore.sharedtestcode.TYPE_GRASS_FILE
 import de.entikore.sharedtestcode.TYPE_NORMAL_FILE
 import de.entikore.sharedtestcode.TYPE_POISON_FILE
 import de.entikore.sharedtestcode.TestModelFactory.Companion.getTypeRemote
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 
-@OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(MainCoroutineRule::class)
 class FetchTypeUseCaseTest {
 
@@ -72,7 +70,7 @@ class FetchTypeUseCaseTest {
             val actualType = awaitItem()
             assertThat(actualType.isFailure).isTrue()
             assertThat(actualType.exceptionOrNull()?.message).isEqualTo(
-                TYPE_WITH_NAME_NOT_FOUND
+                TYPE_WITH_NAME_NOT_FOUND,
             )
             awaitComplete()
         }

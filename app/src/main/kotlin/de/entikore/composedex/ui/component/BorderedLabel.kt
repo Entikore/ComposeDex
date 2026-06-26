@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Entikore
+ * Copyright 2024-2026 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,15 +40,15 @@ fun BorderedLabel(labelText: String, modifier: Modifier = Modifier) {
             .cutCornerShapeBorder(
                 cutCornerPercentage = integerResource(id = R.integer.default_cut_corner_shape_percentage),
                 borderWidth = dimensionResource(id = R.dimen.default_border),
-                borderColor = MaterialTheme.colorScheme.onPrimaryContainer
+                borderColor = MaterialTheme.colorScheme.onPrimaryContainer,
             )
             .clip(shape = CutCornerShape(integerResource(id = R.integer.default_cut_corner_shape_percentage)))
             .padding(
                 start = dimensionResource(id = R.dimen.medium_padding),
                 top = dimensionResource(id = R.dimen.medium_padding),
                 end = dimensionResource(id = R.dimen.medium_padding),
-                bottom = dimensionResource(id = R.dimen.medium_padding)
-            )
+                bottom = dimensionResource(id = R.dimen.medium_padding),
+            ),
     )
 }
 

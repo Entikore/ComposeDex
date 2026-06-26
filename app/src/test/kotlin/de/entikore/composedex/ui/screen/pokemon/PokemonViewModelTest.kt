@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Entikore
+ * Copyright 2025-2026 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,7 +39,6 @@ import de.entikore.sharedtestcode.POKEMON_ODDISH_NAME
 import de.entikore.sharedtestcode.POKEMON_VILEPLUME_NAME
 import de.entikore.sharedtestcode.TestModelFactory.Companion.getPokemonInfoRemote
 import de.entikore.sharedtestcode.TestModelFactory.Companion.getTestModel
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -50,7 +49,6 @@ import org.junit.jupiter.params.provider.MethodSource
 import org.mockito.Mock
 import org.mockito.Mockito.mock
 
-@OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(MainCoroutineRule::class)
 class PokemonViewModelTest {
 
@@ -90,28 +88,27 @@ class PokemonViewModelTest {
     }
 
     @Test
-    fun `creating PokemonDetailViewModel exposes an empty Success PokemonDetailScreenUiState`() =
-        runTest {
-            viewModel = PokemonViewModel(
-                FetchPokemonUseCase(fakePokemonRepository),
-                saveRemoteImageUseCase,
-                saveRemoteCryUseCase,
-                setAsFavouriteUseCase,
-                changeThemeUseCase,
-                mockPlayer,
-                mockTTS
-            )
-            val expectedState = PokemonScreenState.NoPokemonSelected
+    fun `creating PokemonDetailViewModel exposes an empty Success PokemonDetailScreenUiState`() = runTest {
+        viewModel = PokemonViewModel(
+            FetchPokemonUseCase(fakePokemonRepository),
+            saveRemoteImageUseCase,
+            saveRemoteCryUseCase,
+            setAsFavouriteUseCase,
+            changeThemeUseCase,
+            mockPlayer,
+            mockTTS,
+        )
+        val expectedState = PokemonScreenState.NoPokemonSelected
 
-            assertThat(viewModel.screenState.value).isEqualTo(expectedState)
-        }
+        assertThat(viewModel.screenState.value).isEqualTo(expectedState)
+    }
 
     @ParameterizedTest
     @MethodSource("searchTerms")
     fun `search for pokemon exposes Success PokemonDetailScreenUiState with expected Pokemon`(
         searchQuery: String,
         testData: Array<Pokemon>,
-        expectedState: PokemonScreenState.Success
+        expectedState: PokemonScreenState.Success,
     ) = runTest {
         fakePokemonRepository.addPokemon(*testData)
 
@@ -122,7 +119,7 @@ class PokemonViewModelTest {
             setAsFavouriteUseCase,
             changeThemeUseCase,
             mockPlayer,
-            mockTTS
+            mockTTS,
         )
 
         viewModel.screenState.test {
@@ -134,41 +131,40 @@ class PokemonViewModelTest {
             stateResult = awaitItem()
             assertThat(stateResult).isInstanceOf(PokemonScreenState.Success::class.java)
             assertThat(stateResult).isEqualTo(
-                expectedState
+                expectedState,
             )
         }
     }
 
     @Test
-    fun `search for unknown pokemon exposes Error PokemonDetailScreenUiState`() =
-        runTest {
-            viewModel = PokemonViewModel(
-                FetchPokemonUseCase(fakePokemonRepository),
-                saveRemoteImageUseCase,
-                saveRemoteCryUseCase,
-                setAsFavouriteUseCase,
-                changeThemeUseCase,
-                mockPlayer,
-                mockTTS
+    fun `search for unknown pokemon exposes Error PokemonDetailScreenUiState`() = runTest {
+        viewModel = PokemonViewModel(
+            FetchPokemonUseCase(fakePokemonRepository),
+            saveRemoteImageUseCase,
+            saveRemoteCryUseCase,
+            setAsFavouriteUseCase,
+            changeThemeUseCase,
+            mockPlayer,
+            mockTTS,
+        )
+
+        val expectedState = PokemonScreenState.Error(
+            "${PokemonViewModel.Companion.ERROR_LOADING_POKEMON} $POKEMON_GLOOM_NAME",
+        )
+
+        viewModel.screenState.test {
+            var stateResult = awaitItem()
+            assertThat(stateResult).isInstanceOf(PokemonScreenState.NoPokemonSelected::class.java)
+
+            viewModel.lookUpPokemon(POKEMON_GLOOM_NAME)
+
+            stateResult = awaitItem()
+            assertThat(stateResult).isInstanceOf(PokemonScreenState.Error::class.java)
+            assertThat(stateResult).isEqualTo(
+                expectedState,
             )
-
-            val expectedState = PokemonScreenState.Error(
-                "${PokemonViewModel.Companion.ERROR_LOADING_POKEMON} $POKEMON_GLOOM_NAME"
-            )
-
-            viewModel.screenState.test {
-                var stateResult = awaitItem()
-                assertThat(stateResult).isInstanceOf(PokemonScreenState.NoPokemonSelected::class.java)
-
-                viewModel.lookUpPokemon(POKEMON_GLOOM_NAME)
-
-                stateResult = awaitItem()
-                assertThat(stateResult).isInstanceOf(PokemonScreenState.Error::class.java)
-                assertThat(stateResult).isEqualTo(
-                    expectedState
-                )
-            }
         }
+    }
 
     companion object {
         @JvmStatic
@@ -182,7 +178,7 @@ class PokemonViewModelTest {
                 selectedPokemon = gloom.processFlavourTextEntries(),
                 evolvesFrom = oddish.toPokemonPreview(false),
                 evolvesTo = listOf(vileplume.toPokemonPreview(true), bellossom.toPokemonPreview(true)),
-                varieties = listOf(gloom.processFlavourTextEntries())
+                varieties = listOf(gloom.processFlavourTextEntries()),
             )
 
             return listOf(
@@ -192,9 +188,9 @@ class PokemonViewModelTest {
                         oddish,
                         gloom,
                         vileplume,
-                        bellossom
+                        bellossom,
                     ),
-                    expectedState
+                    expectedState,
                 ),
                 Arguments.of(
                     POKEMON_GLOOM_ID.toString(),
@@ -202,9 +198,9 @@ class PokemonViewModelTest {
                         oddish,
                         gloom,
                         vileplume,
-                        bellossom
+                        bellossom,
                     ),
-                    expectedState
+                    expectedState,
                 ),
             )
         }
@@ -212,11 +208,10 @@ class PokemonViewModelTest {
         /**
          * Copy from [FetchPokemonUseCase.processFlavorTextEntries].
          */
-        private fun Pokemon.processFlavourTextEntries(): Pokemon =
-            this.copy(
-                textEntries = textEntries.map {
-                    it.replace(whitespacePattern, " ").trim()
-                }.distinctBy { it.lowercase() }
-            )
+        private fun Pokemon.processFlavourTextEntries(): Pokemon = this.copy(
+            textEntries = textEntries.map {
+                it.replace(whitespacePattern, " ").trim()
+            }.distinctBy { it.lowercase() },
+        )
     }
 }

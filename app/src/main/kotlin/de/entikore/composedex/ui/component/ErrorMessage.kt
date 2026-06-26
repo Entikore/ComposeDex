@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Entikore
+ * Copyright 2024-2026 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -45,25 +45,25 @@ fun ErrorMessage(errorMessage: String, modifier: Modifier = Modifier) {
             .border(
                 width = dimensionResource(id = R.dimen.default_border),
                 MaterialTheme.colorScheme.onErrorContainer,
-                shape = CutCornerShape(integerResource(id = R.integer.default_cut_corner_shape_percentage))
+                shape = CutCornerShape(integerResource(id = R.integer.default_cut_corner_shape_percentage)),
             )
             .background(
                 color = MaterialTheme.colorScheme.errorContainer,
-                shape = CutCornerShape(integerResource(id = R.integer.default_cut_corner_shape_percentage))
+                shape = CutCornerShape(integerResource(id = R.integer.default_cut_corner_shape_percentage)),
             )
             .clip(shape = CutCornerShape(integerResource(id = R.integer.default_cut_corner_shape_percentage)))
-            .padding(dimensionResource(id = R.dimen.medium_padding))
+            .padding(dimensionResource(id = R.dimen.medium_padding)),
     ) {
         Text(
             text = stringResource(id = R.string.ui_error_head),
             color = MaterialTheme.colorScheme.onErrorContainer,
             fontSize = MaterialTheme.typography.headlineSmall.fontSize,
-            modifier = Modifier.padding(dimensionResource(id = R.dimen.large_padding))
+            modifier = Modifier.padding(dimensionResource(id = R.dimen.large_padding)),
         )
         Text(
             text = errorMessage,
             color = MaterialTheme.colorScheme.onErrorContainer,
-            modifier = Modifier.padding(dimensionResource(id = R.dimen.large_padding))
+            modifier = Modifier.padding(dimensionResource(id = R.dimen.large_padding)),
         )
     }
 }

@@ -2,7 +2,22 @@ comments:
   AbsentOrWrongFileLicense:
     active: true
     licenseTemplateIsRegex: true
-    licenseTemplateFile: 'license-header.txt'
+    licenseTemplate: '|
+     /*
+      * Copyright 202[4-6](-202[4-6])? Entikore
+      *
+      * Licensed under the Apache License, Version 2.0 (the "License");
+      * you may not use this file except in compliance with the License.
+      * You may obtain a copy of the License at
+      *
+      *     http://www.apache.org/licenses/LICENSE-2.0
+      *
+      * Unless required by applicable law or agreed to in writing, software
+      * distributed under the License is distributed on an "AS IS" BASIS,
+      * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+      * See the License for the specific language governing permissions and
+      * limitations under the License.
+      */'
   EndOfSentenceFormat:
     active: true
   UndocumentedPublicClass:
@@ -17,8 +32,8 @@ comments:
 
 complexity:
   LongParameterList:
-    functionThreshold: 15
-    constructorThreshold: 10
+    allowedFunctionParameters: 15
+    allowedConstructorParameters: 10
     ignoreDefaultParameters: true
     ignoreDataClasses: true
 
@@ -26,17 +41,17 @@ complexity:
     active: false
 
   TooManyFunctions:
-    thresholdInClasses: 18
-    thresholdInInterfaces: 18
-    thresholdInFiles: 18
-    thresholdInObjects: 18
-    thresholdInEnums: 18
+    allowedFunctionsPerClass: 18
+    allowedFunctionsPerInterface: 18
+    allowedFunctionsPerFile: 18
+    allowedFunctionsPerObject: 18
+    allowedFunctionsPerEnum: 18
 
   ComplexCondition:
-    threshold: 5
+    allowedConditions: 5
 
 
-formatting:
+ktlint:
   MaximumLineLength:
     ignoreBackTickedIdentifier: true
     ignoreAnnotated: [ 'Test', 'Query', 'RewriteQueriesToDropUnusedColumns' ]
@@ -55,7 +70,9 @@ style:
       - '**/androidTest/**'
     ignorePropertyDeclaration: true
     ignoreAnnotated: [ 'Test', 'ParameterizedTest', 'RepeatedTest', 'TestFactory', 'Composable']
-  UnusedPrivateMember:
+  UnusedPrivateFunction:
+    ignoreAnnotated: [ 'Preview' ]
+  UnusedPrivateProperty:
     ignoreAnnotated: [ 'Preview' ]
   MaxLineLength:
     ignoreAnnotated: [ 'Test', 'Query', 'RewriteQueriesToDropUnusedColumns']

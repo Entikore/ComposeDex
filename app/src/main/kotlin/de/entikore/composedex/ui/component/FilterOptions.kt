@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Entikore
+ * Copyright 2024-2026 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,16 +25,14 @@ data class FilterOptions(
     val baby: Pair<String, Boolean> = Pair(BABY_FILTER, false),
     val legendary: Pair<String, Boolean> = Pair(LEGENDARY_FILTER, false),
     val mystical: Pair<String, Boolean> = Pair(MYSTICAL_FILTER, false),
-    val favourite: Pair<String, Boolean> = Pair(FAVOURITE_FILTER, false)
+    val favourite: Pair<String, Boolean> = Pair(FAVOURITE_FILTER, false),
 ) {
-    fun update(option: String, newValue: Boolean): FilterOptions {
-        return when (option) {
-            BABY_FILTER -> this.copy(baby = Pair(BABY_FILTER, newValue))
-            LEGENDARY_FILTER -> this.copy(legendary = Pair(LEGENDARY_FILTER, newValue))
-            MYSTICAL_FILTER -> this.copy(mystical = Pair(MYSTICAL_FILTER, newValue))
-            FAVOURITE_FILTER -> this.copy(favourite = Pair(FAVOURITE_FILTER, newValue))
-            else -> this
-        }
+    fun update(option: String, newValue: Boolean): FilterOptions = when (option) {
+        BABY_FILTER -> this.copy(baby = Pair(BABY_FILTER, newValue))
+        LEGENDARY_FILTER -> this.copy(legendary = Pair(LEGENDARY_FILTER, newValue))
+        MYSTICAL_FILTER -> this.copy(mystical = Pair(MYSTICAL_FILTER, newValue))
+        FAVOURITE_FILTER -> this.copy(favourite = Pair(FAVOURITE_FILTER, newValue))
+        else -> this
     }
 
     companion object {
@@ -45,10 +43,9 @@ data class FilterOptions(
     }
 }
 
-fun FilterOptions.asCheckBoxItems(withFavouriteFilter: Boolean = true): List<Pair<String, Boolean>> {
-    return mutableListOf(this.baby, this.legendary, this.mystical).also {
+fun FilterOptions.asCheckBoxItems(withFavouriteFilter: Boolean = true): List<Pair<String, Boolean>> =
+    mutableListOf(this.baby, this.legendary, this.mystical).also {
         if (withFavouriteFilter) {
             it.add(this.favourite)
         }
     }
-}

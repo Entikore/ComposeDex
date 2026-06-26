@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Entikore
+ * Copyright 2025-2026 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,17 +22,16 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.retryWhen
 import java.io.IOException
 
-fun <T> Flow<T>.asResult() =
-    this
-        .map { Result.success(it) }
-        .retryWhen { cause, _ ->
-            if (cause is IOException) {
-                emit(Result.failure(cause))
-                delay(RETRY_TIME_IN_MILLIS)
-                true
-            } else {
-                false
-            }
-        }.catch { e ->
-            emit(Result.failure(e))
+fun <T> Flow<T>.asResult() = this
+    .map { Result.success(it) }
+    .retryWhen { cause, _ ->
+        if (cause is IOException) {
+            emit(Result.failure(cause))
+            delay(RETRY_TIME_IN_MILLIS)
+            true
+        } else {
+            false
         }
+    }.catch { e ->
+        emit(Result.failure(e))
+    }

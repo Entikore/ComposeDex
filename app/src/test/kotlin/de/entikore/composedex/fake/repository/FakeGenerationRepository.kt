@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Entikore
+ * Copyright 2024-2026 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,9 @@ import de.entikore.composedex.util.TestException
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
-class FakeGenerationRepository : GenerationRepository, FailableFakeRepository() {
+class FakeGenerationRepository :
+    FailableFakeRepository(),
+    GenerationRepository {
 
     private var availablePokemonList: MutableList<Pokemon> = mutableListOf()
     private var availableGenerationList: MutableList<Generation> = mutableListOf()
@@ -40,8 +42,8 @@ class FakeGenerationRepository : GenerationRepository, FailableFakeRepository() 
         }
         emit(
             availableGenerationList.firstOrNull { it.name == name } ?: throw TestException(
-                GENERATION_WITH_NAME_NOT_FOUND
-            )
+                GENERATION_WITH_NAME_NOT_FOUND,
+            ),
         )
     }
 
@@ -51,8 +53,8 @@ class FakeGenerationRepository : GenerationRepository, FailableFakeRepository() 
         }
         emit(
             availableGenerationList.firstOrNull { it.id == id } ?: throw TestException(
-                GENERATION_WITH_ID_NOT_FOUND
-            )
+                GENERATION_WITH_ID_NOT_FOUND,
+            ),
         )
     }
 
@@ -65,11 +67,10 @@ class FakeGenerationRepository : GenerationRepository, FailableFakeRepository() 
         }
         emit(
             availablePokemonList.filter { pokemon ->
-                pokemon.name in availableGenerationList.first {
-                        generation ->
+                pokemon.name in availableGenerationList.first { generation ->
                     generation.name == name
                 }.pokemonInGeneration
-            }
+            },
         )
     }
 
@@ -82,11 +83,10 @@ class FakeGenerationRepository : GenerationRepository, FailableFakeRepository() 
         }
         emit(
             availablePokemonList.filter { pokemon ->
-                pokemon.name in availableGenerationList.first {
-                        generation ->
+                pokemon.name in availableGenerationList.first { generation ->
                     generation.id == id
                 }.pokemonInGeneration
-            }
+            },
         )
     }
 

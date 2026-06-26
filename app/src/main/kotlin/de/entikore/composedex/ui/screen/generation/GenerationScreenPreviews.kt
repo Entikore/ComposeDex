@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Entikore
+ * Copyright 2024-2026 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@ private fun GenerationScreenLoadingPreview() {
         screenState = GenerationScreenUiState.Loading,
         {},
         { _, _ -> },
-        {}
+        {},
     )
 }
 
@@ -38,7 +38,7 @@ private fun GenerationScreenErrorPreview() {
         screenState = GenerationScreenUiState.Error,
         {},
         { _, _ -> },
-        {}
+        {},
     )
 }
 
@@ -51,12 +51,12 @@ private fun GenerationScreenSuccessPreview() {
                 Generation(1, "Generation-1", emptyList(), 0),
                 Generation(2, "Generation-2", emptyList(), 0),
                 Generation(3, "Generation-3", emptyList(), 0),
-                Generation(4, "Generation-4", emptyList(), 0)
-            )
+                Generation(4, "Generation-4", emptyList(), 0),
+            ),
         ),
         {},
         { _, _ -> },
-        {}
+        {},
     )
 }
 
@@ -69,13 +69,13 @@ private fun GenerationScreenSuccessSelectedPreview() {
                 Generation(1, "Generation-1", emptyList(), 0),
                 Generation(2, "Generation-2", emptyList(), 0),
                 Generation(3, "Generation-3", emptyList(), 0),
-                Generation(4, "Generation-4", emptyList(), 0)
+                Generation(4, "Generation-4", emptyList(), 0),
             ),
-            selectedGeneration = SelectedGenerationUiState.Loading
+            selectedGeneration = SelectedGenerationUiState.Loading,
         ),
         {},
         { _, _ -> },
-        {}
+        {},
     )
 }
 
@@ -88,13 +88,13 @@ private fun GenerationScreenSuccessSelected2Preview() {
                 Generation(1, "Generation-1", emptyList(), 0),
                 Generation(2, "Generation-2", emptyList(), 0),
                 Generation(3, "Generation-3", emptyList(), 0),
-                Generation(4, "Generation-4", emptyList(), 0)
+                Generation(4, "Generation-4", emptyList(), 0),
             ),
-            selectedGeneration = SelectedGenerationUiState.Error
+            selectedGeneration = SelectedGenerationUiState.Error,
         ),
         {},
         { _, _ -> },
-        {}
+        {},
     )
 }
 
@@ -107,17 +107,17 @@ private fun GenerationScreenSuccessSelected3Preview() {
                 Generation(1, "Generation-1", emptyList(), 0),
                 Generation(2, "Generation-2", emptyList(), 0),
                 Generation(3, "Generation-3", emptyList(), 0),
-                Generation(4, "Generation-4", emptyList(), 0)
+                Generation(4, "Generation-4", emptyList(), 0),
             ),
             selectedGeneration = SelectedGenerationUiState.Success(
                 selectedGeneration = Generation(1, "Generation-1", emptyList(), 0),
                 pokemonState = PokemonUiState.Loading,
-                showLoadingItem = true
-            )
+                showLoadingItem = true,
+            ),
         ),
         {},
         { _, _ -> },
-        {}
+        {},
     )
 }
 
@@ -130,16 +130,16 @@ private fun GenerationScreenSuccessSelected4Preview() {
                 Generation(1, "Generation-1", emptyList(), 0),
                 Generation(2, "Generation-2", emptyList(), 0),
                 Generation(3, "Generation-3", emptyList(), 0),
-                Generation(4, "Generation-4", emptyList(), 0)
+                Generation(4, "Generation-4", emptyList(), 0),
             ),
             selectedGeneration = SelectedGenerationUiState.Success(
                 selectedGeneration = Generation(1, "Generation-1", emptyList(), 0),
                 pokemonState = PokemonUiState.Error,
-                showLoadingItem = true
-            )
+                showLoadingItem = true,
+            ),
         ),
         {},
         { _, _ -> },
-        {}
+        {},
     )
 }

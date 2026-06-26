@@ -2,7 +2,6 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.android)
     alias(libs.plugins.hilt.android)
     alias(libs.plugins.detekt)
     alias(libs.plugins.ksp)
@@ -43,19 +42,20 @@ android {
         compose = true
         buildConfig = true
     }
-    kotlin {
-        compilerOptions {
-            jvmTarget.set(JvmTarget.JVM_17)
-            freeCompilerArgs.add("-Xannotation-default-target=param-property")
-        }
+}
+
+kotlin {
+    compilerOptions {
+        jvmTarget.set(JvmTarget.JVM_17)
     }
-    detekt {
-        config.setFrom("$rootDir/config/detekt.yml")
-        buildUponDefaultConfig = true
-        allRules = false
-        parallel = true
-        autoCorrect = true
-    }
+}
+
+detekt {
+    config.setFrom("$rootDir/config/detekt.yml")
+    buildUponDefaultConfig = true
+    allRules = false
+    parallel = true
+    autoCorrect = true
 }
 
 dependencies {
@@ -69,7 +69,6 @@ dependencies {
     implementation(libs.androidx.compose.ui)
     implementation(libs.androidx.compose.ui.tooling)
     implementation(libs.androidx.compose.ui.tooling.preview)
-    implementation(libs.androidx.compose.ui)
     implementation(libs.androidx.compose.ui.google.fonts)
 
     implementation(libs.androidx.core.ktx)
@@ -77,10 +76,13 @@ dependencies {
     implementation(libs.androidx.navigation3.ui)
     implementation(libs.androidx.navigation3.runtime)
     implementation(libs.androidx.lifecycle.viewmodel.navigation3)
+    implementation(libs.coroutine.core)
+    implementation(libs.coroutine.android)
     implementation(libs.kotlinx.serialization.core)
 
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)
+    ksp(libs.kotlin.metadata.jvm)
 
     implementation(libs.androidx.datastore.preferences)
     implementation(libs.androidx.hilt.navigation)
@@ -130,4 +132,9 @@ dependencies {
     androidTestImplementation(libs.hilt.android.testing)
     kspAndroidTest(libs.hilt.android.comp)
     androidTestImplementation(project(":sharedTestCode"))
+}
+
+// https://docs.gradle.org/9.0.0-milestone-9/userguide/upgrading_version_8.html#test_task_fails_when_no_tests_are_discovered
+tasks.withType<AbstractTestTask>().configureEach {
+    failOnNoDiscoveredTests = false
 }

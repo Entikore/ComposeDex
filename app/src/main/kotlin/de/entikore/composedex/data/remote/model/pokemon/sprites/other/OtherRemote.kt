@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Entikore
+ * Copyright 2024-2026 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,6 +22,4 @@ import com.squareup.moshi.Json
  *
  * @property officialArtwork The [OfficialArtworkRemote].
  */
-data class OtherRemote(
-    @Json(name = "official-artwork") val officialArtwork: OfficialArtworkRemote
-)
+data class OtherRemote(@Json(name = "official-artwork") val officialArtwork: OfficialArtworkRemote)

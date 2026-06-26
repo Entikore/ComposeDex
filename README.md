@@ -2,7 +2,7 @@
 
 ![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg) ![Build Status](https://github.com/entikore/composedex/workflows/Android%20CI/badge.svg) ![API](https://img.shields.io/badge/API-24%2B-brightgreen.svg?style=flat)
 
-ComposeDex is an learning app created by modern Android development methods that showcases the 
+ComposeDex is a learning app created by modern Android development methods that showcases the 
 Android Guide to App Architecture in a real world example. Explore the world of Pokémon by searching
 through all generations and learning details about each Pokémon and its evolutions. Learn about
 their types and variations and listen to their cries or Pokédex entries. Save your favorites for
@@ -28,7 +28,7 @@ You can clone this repository or import the project from Android Studio followin
 ### Compatibility
 
 - **Minimum SDK**: 24
-- **Target SDK**: 35
+- **Target SDK**: 37
 - **Orientations Supported**: Portrait
 
 ## Preview
@@ -108,7 +108,7 @@ The data layer is designed with an offline-first approach in mind. There exists 
 - [Hilt Android Testing](https://mvnrepository.com/artifact/com.google.dagger/hilt-android-testing): Provides utilities and annotations for writing and running tests with Hilt dependency injection. 
 - [konsist](https://github.com/LemonAppDev/konsist): To enforce coding conventions and consistency.
 - [kotlinx-coroutines-test](https://github.com/Kotlin/kotlinx.coroutines/tree/master/kotlinx-coroutines-test): Provides tools for writing and running tests for Kotlin coroutines, including utilities for controlling the dispatcher and testing asynchronous operations.
-- [JUnit5](https://github.com/junit-team/junit5): A testing framework for Kotlin, providing a modern and flexible approach to writing unit and integration tests.
+- [JUnit](https://github.com/junit-team/junit-framework): A testing framework for Kotlin, providing a modern and flexible approach to writing unit and integration tests.
 - [Mockito](https://github.com/mockito/mockito): A mocking framework for Kotlin, to create and configure mock objects for testing purposes.
 - [Mockito-kotlin](https://github.com/mockito/mockito-kotlin): A wrapper library around Mockito that provides idiomatic Kotlin support for creating and using mocks.
 - [mockwebserver](https://github.com/square/okhttp/tree/master/mockwebserver): Provides a mock web server for testing HTTP clients, to simulate network responses and verify interactions with the API.

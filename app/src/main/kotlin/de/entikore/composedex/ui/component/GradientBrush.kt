@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Entikore
+ * Copyright 2024-2026 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,6 +38,6 @@ fun createGradientBrush(colors: List<Color>, isVertical: Boolean = true): Brush 
         colors = brushColors,
         start = Offset(0f, 0f),
         end = endOffset,
-        tileMode = TileMode.Clamp
+        tileMode = TileMode.Clamp,
     )
 }

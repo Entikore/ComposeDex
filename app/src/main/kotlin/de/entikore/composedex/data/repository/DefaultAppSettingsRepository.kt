@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Entikore
+ * Copyright 2024-2026 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,8 +34,7 @@ import javax.inject.Inject
 /**
  * Implementation of [AppSettingsRepository].
  */
-class DefaultAppSettingsRepository @Inject constructor(private val context: Context) :
-    AppSettingsRepository {
+class DefaultAppSettingsRepository @Inject constructor(private val context: Context) : AppSettingsRepository {
 
     override suspend fun setTheme(value: AppThemeConfig) {
         Timber.d("Set theme to $value")
@@ -51,10 +50,9 @@ class DefaultAppSettingsRepository @Inject constructor(private val context: Cont
         }
     }
 
-    override fun getUserPreferences(): Flow<UserPreferences> =
-        context.themeDataStore.data.map {
-            UserPreferences(mapToAppThemeConfig(it[APP_THEME]), mapToTypeThemeConfig(it[TYPE_THEME]))
-        }
+    override fun getUserPreferences(): Flow<UserPreferences> = context.themeDataStore.data.map {
+        UserPreferences(mapToAppThemeConfig(it[APP_THEME]), mapToTypeThemeConfig(it[TYPE_THEME]))
+    }
 
     private fun mapToAppThemeConfig(value: Int?): AppThemeConfig {
         val theme =
@@ -72,5 +70,5 @@ class DefaultAppSettingsRepository @Inject constructor(private val context: Cont
 }
 
 private val Context.themeDataStore: DataStore<Preferences> by preferencesDataStore(
-    name = "user_settings"
+    name = "user_settings",
 )

@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Entikore
+ * Copyright 2024-2026 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -46,26 +46,25 @@ data class PokemonSpeciesRemote(
     val names: List<Name>,
     val order: Int,
     val shape: NamedApiResource?,
-    val varieties: List<VarietyRemote>
+    val varieties: List<VarietyRemote>,
 )
 
 /**
  * Converts a [PokemonSpeciesRemote] to a [SpeciesEntity].
  */
-fun PokemonSpeciesRemote.toEntity(evolutionChain: Map<Int, List<ChainLink>> = emptyMap()) =
-    SpeciesEntity(
-        speciesId = id,
-        name = name,
-        isBaby = isBaby,
-        isLegendary = isLegendary,
-        isMythical = isMythical,
-        flavorTextEntries =
-        flavorTextEntries.filter { it.language.name == "en" }.map { it.flavorText },
-        evolvesFrom = evolvesFromSpecies?.name.orEmpty(),
-        evolutionChain = evolutionChain,
-        genera = checkGeneraExistence(genera),
-        shape = shape?.name.orEmpty()
-    )
+fun PokemonSpeciesRemote.toEntity(evolutionChain: Map<Int, List<ChainLink>> = emptyMap()) = SpeciesEntity(
+    speciesId = id,
+    name = name,
+    isBaby = isBaby,
+    isLegendary = isLegendary,
+    isMythical = isMythical,
+    flavorTextEntries =
+    flavorTextEntries.filter { it.language.name == "en" }.map { it.flavorText },
+    evolvesFrom = evolvesFromSpecies?.name.orEmpty(),
+    evolutionChain = evolutionChain,
+    genera = checkGeneraExistence(genera),
+    shape = shape?.name.orEmpty(),
+)
 
 // not every PokemonSpeciesRemote has a genera specified
 private fun checkGeneraExistence(genera: List<GeneraRemote>): String {

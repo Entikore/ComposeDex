@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Entikore
+ * Copyright 2025-2026 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -47,17 +47,15 @@ object UseCaseModule {
     fun provideSaveRemoteImageUseCase(
         @ApplicationContext context: Context,
         repository: PokemonRepository,
-        okHttpClientBuilder: OkHttpClient.Builder
-    ): BaseSuspendUseCase<SaveImageData, String> =
-        SaveRemoteImageUseCase(context, repository, okHttpClientBuilder)
+        okHttpClientBuilder: OkHttpClient.Builder,
+    ): BaseSuspendUseCase<SaveImageData, String> = SaveRemoteImageUseCase(context, repository, okHttpClientBuilder)
 
     @Provides
     fun provideSaveRemoteSoundUseCase(
         @ApplicationContext context: Context,
         repository: PokemonRepository,
-        okHttpClientBuilder: OkHttpClient.Builder
-    ): BaseSuspendUseCase<SaveSoundData, String> =
-        SaveRemoteSoundUseCase(context, repository, okHttpClientBuilder)
+        okHttpClientBuilder: OkHttpClient.Builder,
+    ): BaseSuspendUseCase<SaveSoundData, String> = SaveRemoteSoundUseCase(context, repository, okHttpClientBuilder)
 
     @Provides
     fun provideSetAsFavouriteUseCase(repository: FavouriteRepository): BaseSuspendUseCase<SetFavouriteData, Unit> =
@@ -66,18 +64,16 @@ object UseCaseModule {
     @Provides
     fun provideDeleteLocalDataUseCase(
         @ApplicationContext context: Context,
-        composeDexDatabase: LocalStorage
+        composeDexDatabase: LocalStorage,
     ): BaseSuspendUseCase<Unit, Unit> = DeleteLocalDataUseCase(context, composeDexDatabase)
 
     @Provides
-    fun provideGetUserPreferencesUseCase(repository: AppSettingsRepository) =
-        GetUserPreferencesUseCase(repository)
+    fun provideGetUserPreferencesUseCase(repository: AppSettingsRepository) = GetUserPreferencesUseCase(repository)
 
     @Provides
     fun provideChangeLightDarkThemeUseCase(
-        repository: AppSettingsRepository
-    ): BaseSuspendUseCase<AppThemeConfig, Unit> =
-        ChangeLightDarkThemeUseCase(repository)
+        repository: AppSettingsRepository,
+    ): BaseSuspendUseCase<AppThemeConfig, Unit> = ChangeLightDarkThemeUseCase(repository)
 
     @Provides
     fun provideChangeTypeThemeUseCase(repository: AppSettingsRepository): BaseSuspendUseCase<String, Unit> =

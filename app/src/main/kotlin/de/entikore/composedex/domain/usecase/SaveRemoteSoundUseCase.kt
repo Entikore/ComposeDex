@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Entikore
+ * Copyright 2025-2026 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,7 +39,7 @@ class SaveRemoteSoundUseCase @Inject constructor(
     @ApplicationContext private val context: Context,
     private val pokemonRepository: PokemonRepository,
     httpClientBuilder: OkHttpClient.Builder,
-    private val dispatcher: CoroutineDispatcher = Dispatchers.IO
+    private val dispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) : BaseSuspendUseCase<SaveSoundData, String>(dispatcher) {
 
     private var client: OkHttpClient = httpClientBuilder.build()
@@ -47,11 +47,7 @@ class SaveRemoteSoundUseCase @Inject constructor(
         downloadAndSaveSound(params.soundAddress, params.fileName, params.id)
             ?: params.soundAddress
 
-    private suspend fun downloadAndSaveSound(
-        soundAddress: String,
-        dataName: String,
-        id: Int
-    ): String? {
+    private suspend fun downloadAndSaveSound(soundAddress: String, dataName: String, id: Int): String? {
         val request = Request.Builder().url(soundAddress).build()
         return withContext(dispatcher) {
             try {
@@ -99,8 +95,4 @@ class SaveRemoteSoundUseCase @Inject constructor(
  * @property soundAddress The URL of the sound file to be downloaded and saved.
  * @property fileName The desired file name for the saved sound file.
  */
-data class SaveSoundData(
-    val id: Int,
-    val soundAddress: String,
-    val fileName: String
-)
+data class SaveSoundData(val id: Int, val soundAddress: String, val fileName: String)

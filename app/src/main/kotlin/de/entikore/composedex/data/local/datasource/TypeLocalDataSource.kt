@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Entikore
+ * Copyright 2025-2026 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,24 +30,20 @@ import kotlinx.coroutines.withContext
  */
 class TypeLocalDataSource(
     private val database: ComposeDexDatabase,
-    private val dispatcher: CoroutineDispatcher = Dispatchers.IO
+    private val dispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) {
     private val typeDao: TypeDao = database.typeDao()
 
     suspend fun insertTypeOverview(typeOverviewEntity: TypeOverviewEntity) =
         withContext(dispatcher) { typeDao.insertOverview(typeOverviewEntity) }
 
-    suspend fun insertType(typeEntity: TypeEntity) =
-        withContext(dispatcher) { typeDao.insert(typeEntity) }
+    suspend fun insertType(typeEntity: TypeEntity) = withContext(dispatcher) { typeDao.insert(typeEntity) }
 
-    suspend fun insertPokemonForType(
-        type: TypeEntity,
-        fullPokemon: PokemonWithSpeciesTypesAndVarieties
-    ) =
+    suspend fun insertPokemonForType(type: TypeEntity, fullPokemon: PokemonWithSpeciesTypesAndVarieties) =
         withContext(dispatcher) {
             database.insertPokemonAndAssociateWithType(
                 type.typeId,
-                fullPokemon
+                fullPokemon,
             )
         }
 

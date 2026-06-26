@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Entikore
+ * Copyright 2024-2026 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,7 +33,7 @@ fun AutoSizeText(
     text: String,
     modifier: Modifier = Modifier,
     style: TextStyle = MaterialTheme.typography.bodyMedium,
-    color: Color = style.color
+    color: Color = style.color,
 ) {
     var resizedTextStyle by remember { mutableStateOf(style) }
     var shouldDraw by remember { mutableStateOf(false) }
@@ -59,6 +59,6 @@ fun AutoSizeText(
             } else {
                 shouldDraw = true
             }
-        }
+        },
     )
 }

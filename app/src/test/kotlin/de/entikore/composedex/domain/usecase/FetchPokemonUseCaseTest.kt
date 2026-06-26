@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Entikore
+ * Copyright 2025-2026 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,13 +32,11 @@ import de.entikore.sharedtestcode.POKEMON_ODDISH_NAME
 import de.entikore.sharedtestcode.POKEMON_VILEPLUME_NAME
 import de.entikore.sharedtestcode.TestModelFactory.Companion.getPokemonInfoRemote
 import de.entikore.sharedtestcode.TestModelFactory.Companion.getTestModel
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 
-@OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(MainCoroutineRule::class)
 class FetchPokemonUseCaseTest {
     private lateinit var repository: FakePokemonRepository
@@ -67,7 +65,7 @@ class FetchPokemonUseCaseTest {
             oddish,
             gloom,
             vileplume,
-            bellossom
+            bellossom,
         )
     }
 
@@ -88,7 +86,7 @@ class FetchPokemonUseCaseTest {
             oddish,
             gloom,
             vileplume,
-            bellossom
+            bellossom,
         )
     }
 
@@ -101,7 +99,7 @@ class FetchPokemonUseCaseTest {
             shouldReturnError = false,
             expectedException = POKEMON_WITH_NAME_NOT_FOUND,
             useCaseParam = POKEMON_GLOOM_NAME,
-            oddish
+            oddish,
         )
     }
 
@@ -114,7 +112,7 @@ class FetchPokemonUseCaseTest {
             shouldReturnError = false,
             expectedException = POKEMON_WITH_ID_NOT_FOUND,
             useCaseParam = POKEMON_GLOOM_ID.toString(),
-            oddish
+            oddish,
         )
     }
 
@@ -127,7 +125,7 @@ class FetchPokemonUseCaseTest {
             shouldReturnError = true,
             expectedException = EXPECTED_TEST_EXCEPTION,
             useCaseParam = oddish.name,
-            oddish
+            oddish,
         )
     }
 
@@ -140,14 +138,14 @@ class FetchPokemonUseCaseTest {
             shouldReturnError = true,
             expectedException = EXPECTED_TEST_EXCEPTION,
             useCaseParam = oddish.id.toString(),
-            oddish
+            oddish,
         )
     }
 
     private suspend fun getPokemonByXSuccessful(
         expectedPokemon: Pokemon,
         useCaseParam: String,
-        vararg testData: Pokemon
+        vararg testData: Pokemon,
     ) {
         repository.addPokemon(*testData)
 
@@ -164,7 +162,7 @@ class FetchPokemonUseCaseTest {
         shouldReturnError: Boolean,
         expectedException: String,
         useCaseParam: String,
-        vararg testData: Pokemon
+        vararg testData: Pokemon,
     ) {
         repository.addPokemon(*testData)
         repository.setReturnError(shouldReturnError)
@@ -173,7 +171,7 @@ class FetchPokemonUseCaseTest {
             val actualPokemon = awaitItem()
             assertThat(actualPokemon.isFailure).isTrue()
             assertThat(actualPokemon.exceptionOrNull()?.message).isEqualTo(
-                expectedException
+                expectedException,
             )
             awaitComplete()
         }

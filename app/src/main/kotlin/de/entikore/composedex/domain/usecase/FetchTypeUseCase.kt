@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Entikore
+ * Copyright 2025-2026 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,10 +29,8 @@ import javax.inject.Inject
  */
 class FetchTypeUseCase @Inject constructor(
     private val repository: TypeRepository,
-    dispatcher: CoroutineDispatcher = Dispatchers.IO
-) :
-    BaseFetchUseCase<String, Type>(dispatcher) {
+    dispatcher: CoroutineDispatcher = Dispatchers.IO,
+) : BaseFetchUseCase<String, Type>(dispatcher) {
 
-    override fun execute(params: String) =
-        repository.getTypeByName(params).distinctUntilChanged().asResult()
+    override fun execute(params: String) = repository.getTypeByName(params).distinctUntilChanged().asResult()
 }

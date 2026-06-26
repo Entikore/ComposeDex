@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Entikore
+ * Copyright 2024-2026 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,5 +26,5 @@ import de.entikore.composedex.data.remote.model.generation.GenerationListRemote
 data class GenerationOverviewEntity(
     @PrimaryKey(autoGenerate = false) val id: Int = 0,
     val count: Int,
-    val names: List<String>
+    val names: List<String>,
 )

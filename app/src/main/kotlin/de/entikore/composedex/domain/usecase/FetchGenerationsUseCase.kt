@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Entikore
+ * Copyright 2025-2026 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,9 +29,7 @@ import javax.inject.Inject
  */
 class FetchGenerationsUseCase @Inject constructor(
     private val repository: GenerationRepository,
-    dispatcher: CoroutineDispatcher = Dispatchers.IO
-) :
-    BaseFetchUseCase<Unit, List<Generation>>(dispatcher) {
-    override fun execute(params: Unit) =
-        repository.getGenerations().distinctUntilChanged().asResult()
+    dispatcher: CoroutineDispatcher = Dispatchers.IO,
+) : BaseFetchUseCase<Unit, List<Generation>>(dispatcher) {
+    override fun execute(params: Unit) = repository.getGenerations().distinctUntilChanged().asResult()
 }

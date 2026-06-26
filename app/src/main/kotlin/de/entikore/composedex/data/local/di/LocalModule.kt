@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Entikore
+ * Copyright 2024-2026 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -57,59 +57,45 @@ object LocalModule {
         @ApplicationContext context: Context,
         chainConverter: ChainConverter,
         statsConverter: StatsConverter,
-        typesConverter: TypesConverter
-
-    ): ComposeDexDatabase =
-        Room.databaseBuilder(
-            context.applicationContext,
-            ComposeDexDatabase::class.java,
-            ComposeDexDatabase.DATABASE_NAME
-        )
-            .addTypeConverter(chainConverter)
-            .addTypeConverter(statsConverter)
-            .addTypeConverter(typesConverter)
-            .build()
+        typesConverter: TypesConverter,
+    ): ComposeDexDatabase = Room.databaseBuilder(
+        context.applicationContext,
+        ComposeDexDatabase::class.java,
+        ComposeDexDatabase.DATABASE_NAME,
+    )
+        .addTypeConverter(chainConverter)
+        .addTypeConverter(statsConverter)
+        .addTypeConverter(typesConverter)
+        .build()
 
     @Provides
-    fun providePokemonDao(composeDexDatabase: ComposeDexDatabase): PokemonDao =
-        composeDexDatabase.pokemonDao()
+    fun providePokemonDao(composeDexDatabase: ComposeDexDatabase): PokemonDao = composeDexDatabase.pokemonDao()
 
     @Provides
-    fun provideTypeDao(composeDexDatabase: ComposeDexDatabase): TypeDao =
-        composeDexDatabase.typeDao()
+    fun provideTypeDao(composeDexDatabase: ComposeDexDatabase): TypeDao = composeDexDatabase.typeDao()
 
     @Provides
-    fun provideSpeciesDao(composeDexDatabase: ComposeDexDatabase): SpeciesDao =
-        composeDexDatabase.speciesDao()
+    fun provideSpeciesDao(composeDexDatabase: ComposeDexDatabase): SpeciesDao = composeDexDatabase.speciesDao()
 
     @Provides
-    fun provideGenerationDao(composeDexDatabase: ComposeDexDatabase): GenerationDao =
-        composeDexDatabase.generationDao()
+    fun provideGenerationDao(composeDexDatabase: ComposeDexDatabase): GenerationDao = composeDexDatabase.generationDao()
 
     @Provides
-    fun provideVarietyDao(composeDexDatabase: ComposeDexDatabase): VarietyDao =
-        composeDexDatabase.varietyDao()
+    fun provideVarietyDao(composeDexDatabase: ComposeDexDatabase): VarietyDao = composeDexDatabase.varietyDao()
 
     @Provides
-    fun providePokemonLocalDataSource(
-        database: ComposeDexDatabase
-    ): PokemonLocalDataSource =
+    fun providePokemonLocalDataSource(database: ComposeDexDatabase): PokemonLocalDataSource =
         PokemonLocalDataSource(database)
 
     @Provides
-    fun provideFavouriteLocalDataSource(pokemonDao: PokemonDao): FavouriteLocalDataSource =
-        FavouriteLocalDataSource(
-            pokemonDao
-        )
+    fun provideFavouriteLocalDataSource(pokemonDao: PokemonDao): FavouriteLocalDataSource = FavouriteLocalDataSource(
+        pokemonDao,
+    )
 
     @Provides
-    fun provideTypeLocalDataSource(
-        database: ComposeDexDatabase
-    ): TypeLocalDataSource = TypeLocalDataSource(database)
+    fun provideTypeLocalDataSource(database: ComposeDexDatabase): TypeLocalDataSource = TypeLocalDataSource(database)
 
     @Provides
-    fun provideGenerationLocalDataSource(
-        database: ComposeDexDatabase
-    ): GenerationLocalDataSource =
+    fun provideGenerationLocalDataSource(database: ComposeDexDatabase): GenerationLocalDataSource =
         GenerationLocalDataSource(database)
 }

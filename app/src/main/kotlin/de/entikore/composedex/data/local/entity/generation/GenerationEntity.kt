@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Entikore
+ * Copyright 2024-2026 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,12 +27,12 @@ import de.entikore.composedex.domain.model.generation.Generation
 data class GenerationEntity(
     @PrimaryKey(autoGenerate = false) val generationId: Int,
     val generationName: String,
-    val pokemonInGeneration: List<String>
+    val pokemonInGeneration: List<String>,
 )
 
 fun GenerationEntity.asExternalModel() = Generation(
     id = generationId,
     name = generationName,
     pokemonInGeneration = pokemonInGeneration,
-    numberOfPokemon = pokemonInGeneration.size
+    numberOfPokemon = pokemonInGeneration.size,
 )

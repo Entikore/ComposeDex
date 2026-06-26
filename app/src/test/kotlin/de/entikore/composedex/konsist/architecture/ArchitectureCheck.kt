@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Entikore
+ * Copyright 2025-2026 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -58,7 +58,7 @@ class ArchitectureCheck {
         val viewModels = Konsist.scopeFromProduction().classes().withNameEndingWith(VIEW_MODEL)
 
         viewModels.constructors.parameters.assertFalse(
-            additionalMessage = "ViewModels should not access repositories directly and use UseCases instead"
+            additionalMessage = "ViewModels should not access repositories directly and use UseCases instead",
         ) {
             it.type.resideInPackage("$PACKAGE_NAME.domain.repository") &&
                 it.type.name.endsWith(REPOSITORY)
@@ -68,7 +68,7 @@ class ArchitectureCheck {
     @Test
     fun `Validate ViewModel has single constructor with private parameters`() {
         Konsist.scopeFromProduction().classes().withParentOf(
-            ViewModel::class
+            ViewModel::class,
         ).filter { !it.hasAbstractModifier }.assertTrue { declaration ->
             val hasSingleConstructor = declaration.constructors.size == 1
             val constructorParametersHavePrivateModifier = declaration.constructors.first().parameters.all {

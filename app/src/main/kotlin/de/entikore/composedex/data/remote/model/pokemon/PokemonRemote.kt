@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Entikore
+ * Copyright 2024-2026 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -58,7 +58,7 @@ data class PokemonRemote(
     val sprites: SpritesRemote,
     val stats: List<StatRemote>,
     val types: List<PokemonTypeRemote>,
-    val weight: Int
+    val weight: Int,
 )
 
 /**
@@ -76,5 +76,5 @@ fun PokemonRemote.toEntity() = PokemonEntity(
     sprite = sprites.frontDefault.orEmpty(),
     localArtwork = null,
     localSprite = null,
-    isFavourite = false
+    isFavourite = false,
 )

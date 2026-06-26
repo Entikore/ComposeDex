@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Entikore
+ * Copyright 2025-2026 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -46,50 +46,49 @@ import timber.log.Timber
  */
 class OfflineFirstTypeRepository(
     private val localDataSource: TypeLocalDataSource,
-    private val remoteDataSource: RemoteDataSource
+    private val remoteDataSource: RemoteDataSource,
 ) : TypeRepository {
-    override fun getTypes(): Flow<List<Type>> =
-        localDataSource.getTypeOverview()
-            .combine(localDataSource.getAllTypes()) { overview, types ->
-                if (types.isNotEmpty() && types.size == overview?.names?.size) {
-                    types.map { it.asExternalModel() }
-                } else {
-                    throw LocalDataException("Not all types in database")
-                }
-            }.retryWhen { cause, attempt ->
-                if ((cause is LocalDataException || cause is NullPointerException) && attempt < RETRY_COUNT) {
-                    val remoteTypes = mutableListOf<TypeEntity>()
-                    when (val types = remoteDataSource.getPokemonTypes()) {
-                        is ApiResponse.Success -> {
-                            localDataSource.insertTypeOverview(types.data.toEntity())
-                            types.data.results.forEach {
-                                when (val type = remoteDataSource.getPokemonTypeByName(it.name)) {
-                                    is ApiResponse.Success -> {
-                                        remoteTypes.add(type.data.toEntity())
-                                    }
+    override fun getTypes(): Flow<List<Type>> = localDataSource.getTypeOverview()
+        .combine(localDataSource.getAllTypes()) { overview, types ->
+            if (types.isNotEmpty() && types.size == overview?.names?.size) {
+                types.map { it.asExternalModel() }
+            } else {
+                throw LocalDataException("Not all types in database")
+            }
+        }.retryWhen { cause, attempt ->
+            if ((cause is LocalDataException || cause is NullPointerException) && attempt < RETRY_COUNT) {
+                val remoteTypes = mutableListOf<TypeEntity>()
+                when (val types = remoteDataSource.getPokemonTypes()) {
+                    is ApiResponse.Success -> {
+                        localDataSource.insertTypeOverview(types.data.toEntity())
+                        types.data.results.forEach {
+                            when (val type = remoteDataSource.getPokemonTypeByName(it.name)) {
+                                is ApiResponse.Success -> {
+                                    remoteTypes.add(type.data.toEntity())
+                                }
 
-                                    is ApiResponse.Error -> {
-                                        Timber.d("Error fetching type ${it.name} ${type.exception}")
-                                        throw type.exception
-                                    }
+                                is ApiResponse.Error -> {
+                                    Timber.d("Error fetching type ${it.name} ${type.exception}")
+                                    throw type.exception
                                 }
                             }
-                            for (type in remoteTypes) {
-                                localDataSource.insertType(type)
-                            }
                         }
-
-                        is ApiResponse.Error -> {
-                            Timber.d("Error fetching types ${types.exception}")
-                            throw types.exception
+                        for (type in remoteTypes) {
+                            localDataSource.insertType(type)
                         }
                     }
-                    true
-                } else {
-                    Timber.d("Could not fetch types: $cause")
-                    false
+
+                    is ApiResponse.Error -> {
+                        Timber.d("Error fetching types ${types.exception}")
+                        throw types.exception
+                    }
                 }
+                true
+            } else {
+                Timber.d("Could not fetch types: $cause")
+                false
             }
+        }
 
     override fun getTypeByName(name: String): Flow<Type> =
         localDataSource.getTypeByName(name).map { it!!.asExternalModel() }
@@ -121,6 +120,7 @@ class OfflineFirstTypeRepository(
                     is ApiResponse.Error -> {
                         Timber.d("Error fetching type ${type.exception}")
                     }
+
                     is ApiResponse.Success -> {
                         val typeEntity = type.data.toEntity()
                         val localPokemon = localDataSource.getPokemonOfType(name).first()
@@ -138,7 +138,7 @@ class OfflineFirstTypeRepository(
                             remotePokemon?.let {
                                 localDataSource.insertPokemonForType(
                                     type = typeEntity,
-                                    it
+                                    it,
                                 )
                                 val externalPokemon = it.asExternalModel()
                                 if (!resultPokemon.contains(externalPokemon)) {
@@ -153,20 +153,20 @@ class OfflineFirstTypeRepository(
         return flowOf(remoteFlow, localFlow).flattenMerge()
     }
 
-    private suspend fun getRemotePokemonByName(name: String): PokemonWithSpeciesTypesAndVarieties? {
-        return when (val pokemon = remoteDataSource.getPokemonInfoRemoteByName(name)) {
+    private suspend fun getRemotePokemonByName(name: String): PokemonWithSpeciesTypesAndVarieties? =
+        when (val pokemon = remoteDataSource.getPokemonInfoRemoteByName(name)) {
             is ApiResponse.Success -> {
                 PokemonWithSpeciesTypesAndVarieties(
                     pokemon.data.pokemon.toEntity(),
                     pokemon.data.species.toEntity(pokemon.data.evolutionChain),
                     pokemon.data.types.toEntity(),
-                    pokemon.data.species.varieties.toEntity()
+                    pokemon.data.species.varieties.toEntity(),
                 )
             }
+
             is ApiResponse.Error -> {
                 Timber.d("Error fetching pokemon by name $name failed with ${pokemon.exception}")
                 null
             }
         }
-    }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Entikore
+ * Copyright 2024-2026 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -49,64 +49,62 @@ data class PokemonWithSpeciesTypesAndVarieties(
     @Relation(
         parentColumn = "pokemonId",
         entityColumn = "speciesId",
-        associateBy = Junction(PokemonSpeciesCrossRef::class)
+        associateBy = Junction(PokemonSpeciesCrossRef::class),
     )
     val species: SpeciesEntity,
     @Relation(
         parentColumn = "pokemonId",
         entityColumn = "typeId",
-        associateBy = Junction(PokemonTypeCrossRef::class)
+        associateBy = Junction(PokemonTypeCrossRef::class),
     )
     val types: List<TypeEntity>,
     @Relation(
         parentColumn = "pokemonId",
         entityColumn = "varietyName",
-        associateBy = Junction(PokemonVarietyCrossRef::class)
+        associateBy = Junction(PokemonVarietyCrossRef::class),
     )
-    val varieties: List<VarietyEntity>
+    val varieties: List<VarietyEntity>,
 )
 
 /**
  * Converts a [PokemonWithSpeciesTypesAndVarieties] to an [Pokemon].
  */
-fun PokemonWithSpeciesTypesAndVarieties.asExternalModel(): Pokemon {
-    return Pokemon(
-        id = pokemon.pokemonId,
-        name = pokemon.pokemonName,
-        defaultName = species.name,
-        height = heightInMeter(pokemon.height),
-        weight = weightInKilo(pokemon.weight),
-        types = types.map { it.asExternalModel() },
-        stats = pokemon.stats,
-        pokemonLabel = PokemonLabels(
-            baby = PokemonLabel.BABY to species.isBaby,
-            legendary = PokemonLabel.LEGENDARY to species.isLegendary,
-            mystical = PokemonLabel.MYSTICAL to species.isMythical
-        ),
-        textEntries = species.flavorTextEntries,
-        evolutionRank = getEvolutionRank(species.name, species.evolutionChain),
-        evolvesFrom = species.evolvesFrom,
-        evolutionChain = species.evolutionChain,
-        genera = species.genera,
-        varieties = varieties.asExternalModel(),
-        remoteArtwork = pokemon.artwork,
-        artwork = pokemon.localArtwork,
-        remoteSprite = pokemon.sprite,
-        sprite = pokemon.localSprite,
-        remoteCry = pokemon.cry,
-        cry = pokemon.localCry,
-        isFavourite = pokemon.isFavourite,
-        shape = PokemonShape.getShape(species.shape)
+fun PokemonWithSpeciesTypesAndVarieties.asExternalModel(): Pokemon = Pokemon(
+    id = pokemon.pokemonId,
+    name = pokemon.pokemonName,
+    defaultName = species.name,
+    height = heightInMeter(pokemon.height),
+    weight = weightInKilo(pokemon.weight),
+    types = types.map { it.asExternalModel() },
+    stats = pokemon.stats,
+    pokemonLabel = PokemonLabels(
+        baby = PokemonLabel.BABY to species.isBaby,
+        legendary = PokemonLabel.LEGENDARY to species.isLegendary,
+        mystical = PokemonLabel.MYSTICAL to species.isMythical,
+    ),
+    textEntries = species.flavorTextEntries,
+    evolutionRank = getEvolutionRank(species.name, species.evolutionChain),
+    evolvesFrom = species.evolvesFrom,
+    evolutionChain = species.evolutionChain,
+    genera = species.genera,
+    varieties = varieties.asExternalModel(),
+    remoteArtwork = pokemon.artwork,
+    artwork = pokemon.localArtwork,
+    remoteSprite = pokemon.sprite,
+    sprite = pokemon.localSprite,
+    remoteCry = pokemon.cry,
+    cry = pokemon.localCry,
+    isFavourite = pokemon.isFavourite,
+    shape = PokemonShape.getShape(species.shape),
 
-    )
-}
+)
 
 /**
  * Converts a list of [PokemonWithSpeciesTypesAndVarieties] to a list of [Pokemon].
  */
 @JvmName("pokemonWithSpeciesTypesAndVarietiesToExternal")
 fun List<PokemonWithSpeciesTypesAndVarieties>.asExternalModel() = map(
-    PokemonWithSpeciesTypesAndVarieties::asExternalModel
+    PokemonWithSpeciesTypesAndVarieties::asExternalModel,
 )
 
 private const val UNITS_PER_BASE_UNIT = 10.0
@@ -127,10 +125,7 @@ private fun heightInMeter(height: Int): String {
     return df.format(inMeter)
 }
 
-private fun getEvolutionRank(
-    name: String,
-    evolutionChain: Map<Int, List<ChainLink>>
-): EvolutionRank {
+private fun getEvolutionRank(name: String, evolutionChain: Map<Int, List<ChainLink>>): EvolutionRank {
     val containsBaby = evolutionChain.any {
         it.value.any { chainLink -> chainLink.isBaby }
     }
