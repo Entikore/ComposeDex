@@ -40,7 +40,7 @@ data class PokemonDestination(
 ) : ComposeDexDestination
 
 /**
- * Destination for [de.entikore.composedex.ui.screen.favourite.FavouriteDestination].
+ * Destination for [de.entikore.composedex.ui.screen.favourite.FavouriteScreen].
  */
 @Serializable
 data class FavouriteDestination(
@@ -55,6 +55,7 @@ data class FavouriteDestination(
 data class GenerationDestination(
     override val icon: Int = R.drawable.ic_balls_pixel,
     override val uiName: String = "Generations",
+    val generationId: String? = null,
 ) : ComposeDexDestination
 
 /**

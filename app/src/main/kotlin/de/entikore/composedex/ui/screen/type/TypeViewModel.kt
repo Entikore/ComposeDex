@@ -59,8 +59,8 @@ class TypeViewModel @Inject constructor(
     private val setAsFavouriteUseCase: @JvmSuppressWildcards BaseSuspendUseCase<SetFavouriteData, Unit>,
 ) : PokemonFilterViewModel() {
 
-    private val _selectedType = MutableStateFlow("")
-    val selectedType: StateFlow<String> =
+    private val _selectedType = MutableStateFlow<String?>(null)
+    val selectedType: StateFlow<String?> =
         _selectedType.asStateFlow()
 
     private fun fetchSelectedTypeDetailsFlow(type: String): Flow<SelectedTypeUiState> = getTypeUseCase(type).combine(
@@ -75,7 +75,7 @@ class TypeViewModel @Inject constructor(
         combine(
             getTypesUseCase(),
             _selectedType.flatMapLatest { selectedType ->
-                if (selectedType.isNotEmpty()) {
+                if (selectedType != null) {
                     fetchSelectedTypeDetailsFlow(selectedType)
                 } else {
                     flowOf(SelectedTypeUiState.NoTypeSelected)
@@ -92,7 +92,7 @@ class TypeViewModel @Inject constructor(
             initialValue = TypeScreenUiState.Loading,
         )
 
-    fun fetchType(typeName: String) {
+    fun fetchType(typeName: String?) {
         Timber.d("Search for type $typeName")
         _selectedType.value = typeName
     }

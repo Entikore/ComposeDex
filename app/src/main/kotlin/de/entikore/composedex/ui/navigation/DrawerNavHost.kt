@@ -32,7 +32,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
-import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
@@ -47,10 +46,8 @@ import de.entikore.composedex.ui.navigation.destination.TypeDestination
 import de.entikore.composedex.ui.screen.favourite.FavouriteScreen
 import de.entikore.composedex.ui.screen.generation.GenerationScreen
 import de.entikore.composedex.ui.screen.pokemon.PokemonScreen
-import de.entikore.composedex.ui.screen.pokemon.PokemonViewModel
 import de.entikore.composedex.ui.screen.setting.SettingsScreen
 import de.entikore.composedex.ui.screen.type.TypeScreen
-import de.entikore.composedex.ui.screen.type.TypeViewModel
 
 @Composable
 fun DrawerNavHost(
@@ -100,11 +97,7 @@ fun DrawerNavHost(
                             navigateToTypes = { type: String ->
                                 backstack.add(TypeDestination(typeName = type))
                             },
-                            viewModel = hiltViewModel<PokemonViewModel>().also {
-                                pokemonDestination.pokemonName?.let { name ->
-                                    it.lookUpPokemon(name)
-                                }
-                            },
+                            pokemonName = pokemonDestination.pokemonName,
                             modifier = Modifier
                                 .fillMaxSize()
                                 .testTag(stringResource(R.string.test_tag_compose_dex_destination_pokemon))
@@ -124,12 +117,13 @@ fun DrawerNavHost(
                                 ),
                         )
                     }
-                    entry<GenerationDestination> {
+                    entry<GenerationDestination> { generationDestination ->
                         GenerationScreen(
                             navigateToPokemon = { pokemon: String ->
                                 backstack.add(PokemonDestination(pokemonName = pokemon))
                             },
                             openDrawer = changeDrawerState,
+                            generationId = generationDestination.generationId,
                             modifier = Modifier
                                 .fillMaxSize()
                                 .testTag(
@@ -143,11 +137,7 @@ fun DrawerNavHost(
                                 backstack.add(PokemonDestination(pokemonName = pokemon))
                             },
                             openDrawer = changeDrawerState,
-                            viewModel = hiltViewModel<TypeViewModel>().also {
-                                typeDestination.typeName?.let { name ->
-                                    it.fetchType(name)
-                                }
-                            },
+                            typeName = typeDestination.typeName,
                             modifier = Modifier
                                 .fillMaxSize()
                                 .testTag(
