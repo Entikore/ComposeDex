@@ -94,8 +94,15 @@ fun PokemonScreen(
     openDrawer: () -> Unit,
     navigateToTypes: (String) -> Unit,
     modifier: Modifier = Modifier,
+    pokemonName: String? = null,
     viewModel: PokemonViewModel = hiltViewModel(),
 ) {
+    LaunchedEffect(pokemonName) {
+        pokemonName?.let {
+            viewModel.lookUpPokemon(it)
+        }
+    }
+
     val screenState by viewModel.screenState.collectAsState()
     val lookUpPokemon = viewModel::lookUpPokemon
     val selectVariety = viewModel::selectVariety
