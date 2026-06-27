@@ -117,12 +117,13 @@ fun DrawerNavHost(
                                 ),
                         )
                     }
-                    entry<GenerationDestination> {
+                    entry<GenerationDestination> { generationDestination ->
                         GenerationScreen(
                             navigateToPokemon = { pokemon: String ->
                                 backstack.add(PokemonDestination(pokemonName = pokemon))
                             },
                             openDrawer = changeDrawerState,
+                            generationId = generationDestination.generationId,
                             modifier = Modifier
                                 .fillMaxSize()
                                 .testTag(

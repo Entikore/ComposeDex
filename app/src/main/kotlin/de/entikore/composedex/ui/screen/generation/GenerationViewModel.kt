@@ -87,7 +87,7 @@ class GenerationViewModel @Inject constructor(
         GenerationScreenUiState.Loading,
     )
 
-    fun searchForGeneration(generationId: String) {
+    fun searchForGeneration(generationId: String?) {
         Timber.d("Search for generation $generationId")
         selectedGenerationFlow.value = generationId
     }

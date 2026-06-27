@@ -86,9 +86,7 @@ fun TypeScreen(
     viewModel: TypeViewModel = hiltViewModel(),
 ) {
     LaunchedEffect(typeName) {
-        typeName?.let {
-            viewModel.fetchType(it)
-        }
+        viewModel.fetchType(typeName)
     }
 
     val selectedType by viewModel.selectedType.collectAsState()
