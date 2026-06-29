@@ -34,15 +34,13 @@ import de.entikore.composedex.domain.model.preferences.AppThemeConfig
 class MainActivity : ComponentActivity() {
 
     private val viewModel: MainViewModel by viewModels()
-    private var isDarkModeEnabled: MutableState<Boolean> = mutableStateOf(false)
+    private val isDarkModeEnabled: MutableState<Boolean> = mutableStateOf(false)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        installSplashScreen().apply {
-            setOnExitAnimationListener { splashScreenView ->
-                splashScreenView.remove()
-            }
+        installSplashScreen().setOnExitAnimationListener { splashScreenView ->
+            splashScreenView.remove()
         }
 
         setContent {

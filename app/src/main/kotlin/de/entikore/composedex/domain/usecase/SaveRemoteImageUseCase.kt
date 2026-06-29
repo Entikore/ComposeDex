@@ -44,7 +44,7 @@ class SaveRemoteImageUseCase @Inject constructor(
     private val dispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) : BaseSuspendUseCase<SaveImageData, String>(dispatcher) {
 
-    private var client: OkHttpClient = httpClientBuilder.build()
+    private val client: OkHttpClient = httpClientBuilder.build()
     override suspend fun execute(params: SaveImageData): String {
         val bitmap = downloadImage(params.imageAddress)
         return if (bitmap == null) {

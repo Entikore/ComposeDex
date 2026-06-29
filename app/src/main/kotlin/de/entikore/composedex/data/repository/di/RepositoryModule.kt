@@ -46,6 +46,7 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object RepositoryModule {
 
+    @Suppress("InjectDispatcher")
     @Provides
     fun providesIoDispatcher(): CoroutineDispatcher = Dispatchers.IO
 

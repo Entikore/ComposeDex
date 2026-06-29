@@ -51,7 +51,7 @@ class OfflineFirstGenerationRepository(
 ) : GenerationRepository {
     override fun getGenerations(): Flow<List<Generation>> = localDataSource.getGenerationOverview()
         .combine(localDataSource.getAllGenerations()) { overview, generations ->
-            if (generations.isNotEmpty() && generations.size == overview!!.names.size) {
+            if (generations.isNotEmpty() && generations.size == overview?.names?.size) {
                 generations.map { it.asExternalModel() }
             } else {
                 throw LocalDataException("Not all generations in database")
@@ -94,9 +94,11 @@ class OfflineFirstGenerationRepository(
 
     override fun getGenerationByName(name: String): Flow<Generation> = localDataSource
         .getGenerationByName(name)
-        .map { generationEntity -> generationEntity!!.asExternalModel() }
+        .map { generationEntity ->
+            generationEntity?.asExternalModel() ?: throw LocalDataException("Generation $name not found locally")
+        }
         .retryWhen { cause, attempt ->
-            if (cause is NullPointerException && attempt < RETRY_COUNT) {
+            if ((cause is LocalDataException || cause is NullPointerException) && attempt < RETRY_COUNT) {
                 Timber.d(
                     "Attempt $attempt of $RETRY_COUNT to fetch generation $name, failed previously because: $cause",
                 )
@@ -116,9 +118,11 @@ class OfflineFirstGenerationRepository(
 
     override fun getGenerationById(id: Int): Flow<Generation> = localDataSource
         .getGenerationById(id)
-        .map { generationEntity -> generationEntity!!.asExternalModel() }
+        .map { generationEntity ->
+            generationEntity?.asExternalModel() ?: throw LocalDataException("Generation $id not found locally")
+        }
         .retryWhen { cause, attempt ->
-            if (cause is NullPointerException && attempt < RETRY_COUNT) {
+            if ((cause is LocalDataException || cause is NullPointerException) && attempt < RETRY_COUNT) {
                 Timber.d(
                     "Attempt $attempt of $RETRY_COUNT to fetch generation $id, failed previously because: $cause",
                 )
@@ -157,8 +161,8 @@ class OfflineFirstGenerationRepository(
                         val pokemonInGeneration =
                             generation.data.pokemonSpecies
                                 .map { it.name }
-                                .filter { name ->
-                                    !localPokemon.map { it.pokemon.pokemonName }.contains(name)
+                                .filter { speciesName ->
+                                    !localPokemon.map { it.pokemon.pokemonName }.contains(speciesName)
                                 }
                         for (pokemonName in pokemonInGeneration) {
                             val remotePokemon = getRemotePokemonByName(pokemonName)

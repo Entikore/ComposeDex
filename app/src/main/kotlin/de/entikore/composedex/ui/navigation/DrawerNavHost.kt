@@ -167,10 +167,10 @@ fun DrawerNavHost(
                     slideInHorizontally(initialOffsetX = { -it }) togetherWith
                         slideOutHorizontally(targetOffsetX = { it })
                 },
-                predictivePopTransitionSpec = {
+                predictivePopTransitionSpec = { spec ->
                     // Slide in from left when navigating back
-                    slideInHorizontally(initialOffsetX = { -it }) togetherWith
-                        slideOutHorizontally(targetOffsetX = { it })
+                    slideInHorizontally(initialOffsetX = { -spec }) togetherWith
+                        slideOutHorizontally(targetOffsetX = { spec })
                 },
             )
         }

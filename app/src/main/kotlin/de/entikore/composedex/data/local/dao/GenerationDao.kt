@@ -71,7 +71,8 @@ interface GenerationDao : BaseDao<GenerationEntity> {
     @Transaction
     @RewriteQueriesToDropUnusedColumns
     @Query(
-        "SELECT * FROM generation INNER JOIN generation_pokemon ON generation.generationId = generation_pokemon.generationPokemonCrossRefGenerationId" +
+        "SELECT * FROM generation INNER JOIN generation_pokemon " +
+            "ON generation.generationId = generation_pokemon.generationPokemonCrossRefGenerationId" +
             " INNER JOIN pokemon ON pokemon.pokemonId = generation_pokemon.generationPokemonCrossRefPokemonId" +
             " WHERE generation.generationName = :name",
     )
@@ -86,7 +87,8 @@ interface GenerationDao : BaseDao<GenerationEntity> {
     @Transaction
     @RewriteQueriesToDropUnusedColumns
     @Query(
-        "SELECT * FROM generation INNER JOIN generation_pokemon ON generation.generationId = generation_pokemon.generationPokemonCrossRefGenerationId" +
+        "SELECT * FROM generation INNER JOIN generation_pokemon " +
+            "ON generation.generationId = generation_pokemon.generationPokemonCrossRefGenerationId" +
             " INNER JOIN pokemon ON pokemon.pokemonId = generation_pokemon.generationPokemonCrossRefPokemonId" +
             " WHERE generation.generationId = :id",
     )

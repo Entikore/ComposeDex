@@ -34,10 +34,10 @@ import retrofit2.Response
  *
  * @param T The type of data returned in the success case. Must be a non-nullable type.
  */
-sealed class NetworkResult<T : Any> {
-    data class Success<T : Any>(val code: Int, val data: T) : NetworkResult<T>()
-    data class Error<T : Any>(val code: Int, val errorMsg: String?) : NetworkResult<T>()
-    data class Exception<T : Any>(val e: Throwable) : NetworkResult<T>()
+sealed interface NetworkResult<T : Any> {
+    data class Success<T : Any>(val code: Int, val data: T) : NetworkResult<T>
+    data class Error<T : Any>(val code: Int, val errorMsg: String?) : NetworkResult<T>
+    data class Exception<T : Any>(val e: Throwable) : NetworkResult<T>
 }
 
 fun <T : Any> NetworkResult<T>.getSuccessOrThrow(): T = when (this) {

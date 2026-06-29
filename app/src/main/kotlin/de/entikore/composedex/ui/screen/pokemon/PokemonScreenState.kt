@@ -19,10 +19,10 @@ import de.entikore.composedex.domain.model.pokemon.Pokemon
 import de.entikore.composedex.domain.model.type.Type
 
 /**
- * Models state of the Pokemon screen.
+ * Models state of the Pokémon screen.
  */
-sealed class PokemonScreenState {
-    data object NoPokemonSelected : PokemonScreenState()
+sealed interface PokemonScreenState {
+    data object NoPokemonSelected : PokemonScreenState
     data class Success(
         val selectedPokemon: Pokemon,
         val displayedEvolution: String = "",
@@ -30,9 +30,9 @@ sealed class PokemonScreenState {
         val evolvesFrom: PokemonPreview? = null,
         val evolvesTo: List<PokemonPreview> = emptyList(),
         val varieties: List<Pokemon> = emptyList(),
-    ) : PokemonScreenState()
-    data class Error(val errorMessage: String) : PokemonScreenState()
-    data object Loading : PokemonScreenState()
+    ) : PokemonScreenState
+    data class Error(val errorMessage: String) : PokemonScreenState
+    data object Loading : PokemonScreenState
 }
 
 /**

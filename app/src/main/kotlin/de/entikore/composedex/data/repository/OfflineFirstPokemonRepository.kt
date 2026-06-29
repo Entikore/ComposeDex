@@ -41,10 +41,10 @@ class OfflineFirstPokemonRepository(
     private val remoteDataSource: RemoteDataSource,
 ) : PokemonRepository {
     override fun getPokemonByName(name: String): Flow<Pokemon> =
-        localDataSource.getPokemonWithSpeciesTypesAndVarietiesByName(name).map {
-            it!!.asExternalModel()
+        localDataSource.getPokemonWithSpeciesTypesAndVarietiesByName(name).map { pokemon ->
+            pokemon?.asExternalModel() ?: throw LocalDataException("Pokemon $name not found locally")
         }.retryWhen { cause, attempt ->
-            if (cause is NullPointerException && attempt < RETRY_COUNT) {
+            if ((cause is LocalDataException || cause is NullPointerException) && attempt < RETRY_COUNT) {
                 Timber.d("Attempt $attempt of $RETRY_COUNT to fetch pokemon $name, failed previously because: $cause")
                 when (val remotePokemon = remoteDataSource.getPokemonInfoRemoteByName(name)) {
                     is ApiResponse.Error<PokemonInfoRemote> -> {
@@ -72,10 +72,10 @@ class OfflineFirstPokemonRepository(
         }
 
     override fun getPokemonById(id: Int): Flow<Pokemon> =
-        localDataSource.getPokemonWithSpeciesTypesAndVarietiesById(id).map {
-            it!!.asExternalModel()
+        localDataSource.getPokemonWithSpeciesTypesAndVarietiesById(id).map { pokemon ->
+            pokemon?.asExternalModel() ?: throw LocalDataException("Pokemon $id not found locally")
         }.retryWhen { cause, attempt ->
-            if (cause is NullPointerException && attempt < RETRY_COUNT) {
+            if ((cause is LocalDataException || cause is NullPointerException) && attempt < RETRY_COUNT) {
                 Timber.d(
                     "Attempt $attempt of $RETRY_COUNT to fetch pokemon with id $id, failed previously because: $cause",
                 )

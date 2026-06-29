@@ -42,7 +42,7 @@ class SaveRemoteSoundUseCase @Inject constructor(
     private val dispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) : BaseSuspendUseCase<SaveSoundData, String>(dispatcher) {
 
-    private var client: OkHttpClient = httpClientBuilder.build()
+    private val client: OkHttpClient = httpClientBuilder.build()
     override suspend fun execute(params: SaveSoundData): String =
         downloadAndSaveSound(params.soundAddress, params.fileName, params.id)
             ?: params.soundAddress
