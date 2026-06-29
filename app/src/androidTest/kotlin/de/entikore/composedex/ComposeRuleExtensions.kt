@@ -37,10 +37,8 @@ import androidx.test.ext.junit.rules.ActivityScenarioRule
  * returns the [SemanticsNodeInteraction] object.
  */
 fun <A : ComponentActivity> AndroidComposeTestRule<ActivityScenarioRule<A>, A>.onNodeWithTagStringId(
-    @StringRes id: Int
-): SemanticsNodeInteraction {
-    return onNodeWithTag(activity.getString(id))
-}
+    @StringRes id: Int,
+): SemanticsNodeInteraction = onNodeWithTag(activity.getString(id))
 
 /**
  * Finds a semantics node with the given string resource id.
@@ -52,10 +50,8 @@ fun <A : ComponentActivity> AndroidComposeTestRule<ActivityScenarioRule<A>, A>.o
  */
 fun <A : ComponentActivity> AndroidComposeTestRule<ActivityScenarioRule<A>, A>.onNodeWithTextStringId(
     @StringRes id: Int,
-    ignoreCase: Boolean = false
-): SemanticsNodeInteraction {
-    return onNodeWithText(activity.getString(id), ignoreCase = ignoreCase)
-}
+    ignoreCase: Boolean = false,
+): SemanticsNodeInteraction = onNodeWithText(activity.getString(id), ignoreCase = ignoreCase)
 
 /**
  * Semantics matcher with given string resource id for test tags.
@@ -66,10 +62,8 @@ fun <A : ComponentActivity> AndroidComposeTestRule<ActivityScenarioRule<A>, A>.o
  * and returns the [SemanticsMatcher] object.
  */
 fun <A : ComponentActivity> AndroidComposeTestRule<ActivityScenarioRule<A>, A>.hasTestTagStringId(
-    @StringRes id: Int
-): SemanticsMatcher {
-    return hasTestTag(activity.getString(id))
-}
+    @StringRes id: Int,
+): SemanticsMatcher = hasTestTag(activity.getString(id))
 
 /**
  * Semantics matcher with given string resource id for content description.
@@ -83,19 +77,19 @@ fun <A : ComponentActivity> AndroidComposeTestRule<ActivityScenarioRule<A>, A>.h
     @StringRes id: Int,
     substring: Boolean = false,
     ignoreCase: Boolean = false,
-    vararg args: Any
-): SemanticsMatcher {
-    return hasContentDescription(activity.getString(id, *args), substring, ignoreCase)
-}
+    vararg args: Any,
+): SemanticsMatcher = hasContentDescription(activity.getString(id, *args), substring, ignoreCase)
 
 /**
  * Semantics matcher with given string resource id for click label.
  */
-fun <A : ComponentActivity> AndroidComposeTestRule<ActivityScenarioRule<A>, A>.hasClickLabel(@StringRes id: Int): SemanticsMatcher {
+fun <A : ComponentActivity> AndroidComposeTestRule<ActivityScenarioRule<A>, A>.hasClickLabel(
+    @StringRes id: Int,
+): SemanticsMatcher {
     val label = activity.getString(id)
     return SemanticsMatcher("Clickable action with label: $label") {
         it.config.getOrNull(
-            SemanticsActions.OnClick
+            SemanticsActions.OnClick,
         )?.label == label
     }
 }

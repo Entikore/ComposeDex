@@ -78,7 +78,7 @@ class FavouriteScreenKtTest {
             .onChildren().assertCountEquals(favourites.size)
         composeTestRule.onNodeWithTagStringId(R.string.test_tag_favourite_screen_success)
             .onChildren().assertAll(
-                hasClickAction()
+                hasClickAction(),
             )
         for (pokemon in favourites) {
             val node =
@@ -86,16 +86,20 @@ class FavouriteScreenKtTest {
                     .onChildren()
                     .assertAny(
                         composeTestRule.hasContentDescriptionStringId(
-                            id = R.string.cD_display_image_of, substring = false,
-                            ignoreCase = false, pokemon.name
-                        )
+                            id = R.string.cD_display_image_of,
+                            substring = false,
+                            ignoreCase = false,
+                            pokemon.name,
+                        ),
                     )
             for (pokemonType in pokemon.types) {
                 node.assertAny(
                     composeTestRule.hasContentDescriptionStringId(
-                        id = R.string.cD_type_icon_of, substring = false,
-                        ignoreCase = false, pokemonType.name
-                    )
+                        id = R.string.cD_type_icon_of,
+                        substring = false,
+                        ignoreCase = false,
+                        pokemonType.name,
+                    ),
                 )
             }
         }

@@ -76,7 +76,7 @@ class GenerationScreenKtTest {
         val generations = listOf(generationI, generationII, generationVI)
         val fakeScreenUiState = GenerationScreenUiState.Success(
             generations = generations,
-            selectedGeneration = SelectedGenerationUiState.NoGenerationSelected
+            selectedGeneration = SelectedGenerationUiState.NoGenerationSelected,
         )
 
         setupComposeTestRule(fakeScreenUiState)
@@ -96,7 +96,7 @@ class GenerationScreenKtTest {
 
         val fakeScreenUiState = GenerationScreenUiState.Success(
             generations = generations,
-            selectedGeneration = fakeSelectedGenerationUiState
+            selectedGeneration = fakeSelectedGenerationUiState,
         )
 
         setupComposeTestRule(fakeScreenUiState)
@@ -117,11 +117,11 @@ class GenerationScreenKtTest {
         val fakeSelectedGenerationUiState = SelectedGenerationUiState.Success(
             selectedGeneration = generationI,
             pokemonState = PokemonUiState.Loading,
-            showLoadingItem = false
+            showLoadingItem = false,
         )
         val fakeScreenUiState = GenerationScreenUiState.Success(
             generations = generations,
-            selectedGeneration = fakeSelectedGenerationUiState
+            selectedGeneration = fakeSelectedGenerationUiState,
         )
 
         setupComposeTestRule(fakeScreenUiState)
@@ -142,11 +142,11 @@ class GenerationScreenKtTest {
         val fakeSelectedGenerationUiState = SelectedGenerationUiState.Success(
             selectedGeneration = generationI,
             pokemonState = PokemonUiState.Error,
-            showLoadingItem = false
+            showLoadingItem = false,
         )
         val fakeScreenUiState = GenerationScreenUiState.Success(
             generations = generations,
-            selectedGeneration = fakeSelectedGenerationUiState
+            selectedGeneration = fakeSelectedGenerationUiState,
         )
 
         setupComposeTestRule(fakeScreenUiState)
@@ -169,11 +169,11 @@ class GenerationScreenKtTest {
         val fakeSelectedGenerationUiState = SelectedGenerationUiState.Success(
             selectedGeneration = generationI,
             pokemonState = PokemonUiState.Success(listOf(ditto, lapras)),
-            showLoadingItem = false
+            showLoadingItem = false,
         )
         val fakeScreenUiState = GenerationScreenUiState.Success(
             generations = generations,
-            selectedGeneration = fakeSelectedGenerationUiState
+            selectedGeneration = fakeSelectedGenerationUiState,
         )
 
         // since showLoading is false
@@ -198,12 +198,12 @@ class GenerationScreenKtTest {
         val lapras = getPokemonInfoRemote(getTestModel(POKEMON_LAPRAS_NAME)).toEntity().asExternalModel()
         val fakeSelectedGenerationUiState = SelectedGenerationUiState.Success(
             selectedGeneration = generationI,
-            pokemonState = PokemonUiState.Success(listOf(ditto,lapras)),
-            showLoadingItem = true
+            pokemonState = PokemonUiState.Success(listOf(ditto, lapras)),
+            showLoadingItem = true,
         )
         val fakeScreenUiState = GenerationScreenUiState.Success(
             generations = generations,
-            selectedGeneration = fakeSelectedGenerationUiState
+            selectedGeneration = fakeSelectedGenerationUiState,
         )
 
         val expectedListItems = 3
@@ -228,7 +228,7 @@ class GenerationScreenKtTest {
 
         val fakeScreenUiState = GenerationScreenUiState.Success(
             generations = generations,
-            selectedGeneration = fakeSelectedGenerationUiState
+            selectedGeneration = fakeSelectedGenerationUiState,
         )
 
         setupComposeTestRule(fakeScreenUiState)
@@ -237,7 +237,6 @@ class GenerationScreenKtTest {
             .assertIsDisplayed()
         composeTestRule.onNodeWithTextStringId(R.string.error_fetching_generation)
             .assertIsDisplayed()
-
     }
 
     private fun setupComposeTestRule(screenState: GenerationScreenUiState) {
@@ -246,7 +245,7 @@ class GenerationScreenKtTest {
                 screenState = screenState,
                 searchGeneration = { _ -> },
                 updateFavourite = { _, _ -> },
-                navigateToPokemon = { _ -> }
+                navigateToPokemon = { _ -> },
             )
         }
     }

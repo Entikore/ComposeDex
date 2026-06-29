@@ -24,8 +24,7 @@ import kotlinx.coroutines.test.setMain
 import org.junit.rules.TestWatcher
 import org.junit.runner.Description
 
-class MainCoroutineRule(private val testDispatcher: TestDispatcher = StandardTestDispatcher()) :
-    TestWatcher() {
+class MainCoroutineRule(private val testDispatcher: TestDispatcher = StandardTestDispatcher()) : TestWatcher() {
 
     @OptIn(ExperimentalCoroutinesApi::class)
     override fun starting(description: Description?) {

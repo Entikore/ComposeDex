@@ -68,6 +68,7 @@ import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
+import java.util.Locale
 import java.util.stream.Stream
 
 @ExtendWith(MainCoroutineRule::class)
@@ -135,6 +136,7 @@ class RemoteDataSourceTest {
             )
             assertThat(fullPokemonInfo.userMessage).isEqualTo(
                 RemoteDataSource.ERROR_POKEMON_NOT_FOUND.format(
+                    Locale.US,
                     POKEMON_ODDISH_NAME,
                 ),
             )
@@ -167,6 +169,7 @@ class RemoteDataSourceTest {
         )
         assertThat(fullPokemonInfo.userMessage).isEqualTo(
             RemoteDataSource.ERROR_POKEMON_NOT_FOUND.format(
+                Locale.US,
                 name,
             ),
         )
@@ -206,6 +209,7 @@ class RemoteDataSourceTest {
         )
         assertThat(fullPokemonInfo.userMessage).isEqualTo(
             RemoteDataSource.ERROR_POKEMON_NOT_FOUND.format(
+                Locale.US,
                 POKEMON_ODDISH_NAME,
             ),
         )
@@ -238,6 +242,7 @@ class RemoteDataSourceTest {
         )
         assertThat(fullPokemonInfo.userMessage).isEqualTo(
             RemoteDataSource.ERROR_POKEMON_NOT_FOUND.format(
+                Locale.US,
                 name,
             ),
         )
@@ -279,6 +284,7 @@ class RemoteDataSourceTest {
         )
         assertThat(fullPokemonInfo.userMessage).isEqualTo(
             RemoteDataSource.ERROR_POKEMON_ID_NOT_FOUND.format(
+                Locale.US,
                 POKEMON_GLOOM_ID,
             ),
         )
@@ -312,6 +318,7 @@ class RemoteDataSourceTest {
         )
         assertThat(fullPokemonInfo.userMessage).isEqualTo(
             RemoteDataSource.ERROR_POKEMON_ID_NOT_FOUND.format(
+                Locale.US,
                 id,
             ),
         )
@@ -387,6 +394,7 @@ class RemoteDataSourceTest {
         )
         assertThat(typeRemote.userMessage).isEqualTo(
             RemoteDataSource.ERROR_TYPE_NOT_FOUND.format(
+                Locale.US,
                 TYPE_ICE_NAME,
             ),
         )
@@ -399,7 +407,10 @@ class RemoteDataSourceTest {
         file: String,
         name: String,
     ) = runTest {
-        val expectedErrorMessage = RemoteDataSource.ERROR_TYPE_NOT_FOUND.format(name)
+        val expectedErrorMessage = RemoteDataSource.ERROR_TYPE_NOT_FOUND.format(
+            Locale.US,
+            name,
+        )
         mockWebServer.buildAndEnqueueMockResponse(
             readFileWithoutNewLineFromResources(file),
             responseCode,
@@ -491,6 +502,7 @@ class RemoteDataSourceTest {
         )
         assertThat(generationListRemote.userMessage).isEqualTo(
             RemoteDataSource.ERROR_GENERATION_NOT_FOUND.format(
+                Locale.US,
                 GEN_I_NAME,
             ),
         )
@@ -503,7 +515,10 @@ class RemoteDataSourceTest {
         file: String,
         name: String,
     ) = runTest {
-        val expectedErrorMessage = RemoteDataSource.ERROR_GENERATION_NOT_FOUND.format(name)
+        val expectedErrorMessage = RemoteDataSource.ERROR_GENERATION_NOT_FOUND.format(
+            Locale.US,
+            name,
+        )
         mockWebServer.buildAndEnqueueMockResponse(
             readFileWithoutNewLineFromResources(file),
             responseCode,
@@ -550,6 +565,7 @@ class RemoteDataSourceTest {
         )
         assertThat(generationListRemote.userMessage).isEqualTo(
             RemoteDataSource.ERROR_GENERATION_ID_NOT_FOUND.format(
+                Locale.US,
                 GEN_VI_ID,
             ),
         )
@@ -562,7 +578,10 @@ class RemoteDataSourceTest {
         file: String,
         id: Int,
     ) = runTest {
-        val expectedErrorMessage = RemoteDataSource.ERROR_GENERATION_ID_NOT_FOUND.format(id)
+        val expectedErrorMessage = RemoteDataSource.ERROR_GENERATION_ID_NOT_FOUND.format(
+            Locale.US,
+            id,
+        )
         mockWebServer.buildAndEnqueueMockResponse(
             readFileWithoutNewLineFromResources(file),
             responseCode,
@@ -577,7 +596,7 @@ class RemoteDataSourceTest {
         assertThat(actualTypeRemote.userMessage).isEqualTo(expectedErrorMessage)
     }
 
-    @Suppress("UnusedPrivateMember")
+    @Suppress("UnusedPrivateFunction")
     companion object {
 
         private const val DEFINITELY_NOT_A_JSON = "definitely not a json"

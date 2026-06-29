@@ -25,8 +25,8 @@ import kotlinx.coroutines.flow.flow
 class FakeTypeRepository :
     FailableFakeRepository(),
     TypeRepository {
-    private var availablePokemonList: MutableList<Pokemon> = mutableListOf()
-    private var availableTypeList: MutableList<Type> = mutableListOf()
+    private val availablePokemonList: MutableList<Pokemon> = mutableListOf()
+    private val availableTypeList: MutableList<Type> = mutableListOf()
 
     override fun getTypes(): Flow<List<Type>> = flow {
         if (shouldReturnError) {

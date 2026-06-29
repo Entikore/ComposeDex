@@ -58,13 +58,13 @@ class NavigationTest {
             val appState = ComposeDexAppState(
                 snackbarHostState = remember { SnackbarHostState() },
                 scope = rememberCoroutineScope(),
-                drawerState = rememberDrawerState(DrawerValue.Closed)
+                drawerState = rememberDrawerState(DrawerValue.Closed),
             )
             DrawerNavHost(
                 drawerState = appState.drawerState,
                 snackBarHostState = appState.snackbarHostState,
                 changeDrawerState = appState::changeDrawerState,
-                showSnackbar = appState::showSnackbar
+                showSnackbar = appState::showSnackbar,
             )
         }
     }
@@ -80,11 +80,11 @@ class NavigationTest {
     fun navGraph_clickOnDrawerPokemon_navigateToPokemonScreen() {
         navigateToDrawerScreen(
             FavouriteDestination(),
-            R.string.test_tag_compose_dex_destination_favourite
+            R.string.test_tag_compose_dex_destination_favourite,
         )
         navigateToDrawerScreen(
             PokemonDestination(),
-            R.string.test_tag_compose_dex_destination_pokemon
+            R.string.test_tag_compose_dex_destination_pokemon,
         )
     }
 
@@ -92,7 +92,7 @@ class NavigationTest {
     fun navGraph_clickOnDrawerFavourite_navigateToFavouriteScreen() {
         navigateToDrawerScreen(
             FavouriteDestination(),
-            R.string.test_tag_compose_dex_destination_favourite
+            R.string.test_tag_compose_dex_destination_favourite,
         )
     }
 
@@ -100,7 +100,7 @@ class NavigationTest {
     fun navGraph_clickOnDrawerGeneration_navigateToGenerationScreen() {
         navigateToDrawerScreen(
             GenerationDestination(),
-            R.string.test_tag_compose_dex_destination_generation
+            R.string.test_tag_compose_dex_destination_generation,
         )
     }
 
@@ -113,14 +113,11 @@ class NavigationTest {
     fun navGraph_clickOnDrawerSettings_navigateToSettingsScreen() {
         navigateToDrawerScreen(
             SettingsDestination(),
-            R.string.test_tag_compose_dex_destination_settings
+            R.string.test_tag_compose_dex_destination_settings,
         )
     }
 
-    private fun navigateToDrawerScreen(
-        screen: ComposeDexDestination,
-        testTagId: Int
-    ) {
+    private fun navigateToDrawerScreen(screen: ComposeDexDestination, testTagId: Int) {
         composeTestRule.onNodeWithTagStringId(R.string.test_tag_open_drawer).performClick()
         composeTestRule.onNodeWithText(screen.uiName).performClick()
         composeTestRule
