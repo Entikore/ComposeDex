@@ -45,7 +45,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 
-class FavouriteLocalDataSourceTest: LocalDataSourceTest() {
+class FavouriteLocalDataSourceTest : LocalDataSourceTest() {
 
     @get:Rule
     val mainCoroutineRule = MainCoroutineRule()
@@ -67,7 +67,7 @@ class FavouriteLocalDataSourceTest: LocalDataSourceTest() {
             .build()
         localDataSource = FavouriteLocalDataSource(
             pokemonDao = database.pokemonDao(),
-            dispatcher = mainCoroutineRule.getDispatcher()
+            dispatcher = mainCoroutineRule.getDispatcher(),
         )
     }
 
@@ -99,7 +99,7 @@ class FavouriteLocalDataSourceTest: LocalDataSourceTest() {
             getPokemonInfoRemote(getTestModel(POKEMON_ODDISH_NAME)).toEntity().markAsFavourite(),
             getPokemonInfoRemote(getTestModel(POKEMON_GLOOM_NAME)).toEntity().markAsFavourite(),
             getPokemonInfoRemote(getTestModel(POKEMON_VILEPLUME_NAME)).toEntity()
-                .markAsFavourite()
+                .markAsFavourite(),
         )
         localDataSource.getAllFavourites().distinctUntilChanged().test {
             assertThat(awaitItem()).isEmpty()
@@ -111,7 +111,7 @@ class FavouriteLocalDataSourceTest: LocalDataSourceTest() {
                 val actualFavourites = awaitItem()
                 assertThat(actualFavourites.size).isEqualTo(expectedFavourites.size)
                 assertThat(actualFavourites.sortTypesForComparison()).containsExactlyElementsIn(
-                    expectedFavourites.sortTypesForComparison()
+                    expectedFavourites.sortTypesForComparison(),
                 )
             }
         }
@@ -123,8 +123,8 @@ class FavouriteLocalDataSourceTest: LocalDataSourceTest() {
             database.pokemonDao().insertVarietyCrossRef(
                 PokemonVarietyCrossRef(
                     entity.pokemon.pokemonId,
-                    variety.varietyName
-                )
+                    variety.varietyName,
+                ),
             )
         }
         for (type in entity.types) {
@@ -132,16 +132,16 @@ class FavouriteLocalDataSourceTest: LocalDataSourceTest() {
             database.pokemonDao().insertTypeCrossRef(
                 PokemonTypeCrossRef(
                     entity.pokemon.pokemonId,
-                    type.typeId
-                )
+                    type.typeId,
+                ),
             )
         }
         database.speciesDao().insert(entity.species)
         database.pokemonDao().insertSpeciesCrossRef(
             PokemonSpeciesCrossRef(
                 entity.pokemon.pokemonId,
-                entity.species.speciesId
-            )
+                entity.species.speciesId,
+            ),
         )
         database.pokemonDao().insert(entity.pokemon)
     }

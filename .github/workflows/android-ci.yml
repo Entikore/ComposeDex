@@ -33,7 +33,7 @@ jobs:
         run: chmod +x gradlew
 
       - name: Run detekt
-        run: ./gradlew detekt --stacktrace
+        run: ./gradlew detektMain detektTest --stacktrace
 
       - name: Run unit tests
         run: ./gradlew testDebugUnitTest --stacktrace

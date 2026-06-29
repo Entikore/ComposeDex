@@ -27,6 +27,7 @@ import de.entikore.composedex.domain.model.pokemon.ChainLink
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import java.util.Locale
 
 /**
  * Retrofit backed [ComposeDexApi].
@@ -42,7 +43,7 @@ class RemoteDataSource(private val api: ComposeDexApi, private val dispatcher: C
                 )
             } catch (exception: RemoteDataSourceException) {
                 ApiResponse.error(
-                    ERROR_POKEMON_NOT_FOUND.format(name),
+                    ERROR_POKEMON_NOT_FOUND.format(Locale.US, name),
                     exception,
                 )
             }
@@ -56,7 +57,7 @@ class RemoteDataSource(private val api: ComposeDexApi, private val dispatcher: C
             )
         } catch (exception: RemoteDataSourceException) {
             ApiResponse.error(
-                ERROR_POKEMON_NOT_FOUND.format(name),
+                ERROR_POKEMON_NOT_FOUND.format(Locale.US, name),
                 exception,
             )
         }
@@ -69,7 +70,7 @@ class RemoteDataSource(private val api: ComposeDexApi, private val dispatcher: C
                 fetchAndProcessEvolutionChain(initialPokemonInfo),
             )
         } catch (exception: RemoteDataSourceException) {
-            ApiResponse.error(ERROR_POKEMON_ID_NOT_FOUND.format(id), exception)
+            ApiResponse.error(ERROR_POKEMON_ID_NOT_FOUND.format(Locale.US, id), exception)
         }
     }
 
@@ -87,7 +88,7 @@ class RemoteDataSource(private val api: ComposeDexApi, private val dispatcher: C
             val type = handleApi { api.getPokemonTypeByName(name) }.getSuccessOrThrow()
             ApiResponse.success(type)
         } catch (exception: RemoteDataSourceException) {
-            ApiResponse.error(ERROR_TYPE_NOT_FOUND.format(name), exception)
+            ApiResponse.error(ERROR_TYPE_NOT_FOUND.format(Locale.US, name), exception)
         }
     }
 
@@ -106,7 +107,7 @@ class RemoteDataSource(private val api: ComposeDexApi, private val dispatcher: C
             ApiResponse.success(generation)
         } catch (exception: RemoteDataSourceException) {
             ApiResponse.error(
-                ERROR_GENERATION_NOT_FOUND.format(name),
+                ERROR_GENERATION_NOT_FOUND.format(Locale.US, name),
                 exception,
             )
         }
@@ -119,7 +120,7 @@ class RemoteDataSource(private val api: ComposeDexApi, private val dispatcher: C
             ApiResponse.success(generation)
         } catch (exception: RemoteDataSourceException) {
             ApiResponse.error(
-                ERROR_GENERATION_ID_NOT_FOUND.format(id),
+                ERROR_GENERATION_ID_NOT_FOUND.format(Locale.US, id),
                 exception,
             )
         }
@@ -127,7 +128,7 @@ class RemoteDataSource(private val api: ComposeDexApi, private val dispatcher: C
 
     private suspend fun getPokemonWithSpeciesAndType(id: Int): PokemonInfoRemote {
         val pokemon = handleApi { api.getPokemonById(id) }.getSuccessOrThrow(
-            ERROR_POKEMON_ID_NOT_FOUND.format(id),
+            ERROR_POKEMON_ID_NOT_FOUND.format(Locale.US, id),
         )
         return getSpeciesAndTypes(pokemon)
     }

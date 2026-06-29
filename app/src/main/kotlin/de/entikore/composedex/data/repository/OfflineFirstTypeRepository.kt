@@ -90,27 +90,27 @@ class OfflineFirstTypeRepository(
             }
         }
 
-    override fun getTypeByName(name: String): Flow<Type> =
-        localDataSource.getTypeByName(name).map { it!!.asExternalModel() }
-            .retryWhen { cause, attempt ->
-                if (cause is NullPointerException && attempt < RETRY_COUNT) {
-                    Timber.d("Attempt $attempt of $RETRY_COUNT to fetch type $name, failed previously because: $cause")
-                    when (val remoteType = remoteDataSource.getPokemonTypeByName(name)) {
-                        is ApiResponse.Error -> {
-                            Timber.d("Error fetching type $name failed with ${remoteType.exception}")
-                            throw remoteType.exception
-                        }
+    override fun getTypeByName(name: String): Flow<Type> = localDataSource.getTypeByName(name).map { typeEntity ->
+        typeEntity?.asExternalModel() ?: throw LocalDataException("Type $name not found locally")
+    }.retryWhen { cause, attempt ->
+        if ((cause is LocalDataException || cause is NullPointerException) && attempt < RETRY_COUNT) {
+            Timber.d("Attempt $attempt of $RETRY_COUNT to fetch type $name, failed previously because: $cause")
+            when (val remoteType = remoteDataSource.getPokemonTypeByName(name)) {
+                is ApiResponse.Error -> {
+                    Timber.d("Error fetching type $name failed with ${remoteType.exception}")
+                    throw remoteType.exception
+                }
 
-                        is ApiResponse.Success -> {
-                            localDataSource.insertType(remoteType.data.toEntity())
-                        }
-                    }
-                    true
-                } else {
-                    Timber.d("Could not fetch type by name $name: $cause")
-                    false
+                is ApiResponse.Success -> {
+                    localDataSource.insertType(remoteType.data.toEntity())
                 }
             }
+            true
+        } else {
+            Timber.d("Could not fetch type by name $name: $cause")
+            false
+        }
+    }
 
     @OptIn(ExperimentalCoroutinesApi::class)
     override fun getPokemonOfType(name: String): Flow<List<Pokemon>> {
@@ -130,8 +130,8 @@ class OfflineFirstTypeRepository(
                             }
                         val pokemonOfType =
                             typeEntity.pokemonOfType
-                                .filter { name ->
-                                    !localPokemon.map { it.pokemon.pokemonName }.contains(name)
+                                .filter { pokemonOfTypeName ->
+                                    !localPokemon.map { it.pokemon.pokemonName }.contains(pokemonOfTypeName)
                                 }
                         for (pokemonName in pokemonOfType) {
                             val remotePokemon = getRemotePokemonByName(pokemonName)

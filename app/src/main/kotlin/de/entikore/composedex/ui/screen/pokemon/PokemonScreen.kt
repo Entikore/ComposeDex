@@ -292,7 +292,6 @@ private fun PokemonInformation(
             displayedEvolution,
             evolvesFrom,
             evolvesTo,
-            selectedType.name,
             lookUpPokemon,
             navigateToTypes,
             selectType,
@@ -381,7 +380,6 @@ private fun PokemonHeader(
     displayedEvolution: String,
     evolvesFrom: PokemonPreview?,
     evolvesTo: List<PokemonPreview>,
-    typeName: String,
     lookUpPokemon: (String) -> Unit,
     navigateToTypes: (String) -> Unit,
     selectType: (String) -> Unit,
@@ -404,7 +402,6 @@ private fun PokemonHeader(
             EvolutionChainPreview(
                 evolvesFrom = evolvesFrom,
                 evolvesTo = evolvesTo,
-                selectedType = typeName,
                 selectPokemon = lookUpPokemon,
                 changeEvolutionText,
                 modifier = sharedModifier
@@ -494,7 +491,6 @@ private fun PokemonLabelRow(rank: String, pokemonLabel: PokemonLabels, modifier:
 private fun EvolutionChainPreview(
     evolvesFrom: PokemonPreview?,
     evolvesTo: List<PokemonPreview>,
-    selectedType: String,
     selectPokemon: (String) -> Unit,
     changeEvolutionText: (String) -> Unit,
     modifier: Modifier = Modifier,
@@ -516,7 +512,6 @@ private fun EvolutionChainPreview(
                 Stage1Pokemon(
                     evolvesFrom,
                     evolvesTo,
-                    selectedType,
                     selectPokemon,
                     changeEvolutionText,
                     previewSizeModifier.testTag(stringResource(R.string.test_tag_stage1pokemon)),
@@ -527,7 +522,6 @@ private fun EvolutionChainPreview(
                 if (evolvesFrom != null) {
                     Stage2Pokemon(
                         evolvesFrom,
-                        selectedType,
                         selectPokemon,
                         changeEvolutionText,
                         previewSizeModifier.testTag(stringResource(R.string.test_tag_stage2pokemon)),
@@ -535,7 +529,6 @@ private fun EvolutionChainPreview(
                 } else if (evolvesTo.isNotEmpty()) {
                     Stage0PokemonWithEvolution(
                         evolvesTo,
-                        selectedType,
                         selectPokemon,
                         changeEvolutionText,
                         previewSizeModifier.testTag(stringResource(R.string.test_tag_stage0pokemonwithevolution)),
@@ -551,7 +544,6 @@ private fun EvolutionChainPreview(
 @Composable
 private fun Stage0PokemonWithEvolution(
     evolvesTo: List<PokemonPreview>,
-    selectedTypeName: String,
     selectPokemon: (String) -> Unit,
     changeEvolutionText: (String) -> Unit,
     modifier: Modifier = Modifier,
@@ -563,7 +555,6 @@ private fun Stage0PokemonWithEvolution(
     ) {
         EvolvesToPager(
             evolvesTo = evolvesTo,
-            selectedTypeName = selectedTypeName,
             selectPokemon = selectPokemon,
             changeEvolutionText,
             modifier = Modifier.fillMaxSize(0.9f),
@@ -580,7 +571,6 @@ private fun Stage0PokemonWithEvolution(
 private fun Stage1Pokemon(
     evolvesFrom: PokemonPreview,
     evolvesTo: List<PokemonPreview>,
-    typeName: String,
     selectPokemon: (String) -> Unit,
     changeEvolutionText: (String) -> Unit,
     modifier: Modifier = Modifier,
@@ -619,8 +609,6 @@ private fun Stage1Pokemon(
                         }
                     } else {
                         EvolutionChainPicture(
-                            evolvesFromTypes = evolvesFrom.types,
-                            selectedTypeName = typeName,
                             evolvesFromName = evolvesFrom.name,
                             evolvesFromSprite = evolvesFrom.sprite,
                             selectPokemon = selectPokemon,
@@ -632,7 +620,6 @@ private fun Stage1Pokemon(
                 1 -> {
                     EvolvesToPager(
                         evolvesTo = evolvesTo,
-                        selectedTypeName = typeName,
                         selectPokemon = selectPokemon,
                         changeEvolutionText = changeEvolutionText,
                         modifier = sharedModifier,
@@ -647,7 +634,6 @@ private fun Stage1Pokemon(
 @Composable
 private fun Stage2Pokemon(
     pokemon: PokemonPreview,
-    selectedTypeName: String,
     selectPokemon: (String) -> Unit,
     changeEvolutionText: (String) -> Unit,
     modifier: Modifier = Modifier,
@@ -673,8 +659,6 @@ private fun Stage2Pokemon(
             }
         } else {
             EvolutionChainPicture(
-                evolvesFromTypes = pokemon.types,
-                selectedTypeName = selectedTypeName,
                 evolvesFromName = pokemon.name,
                 evolvesFromSprite = pokemon.sprite,
                 selectPokemon = selectPokemon,
@@ -691,20 +675,11 @@ private fun Stage2Pokemon(
 
 @Composable
 private fun EvolutionChainPicture(
-    evolvesFromTypes: List<Type>,
-    selectedTypeName: String,
     evolvesFromName: String,
     evolvesFromSprite: String,
     selectPokemon: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    var type: Type?
-    if (evolvesFromTypes.isNotEmpty()) {
-        type = evolvesFromTypes.firstOrNull { it.name == selectedTypeName }
-        if (type == null) {
-            type = evolvesFromTypes.first()
-        }
-    }
     AsyncImage(
         model = evolvesFromSprite,
         contentDescription = stringResource(
@@ -721,7 +696,6 @@ private fun EvolutionChainPicture(
 @Composable
 private fun EvolvesToPager(
     evolvesTo: List<PokemonPreview>,
-    selectedTypeName: String,
     selectPokemon: (String) -> Unit,
     changeEvolutionText: (String) -> Unit,
     modifier: Modifier = Modifier,
@@ -757,8 +731,6 @@ private fun EvolvesToPager(
                 }
             } else {
                 EvolutionChainPicture(
-                    evolvesFromTypes = evolvesTo[index].types,
-                    selectedTypeName = selectedTypeName,
                     evolvesFromName = evolvesTo[index].name,
                     evolvesFromSprite = evolvesTo[index].sprite,
                     selectPokemon = selectPokemon,

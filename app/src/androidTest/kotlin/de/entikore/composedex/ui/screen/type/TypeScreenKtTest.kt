@@ -42,7 +42,7 @@ import de.entikore.sharedtestcode.TestModelFactory.Companion.getTypeRemote
 import org.junit.Rule
 import org.junit.Test
 
-//TODO not finished, check the current implementation
+// TODO not finished, check the current implementation
 class TypeScreenKtTest {
 
     @get:Rule
@@ -153,10 +153,11 @@ class TypeScreenKtTest {
         val poisonType = getTypeRemote(TYPE_POISON_FILE).toEntity().asExternalModel()
         val types = listOf(iceType, grassType, poisonType)
         val fakeScreenState = TypeScreenUiState.Success(
-            types, SelectedTypeUiState.Success(
+            types,
+            SelectedTypeUiState.Success(
                 poisonType,
-                pokemonUiState
-            )
+                pokemonUiState,
+            ),
         )
 
         setupComposeTestRule(fakeScreenState)
@@ -171,7 +172,7 @@ class TypeScreenKtTest {
                 screenState = screenState,
                 searchType = { _ -> },
                 updateFavourite = { _, _ -> },
-                navigateToPokemon = { _ -> }
+                navigateToPokemon = { _ -> },
             )
         }
     }

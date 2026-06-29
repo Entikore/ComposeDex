@@ -26,7 +26,7 @@ fun createGradientBrush(colors: List<Color>, isVertical: Boolean = true): Brush 
     if (colors.size < 2) {
         brushColors.addAll(colors)
     }
-    brushColors.map { it }
+
     val endOffset =
         if (isVertical) {
             Offset(0f, Float.POSITIVE_INFINITY)

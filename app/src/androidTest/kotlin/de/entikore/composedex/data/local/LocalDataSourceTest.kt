@@ -27,19 +27,19 @@ import de.entikore.sharedtestcode.TestModelFactory.Companion.getTestModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 
-abstract class LocalDataSourceTest {
+open class LocalDataSourceTest {
 
     suspend fun <E, P> observePokemonOfX(
         entity: E,
         param: P,
         observe: (P) -> Flow<List<PokemonWithSpeciesTypesAndVarieties>>,
         insertEntity: suspend (E) -> Unit,
-        insertPokemonForEntity: suspend (E, PokemonWithSpeciesTypesAndVarieties) -> Unit
+        insertPokemonForEntity: suspend (E, PokemonWithSpeciesTypesAndVarieties) -> Unit,
     ) {
         val testDataEntities = listOf(
             getPokemonInfoRemote(getTestModel(POKEMON_ODDISH_NAME)).toEntity(),
             getPokemonInfoRemote(getTestModel(POKEMON_GLOOM_NAME)).toEntity(),
-            getPokemonInfoRemote(getTestModel(POKEMON_VILEPLUME_NAME)).toEntity()
+            getPokemonInfoRemote(getTestModel(POKEMON_VILEPLUME_NAME)).toEntity(),
         )
         observe.invoke(param).distinctUntilChanged().test {
             insertEntity.invoke(entity)
@@ -51,14 +51,13 @@ abstract class LocalDataSourceTest {
                 val actualPokemon = awaitItem()
                 assertThat(actualPokemon.size).isEqualTo(expectedPokemon.size)
                 assertThat(actualPokemon.sortTypesForComparison()).containsExactlyElementsIn(
-                    expectedPokemon.sortTypesForComparison()
+                    expectedPokemon.sortTypesForComparison(),
                 )
             }
         }
     }
 
-    fun List<PokemonWithSpeciesTypesAndVarieties>.sortTypesForComparison() =
-        this.map { it.sortTypesForComparison() }
+    fun List<PokemonWithSpeciesTypesAndVarieties>.sortTypesForComparison() = this.map { it.sortTypesForComparison() }
 
     fun PokemonWithSpeciesTypesAndVarieties.sortTypesForComparison() =
         this.copy(types = this.types.sortedBy { it.typeId })

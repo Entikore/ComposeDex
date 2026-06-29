@@ -282,7 +282,7 @@ class PokemonViewModel @Inject constructor(
                         name = name,
                         url = pokemon.remoteSprite,
                         types = pokemon.types,
-                        sprite = pokemon.sprite ?: "",
+                        sprite = pokemon.sprite.orEmpty(),
                         evolutionText = evolutionText,
                         isLoading = pokemon.sprite == null,
                     )
@@ -319,7 +319,7 @@ class PokemonViewModel @Inject constructor(
                         PokemonPreview(
                             name = pokemon.name,
                             types = pokemon.types,
-                            sprite = pokemon.sprite ?: "",
+                            sprite = pokemon.sprite.orEmpty(),
                             url = pokemon.remoteSprite,
                             evolutionText = evolutionText,
                             isLoading = pokemon.sprite == null,

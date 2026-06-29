@@ -78,7 +78,8 @@ interface TypeDao : BaseDao<TypeEntity> {
     @RewriteQueriesToDropUnusedColumns
     @Query(
         "SELECT * FROM type INNER JOIN type_pokemon ON type.typeId = type_pokemon.typePokemonCrossRefTypeId" +
-            " INNER JOIN pokemon ON pokemon.pokemonId = type_pokemon.typePokemonCrossRefPokemonId WHERE type.typeName = :name",
+            " INNER JOIN pokemon ON pokemon.pokemonId = type_pokemon.typePokemonCrossRefPokemonId " +
+            "WHERE type.typeName = :name",
     )
     fun getPokemonWithType(name: String): Flow<List<PokemonWithSpeciesTypesAndVarieties>>
 }

@@ -26,7 +26,7 @@ class FakePokemonRepository :
     FailableFakeRepository(),
     PokemonRepository {
 
-    private var availablePokemonList: MutableList<Pokemon> = mutableListOf()
+    private val availablePokemonList: MutableList<Pokemon> = mutableListOf()
 
     override fun getPokemonByName(name: String): Flow<Pokemon> = flow {
         if (shouldReturnError) {

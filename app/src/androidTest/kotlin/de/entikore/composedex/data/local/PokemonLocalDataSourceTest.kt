@@ -34,7 +34,6 @@ import de.entikore.sharedtestcode.POKEMON_LAPRAS_NAME
 import de.entikore.sharedtestcode.POKEMON_ODDISH_NAME
 import de.entikore.sharedtestcode.TestModelFactory.Companion.getPokemonInfoRemote
 import de.entikore.sharedtestcode.TestModelFactory.Companion.getTestModel
-
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.test.runTest
 import org.junit.After
@@ -42,7 +41,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 
-class PokemonLocalDataSourceTest: LocalDataSourceTest() {
+class PokemonLocalDataSourceTest : LocalDataSourceTest() {
 
     @get:Rule
     val mainCoroutineRule = MainCoroutineRule()
@@ -64,9 +63,8 @@ class PokemonLocalDataSourceTest: LocalDataSourceTest() {
             .build()
         localDataSource = PokemonLocalDataSource(
             database = database,
-            dispatcher = mainCoroutineRule.getDispatcher()
+            dispatcher = mainCoroutineRule.getDispatcher(),
         )
-
     }
 
     @After
@@ -188,7 +186,7 @@ class PokemonLocalDataSourceTest: LocalDataSourceTest() {
                 val expectedEntitySprite = "newSprite"
                 localDataSource.updatePokemonSprite(
                     favouriteEntity.pokemon.pokemonId,
-                    expectedEntitySprite
+                    expectedEntitySprite,
                 )
                 val spriteEntity = awaitItem()
                 assertThat(spriteEntity).isNotNull()
@@ -219,7 +217,7 @@ class PokemonLocalDataSourceTest: LocalDataSourceTest() {
                 val expectedEntitySprite = "newSprite"
                 localDataSource.updatePokemonSprite(
                     favouriteEntity.pokemon.pokemonId,
-                    expectedEntitySprite
+                    expectedEntitySprite,
                 )
                 val spriteEntity = awaitItem()
                 assertThat(spriteEntity).isNotNull()

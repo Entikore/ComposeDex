@@ -47,7 +47,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 
-class GenerationLocalDataSourceTest: LocalDataSourceTest() {
+class GenerationLocalDataSourceTest : LocalDataSourceTest() {
 
     @get:Rule
     val mainCoroutineRule = MainCoroutineRule()
@@ -70,11 +70,11 @@ class GenerationLocalDataSourceTest: LocalDataSourceTest() {
             .build()
         pokemonLocalDataSource = PokemonLocalDataSource(
             database = database,
-            dispatcher = mainCoroutineRule.getDispatcher()
+            dispatcher = mainCoroutineRule.getDispatcher(),
         )
         localDataSource = GenerationLocalDataSource(
             database = database,
-            dispatcher = mainCoroutineRule.getDispatcher()
+            dispatcher = mainCoroutineRule.getDispatcher(),
         )
     }
 
@@ -127,7 +127,9 @@ class GenerationLocalDataSourceTest: LocalDataSourceTest() {
         database.generationDao()
             .getPokemonWithinGenerationByName(expectedGenerationEntity.generationName).test {
                 val actualEntity = awaitItem()
-                assertThat(actualEntity.sortTypesForComparison()).containsExactly(expectedEntity.sortTypesForComparison())
+                assertThat(
+                    actualEntity.sortTypesForComparison(),
+                ).containsExactly(expectedEntity.sortTypesForComparison())
             }
     }
 
@@ -148,7 +150,7 @@ class GenerationLocalDataSourceTest: LocalDataSourceTest() {
         val testDataEntities = listOf(
             getGenerationRemote(GEN_I_FILE).toEntity(),
             getGenerationRemote(GEN_II_FILE).toEntity(),
-            getGenerationRemote(GEN_VI_FILE).toEntity()
+            getGenerationRemote(GEN_VI_FILE).toEntity(),
         )
 
         localDataSource.getAllGenerations().distinctUntilChanged().test {
@@ -198,7 +200,7 @@ class GenerationLocalDataSourceTest: LocalDataSourceTest() {
             expectedGenerationEntity.generationName,
             localDataSource::getPokemonOfGenerationByName,
             localDataSource::insertGeneration,
-            localDataSource::insertPokemonForGeneration
+            localDataSource::insertPokemonForGeneration,
         )
     }
 
@@ -210,7 +212,7 @@ class GenerationLocalDataSourceTest: LocalDataSourceTest() {
             expectedGenerationEntity.generationId,
             localDataSource::getPokemonOfGenerationById,
             localDataSource::insertGeneration,
-            localDataSource::insertPokemonForGeneration
+            localDataSource::insertPokemonForGeneration,
         )
     }
 }

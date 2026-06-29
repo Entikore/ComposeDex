@@ -48,7 +48,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 
-class TypeLocalDataSourceTest: LocalDataSourceTest() {
+class TypeLocalDataSourceTest : LocalDataSourceTest() {
 
     @get:Rule
     val mainCoroutineRule = MainCoroutineRule()
@@ -71,11 +71,11 @@ class TypeLocalDataSourceTest: LocalDataSourceTest() {
             .build()
         pokemonLocalDataSource = PokemonLocalDataSource(
             database = database,
-            dispatcher = mainCoroutineRule.getDispatcher()
+            dispatcher = mainCoroutineRule.getDispatcher(),
         )
         localDataSource = TypeLocalDataSource(
             database = database,
-            dispatcher = mainCoroutineRule.getDispatcher()
+            dispatcher = mainCoroutineRule.getDispatcher(),
         )
     }
 
@@ -148,7 +148,7 @@ class TypeLocalDataSourceTest: LocalDataSourceTest() {
             getTypeRemote(TYPE_ICE_FILE).toEntity(),
             getTypeRemote(TYPE_GRASS_FILE).toEntity(),
             getTypeRemote(TYPE_NORMAL_FILE).toEntity(),
-            getTypeRemote(TYPE_POISON_FILE).toEntity()
+            getTypeRemote(TYPE_POISON_FILE).toEntity(),
         )
 
         localDataSource.getAllTypes().distinctUntilChanged().test {
@@ -184,7 +184,7 @@ class TypeLocalDataSourceTest: LocalDataSourceTest() {
             expectedTypeEntity.typeName,
             localDataSource::getPokemonOfType,
             localDataSource::insertType,
-            localDataSource::insertPokemonForType
+            localDataSource::insertPokemonForType,
         )
     }
 }

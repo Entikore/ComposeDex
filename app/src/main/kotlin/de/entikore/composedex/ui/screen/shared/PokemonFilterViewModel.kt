@@ -30,10 +30,10 @@ import timber.log.Timber
 /**
  * Base ViewModel for all View Models that manage a list of Pokemon to provide filter options.
  */
-abstract class PokemonFilterViewModel : ViewModel() {
+open class PokemonFilterViewModel(defaultFilterOptions: PokemonFilterOptions = PokemonFilterOptions()) : ViewModel() {
 
     private val _filterOptions =
-        MutableStateFlow(PokemonFilterOptions())
+        MutableStateFlow(defaultFilterOptions)
 
     val filterOptions: StateFlow<PokemonFilterOptions> =
         _filterOptions.stateIn(viewModelScope, SharingStarted.Eagerly, _filterOptions.value)

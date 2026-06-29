@@ -54,7 +54,6 @@ complexity:
 ktlint:
   MaximumLineLength:
     ignoreBackTickedIdentifier: true
-    ignoreAnnotated: [ 'Test', 'Query', 'RewriteQueriesToDropUnusedColumns' ]
 
 # also ignore naming for composable functions
 naming:
@@ -71,9 +70,10 @@ style:
     ignorePropertyDeclaration: true
     ignoreAnnotated: [ 'Test', 'ParameterizedTest', 'RepeatedTest', 'TestFactory', 'Composable']
   UnusedPrivateFunction:
+    active: true
     ignoreAnnotated: [ 'Preview' ]
   UnusedPrivateProperty:
-    ignoreAnnotated: [ 'Preview' ]
+    active: true
   MaxLineLength:
     ignoreAnnotated: [ 'Test', 'Query', 'RewriteQueriesToDropUnusedColumns']
 

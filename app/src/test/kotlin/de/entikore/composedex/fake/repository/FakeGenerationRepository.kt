@@ -26,8 +26,8 @@ class FakeGenerationRepository :
     FailableFakeRepository(),
     GenerationRepository {
 
-    private var availablePokemonList: MutableList<Pokemon> = mutableListOf()
-    private var availableGenerationList: MutableList<Generation> = mutableListOf()
+    private val availablePokemonList: MutableList<Pokemon> = mutableListOf()
+    private val availableGenerationList: MutableList<Generation> = mutableListOf()
 
     override fun getGenerations(): Flow<List<Generation>> = flow {
         if (shouldReturnError) {

@@ -91,7 +91,7 @@ class PokemonScreenKtTest {
             selectedPokemon = selectedPokemon,
             displayedEvolution = "Evolves to $POKEMON_GLOOM_NAME",
             evolvesTo = listOf(evolvesTo),
-            selectedType = selectedType
+            selectedType = selectedType,
         )
 
         setupComposeTestRule(fakeScreenState)
@@ -122,7 +122,7 @@ class PokemonScreenKtTest {
         composeTestRule.waitForIdle()
         composeTestRule.onAllNodes(composeTestRule.hasClickLabel(R.string.label_type_icon_click))
             .filter(
-                hasAnyAncestor(composeTestRule.hasTestTagStringId(R.string.test_tag_weakness))
+                hasAnyAncestor(composeTestRule.hasTestTagStringId(R.string.test_tag_weakness)),
             ).assertCountEquals(selectedType.doubleDamageFrom.size)
         composeTestRule.onNodeWithTagStringId(R.string.test_tag_resistance).assertIsDisplayed()
         composeTestRule.onNodeWithTagStringId(R.string.test_tag_resistance).performTouchInput {
@@ -131,7 +131,7 @@ class PokemonScreenKtTest {
         composeTestRule.waitForIdle()
         composeTestRule.onAllNodes(composeTestRule.hasClickLabel(R.string.label_type_icon_click))
             .filter(
-                hasAnyAncestor(composeTestRule.hasTestTagStringId(R.string.test_tag_resistance))
+                hasAnyAncestor(composeTestRule.hasTestTagStringId(R.string.test_tag_resistance)),
             ).assertCountEquals(selectedType.halfDamageFrom.size)
     }
 
@@ -152,7 +152,7 @@ class PokemonScreenKtTest {
             selectedPokemon = gloom,
             displayedEvolution = "Evolves from ${oddish.name}",
             evolvesFrom = oddish,
-            evolvesTo = listOf(vileplume, bellossom)
+            evolvesTo = listOf(vileplume, bellossom),
         )
 
         setupComposeTestRule(fakeScreenState)
@@ -164,7 +164,7 @@ class PokemonScreenKtTest {
         composeTestRule.onNodeWithContentDescription(
             oddish.name,
             substring = true,
-            ignoreCase = true
+            ignoreCase = true,
         ).assertIsDisplayed()
 
         // swipe to evolvesTo
@@ -175,7 +175,7 @@ class PokemonScreenKtTest {
         composeTestRule.onNodeWithContentDescription(
             vileplume.name,
             substring = true,
-            ignoreCase = true
+            ignoreCase = true,
         ).assertIsDisplayed()
 
         // swipe to other evolvesTo
@@ -186,9 +186,8 @@ class PokemonScreenKtTest {
         composeTestRule.onNodeWithContentDescription(
             bellossom.name,
             substring = true,
-            ignoreCase = true
+            ignoreCase = true,
         ).assertIsDisplayed()
-
     }
 
     @Test
@@ -196,7 +195,7 @@ class PokemonScreenKtTest {
         val gloom =
             getPokemonInfoRemote(getTestModel(POKEMON_GLOOM_NAME)).toEntity().asExternalModel()
         val fakeScreenState = PokemonScreenState.Success(
-            selectedPokemon = gloom
+            selectedPokemon = gloom,
         )
 
         setupComposeTestRule(fakeScreenState)
@@ -205,28 +204,34 @@ class PokemonScreenKtTest {
             .assertIsDisplayed()
 
         // assert the correct text entry and counter is displayed
-        composeTestRule.onNode(composeTestRule.hasContentDescriptionStringId(
-            id = R.string.semantics_displays_the_text_information_of_the_pokemon,
-            args = arrayOf(gloom.name)
-        )).assertIsDisplayed()
+        composeTestRule.onNode(
+            composeTestRule.hasContentDescriptionStringId(
+                id = R.string.semantics_displays_the_text_information_of_the_pokemon,
+                args = arrayOf(gloom.name),
+            ),
+        ).assertIsDisplayed()
 
         composeTestRule.onNodeWithText("1 of ${gloom.textEntries.size}").assertExists()
 
         // swipe to the next text entry and assert the correct counter is displayed
-        composeTestRule.onNode(composeTestRule.hasContentDescriptionStringId(
-            id = R.string.semantics_displays_the_text_information_of_the_pokemon,
-            args = arrayOf(gloom.name)
-        )).assertIsDisplayed()
+        composeTestRule.onNode(
+            composeTestRule.hasContentDescriptionStringId(
+                id = R.string.semantics_displays_the_text_information_of_the_pokemon,
+                args = arrayOf(gloom.name),
+            ),
+        ).assertIsDisplayed()
             .performTouchInput { swipeLeft() }
 
         composeTestRule.onNodeWithText("2 of ${gloom.textEntries.size}").assertExists()
 
         // swipe to the last text entry and assert the correct counter is displayed
-        composeTestRule.onNode(composeTestRule.hasContentDescriptionStringId(
-            id = R.string.semantics_displays_the_text_information_of_the_pokemon,
-            args = arrayOf(gloom.name)
-        )).assertIsDisplayed()
-            .performTouchInput { for (i in 3..gloom.textEntries.size) swipeLeft() }
+        composeTestRule.onNode(
+            composeTestRule.hasContentDescriptionStringId(
+                id = R.string.semantics_displays_the_text_information_of_the_pokemon,
+                args = arrayOf(gloom.name),
+            ),
+        ).assertIsDisplayed()
+            .performTouchInput { repeat(gloom.textEntries.size) { swipeLeft() } }
 
         composeTestRule.onNodeWithText("${gloom.textEntries.size} of ${gloom.textEntries.size}").assertExists()
     }
@@ -243,7 +248,7 @@ class PokemonScreenKtTest {
                 changeEvolutionText = {},
                 updateFavourite = { _, _ -> },
                 playSound = {},
-                speakTextEntry = {}
+                speakTextEntry = {},
             )
         }
     }
