@@ -65,7 +65,7 @@ class SaveRemoteImageUseCase @Inject constructor(
                         Timber.e("Unsuccessful response: ${response.code} for $imageAddress")
                         return@withContext null
                     }
-                    response.body?.byteStream()?.use { inputStream ->
+                    response.body.byteStream().use { inputStream ->
                         BitmapFactory.decodeStream(inputStream)
                     }
                 }
