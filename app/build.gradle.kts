@@ -8,6 +8,7 @@ plugins {
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.junit5)
     alias(libs.plugins.jetbrains.kotlin.serialization)
+    alias(libs.plugins.dependency.analysis)
 }
 
 android {

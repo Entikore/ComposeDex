@@ -16,6 +16,7 @@ coreKtx = "1.19.0"
 coreSplash = "1.2.0"
 coroutine = "1.11.0"
 dataStore = "1.2.1"
+dependencyAnalysis = "3.19.2"
 detekt = "2.0.0-alpha.6"
 detektCompose = "0.6.6"
 exoPlayer = "1.11.1"
@@ -112,6 +113,7 @@ turbine = { group = "app.cash.turbine", name = "turbine", version.ref = "turbine
 android-application = { id = "com.android.application", version.ref = "androidGradlePlugin" }
 android-library = { id = "com.android.library", version.ref = "androidGradlePlugin" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlinAndroid" }
+dependency-analysis = { id = "com.autonomousapps.dependency-analysis", version.ref = "dependencyAnalysis" }
 detekt = { id = "dev.detekt", version.ref = "detekt" }
 hilt-android = { id = "com.google.dagger.hilt.android", version.ref = "hiltAndroid" }
 jetbrains-kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlinSerialization" }

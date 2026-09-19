@@ -5,8 +5,15 @@ plugins {
     alias(libs.plugins.ksp) apply false
     alias(libs.plugins.compose.compiler) apply false
     alias(libs.plugins.junit5) apply false
+    alias(libs.plugins.dependency.analysis)
 }
 
 tasks.withType<Test> {
     useJUnitPlatform()
+}
+
+dependencyAnalysis {
+    structure {
+        ignoreKtx(true) // default is false
+    }
 }
