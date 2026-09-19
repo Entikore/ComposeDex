@@ -36,7 +36,7 @@ android {
 }
 
 dependencies {
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.moshi.kotlin)
+    implementation(libs.androidx.core.core.ktx)
+    implementation(libs.com.squareup.moshi.moshi.kotlin)
     implementation(project(":app"))
 }
