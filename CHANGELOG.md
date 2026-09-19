@@ -7,11 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Changed
-
-- migrate to navigation3 library.
+- Migrate navigation layer to AndroidX Navigation3 library (`NavDisplay`, `entryProvider`, and type-safe destinations).
+- Refactor domain UseCases to standard `BaseFetchUseCase` pattern.
+- Improve UI screen state building and state management across screens.
+- Replace `LaunchedEffect` with `DisposableEffect` for non-suspending handlers.
+- Update project dependencies (Kotlin 2.4.20, AGP 9.4.1, Compose BOM 2026.09.00, Navigation3 1.1.7, Coil 3.6.3, Room 2.8.5, Retrofit 3.0.0).
 
 ### Fixed
-- asynchronous DAO queries no longer suspend indefinitely if table is empty.
+- Asynchronous DAO queries no longer suspend indefinitely if table is empty.
+- Navigation backstack state and animation transition issues in Navigation3 drawer host.
+- Make complex Room database operations atomic using `@Transaction`.
+- Resolve Detekt static analysis and linter findings across all modules.
 
 ## [1.0.0] - 2024-12-30
 

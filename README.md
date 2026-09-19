@@ -61,7 +61,7 @@ the UI layer, the domain layer and the data layer.
 
 The UI layer is built on [best practices](https://developer.android.com/topic/architecture/recommendations#ui-layer) 
 
-- Activity: ComposeDex is a single-activity application and uses the [Navigation Compose](https://developer.android.com/develop/ui/compose/navigation) to switch between screens.
+- Activity: ComposeDex is a single-activity application and uses [Navigation3](https://developer.android.com/jetpack/androidx/releases/navigation3) for type-safe navigation between screens.
 - Screens: Each screen is build out of composable components and can be navigated to by the user.
 - ViewModels: Each UI 'screen' has its own [ViewModel][viewmodel], which exposes a single [StateFlow](https://developer.android.com/kotlin/flow/stateflow-and-sharedflow) containing the entire view state. Each [ViewModel][viewmodel] is responsible for subscribing to any data streams required for the view, as well as exposing functions which allow the UI to send events. 
 - Navigation: Defines different destinations (each destination is one of the defined screens) that can be navigated to.
@@ -86,7 +86,6 @@ The data layer is designed with an offline-first approach in mind. There exists 
 - [AndroidX Compose](https://developer.android.com/jetpack/androidx/releases/compose): A modern toolkit for building native Android user interfaces using a declarative approach, where UI elements are described as functions that transform data into UI.
 - [AndroidX Core Splash](https://developer.android.com/jetpack/androidx/releases/core): Provides a way to customize the splash screen, ensuring a consistent launch animation while the app initializes.
 - [AndroidX Datastore](https://developer.android.com/jetpack/androidx/releases/datastore): A data storage solution that provides a safe and consistent way to store key-value pairs.
-- [AndroidX Drawerlayout](https://developer.android.com/jetpack/androidx/releases/drawerlayout): Provides a UI panel that slides in from the edge of the screen, used for the navigation menu.
 - [AndroidX ExoPlayer](https://developer.android.com/reference/androidx/media3/exoplayer/ExoPlayer): An application-level media player for Android to play audio.
 - [AndroidX Hilt](https://developer.android.com/jetpack/androidx/releases/hilt): A dependency injection library to integrate Dagger with Android components.
 - [AndroidX navigation3](https://developer.android.com/jetpack/androidx/releases/navigation3):
