@@ -45,7 +45,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
@@ -97,10 +97,11 @@ fun PokemonScreen(
     pokemonName: String? = null,
     viewModel: PokemonViewModel = hiltViewModel(),
 ) {
-    LaunchedEffect(pokemonName) {
+    DisposableEffect(pokemonName) {
         pokemonName?.let {
             viewModel.lookUpPokemon(it)
         }
+        onDispose { }
     }
 
     val screenState by viewModel.screenState.collectAsState()
@@ -583,10 +584,11 @@ private fun Stage1Pokemon(
 
     val currentPage by remember { derivedStateOf { pagerState.currentPage } }
     val currentChangeEvolutionText by rememberUpdatedState(changeEvolutionText)
-    LaunchedEffect(currentPage) {
+    DisposableEffect(currentPage) {
         if (currentPage == 0) {
             currentChangeEvolutionText(evolvesFrom.evolutionText)
         }
+        onDispose { }
     }
 
     Column(
@@ -714,8 +716,9 @@ private fun EvolvesToPager(
         val currentPage by remember { derivedStateOf { pagerState.currentPage } }
         val currentChangeEvolutionText by rememberUpdatedState(changeEvolutionText)
 
-        LaunchedEffect(currentPage) {
+        DisposableEffect(currentPage) {
             currentChangeEvolutionText(evolvesTo[currentPage].evolutionText)
+            onDispose { }
         }
 
         VerticalPager(
@@ -771,8 +774,9 @@ private fun PokemonPicture(
 
             val currentPage by remember { derivedStateOf { pagerState.currentPage } }
             val currentSelectVariety by rememberUpdatedState(selectVariety)
-            LaunchedEffect(currentPage) {
+            DisposableEffect(currentPage) {
                 currentSelectVariety(currentPage)
+                onDispose { }
             }
 
             if (pagerState.pageCount > 0) {

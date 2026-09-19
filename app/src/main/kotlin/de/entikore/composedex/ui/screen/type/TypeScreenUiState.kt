@@ -79,7 +79,7 @@ fun TypeScreenUiState.withFilteredPokemonList(filteredList: List<Pokemon>?): Typ
 
     return this.copy(
         selectedType = this.selectedType.copy(
-            pokemonState = this.selectedType.pokemonState.copy(filteredList),
+            pokemonState = this.selectedType.pokemonState.copy(pokemon = filteredList),
         ),
     )
 }

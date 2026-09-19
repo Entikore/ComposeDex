@@ -21,13 +21,14 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.retryWhen
 import java.io.IOException
+import kotlin.time.Duration.Companion.milliseconds
 
 fun <T> Flow<T>.asResult() = this
     .map { Result.success(it) }
     .retryWhen { cause, _ ->
         if (cause is IOException) {
             emit(Result.failure(cause))
-            delay(RETRY_TIME_IN_MILLIS)
+            delay(RETRY_TIME_IN_MILLIS.milliseconds)
             true
         } else {
             false

@@ -77,7 +77,7 @@ fun GenerationScreenUiState.withFilteredPokemonList(filteredList: List<Pokemon>?
 
     return this.copy(
         selectedGeneration = this.selectedGeneration.copy(
-            pokemonState = this.selectedGeneration.pokemonState.copy(filteredList),
+            pokemonState = this.selectedGeneration.pokemonState.copy(pokemon = filteredList),
         ),
     )
 }
