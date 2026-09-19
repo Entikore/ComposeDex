@@ -149,7 +149,7 @@ class PokemonViewModelTest {
         )
 
         val expectedState = PokemonScreenState.Error(
-            "${PokemonViewModel.Companion.ERROR_LOADING_POKEMON} $POKEMON_GLOOM_NAME",
+            "${PokemonViewModel.ERROR_LOADING_POKEMON} $POKEMON_GLOOM_NAME",
         )
 
         viewModel.screenState.test {

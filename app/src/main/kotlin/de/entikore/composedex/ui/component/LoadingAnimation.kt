@@ -37,6 +37,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import de.entikore.composedex.R
 import kotlinx.coroutines.delay
+import kotlin.time.Duration.Companion.milliseconds
 
 @Composable
 fun LoadingAnimation(modifier: Modifier = Modifier, circleSize: Dp = 25.dp, travelDistance: Dp = 20.dp) {
@@ -49,7 +50,7 @@ fun LoadingAnimation(modifier: Modifier = Modifier, circleSize: Dp = 25.dp, trav
 
     circles.forEachIndexed { index, animatable ->
         LaunchedEffect(key1 = animatable) {
-            delay(index * 100L)
+            delay((index * 100L).milliseconds)
             animatable.animateTo(
                 targetValue = 1f,
                 animationSpec =
