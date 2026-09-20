@@ -172,7 +172,7 @@ class PokemonViewModel @Inject constructor(
         tts.stopTTS()
     }
 
-    fun lookUpPokemon(name: String) {
+    fun lookUpPokemon(name: String?) {
         Timber.d("Search for pokemon $name")
         selectedPokemonFlow.value = name
     }

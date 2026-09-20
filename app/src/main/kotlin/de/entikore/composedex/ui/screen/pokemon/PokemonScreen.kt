@@ -98,9 +98,7 @@ fun PokemonScreen(
     viewModel: PokemonViewModel = hiltViewModel(),
 ) {
     DisposableEffect(pokemonName) {
-        pokemonName?.let {
-            viewModel.lookUpPokemon(it)
-        }
+        viewModel.lookUpPokemon(pokemonName)
         onDispose { }
     }
 
