@@ -98,13 +98,18 @@ fun PokemonScreen(
     viewModel: PokemonViewModel = hiltViewModel(),
 ) {
     DisposableEffect(pokemonName) {
-        pokemonName?.let {
-            viewModel.lookUpPokemon(it)
-        }
+        viewModel.lookUpPokemon(pokemonName)
         onDispose { }
     }
 
     val screenState by viewModel.screenState.collectAsState()
+
+    (screenState as? PokemonScreenState.Success)?.selectedType?.name?.let { typeName ->
+        DisposableEffect(typeName) {
+            viewModel.switchTheme(typeName)
+            onDispose { }
+        }
+    }
     val lookUpPokemon = viewModel::lookUpPokemon
     val selectVariety = viewModel::selectVariety
     val selectType = viewModel::selectType
@@ -470,11 +475,6 @@ private fun PokemonLabelRow(rank: String, pokemonLabel: PokemonLabels, modifier:
 
     ) {
         BorderedLabel(labelText = rank)
-        if (pokemonLabel.baby.second) {
-            BorderedLabel(
-                labelText = pokemonLabel.baby.first.uiString,
-            )
-        }
         if (pokemonLabel.legendary.second) {
             BorderedLabel(
                 labelText = pokemonLabel.legendary.first.uiString,

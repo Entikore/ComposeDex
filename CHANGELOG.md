@@ -22,6 +22,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Navigation backstack state and animation transition issues in Navigation3 drawer host.
 - Make complex Room database operations atomic using `@Transaction`.
 - Resolve Detekt static analysis and linter findings across all modules.
+- The theme is correctly updated when navigating back to a previously selected Pokémon.
+- The selected Pokémon is reset when navigating from NavDrawer to PokemonScreen.
+- PokemonScreenState.Loading is emitted on loading a selected Pokémon.
 
 ## [1.0.0] - 2024-12-30
 

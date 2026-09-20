@@ -44,6 +44,7 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -76,9 +77,9 @@ class PokemonViewModel @Inject constructor(
                 if (pokemonParameter == null) {
                     flowOf(PokemonScreenState.NoPokemonSelected)
                 } else {
-                    getPokemonUseCase(pokemonParameter).flatMapLatest {
-                        handlePokemonResult(it, pokemonParameter)
-                    }
+                    getPokemonUseCase(pokemonParameter)
+                        .flatMapLatest { handlePokemonResult(it, pokemonParameter) }
+                        .onStart { emit(PokemonScreenState.Loading) }
                 }
             }
             .onEach {
@@ -172,7 +173,7 @@ class PokemonViewModel @Inject constructor(
         tts.stopTTS()
     }
 
-    fun lookUpPokemon(name: String) {
+    fun lookUpPokemon(name: String?) {
         Timber.d("Search for pokemon $name")
         selectedPokemonFlow.value = name
     }
@@ -219,11 +220,9 @@ class PokemonViewModel @Inject constructor(
         }
     }
 
-    private fun switchTheme(typeName: String) {
-        if (lastThemeType != typeName) {
-            lastThemeType = typeName
-            viewModelScope.launch { changeThemeUseCase(typeName) }
-        }
+    fun switchTheme(typeName: String) {
+        lastThemeType = typeName
+        viewModelScope.launch { changeThemeUseCase(typeName) }
     }
 
     private fun updateInitialSelection(pokemon: Pokemon) {

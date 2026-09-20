@@ -151,6 +151,7 @@ fun DrawerEntry(icon: Int, name: String, selected: Boolean, onClick: () -> Unit,
             )
         },
         onClick = onClick,
+        shape = CutCornerShape(integerResource(id = R.integer.default_cut_corner_shape_percentage)),
         modifier = modifier.cutCornerShapeBorder(
             cutCornerPercentage = integerResource(id = R.integer.default_cut_corner_shape_percentage),
             borderWidth = dimensionResource(R.dimen.default_border),
