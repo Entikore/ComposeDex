@@ -56,7 +56,7 @@ class SaveRemoteSoundUseCase @Inject constructor(
                         Timber.e("Unsuccessful response: ${response.code} for $soundAddress")
                         return@withContext null
                     }
-                    response.body?.byteStream()?.use { inputStream ->
+                    response.body.byteStream().use { inputStream ->
                         context.openFileOutput(dataName, Context.MODE_PRIVATE).use { outputStream ->
                             inputStream.copyTo(outputStream)
                         }
