@@ -13,6 +13,6 @@ tasks.withType<Test> {
 
 dependencyAnalysis {
     structure {
-        ignoreKtx(true) // default is false
+        ignoreKtx(true)
     }
 }

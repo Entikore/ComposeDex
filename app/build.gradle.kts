@@ -153,7 +153,6 @@ dependencies {
     testImplementation(libs.org.mockito.mockito.core)
     testImplementation(libs.androidx.arch.core.core.testing)
 
-    androidTestImplementation(composeBom)
     androidTestImplementation(libs.androidx.test.ext.junit)
     androidTestImplementation(libs.junit.junit)
     androidTestImplementation(libs.androidx.arch.core.core.testing)
@@ -168,9 +167,4 @@ dependencies {
     androidTestImplementation(libs.com.google.dagger.hilt.android.testing)
     kspAndroidTest(libs.com.google.dagger.hilt.android.compiler)
     androidTestImplementation(project(":sharedTestCode"))
-}
-
-// https://docs.gradle.org/9.0.0-milestone-9/userguide/upgrading_version_8.html#test_task_fails_when_no_tests_are_discovered
-tasks.withType<AbstractTestTask>().configureEach {
-    failOnNoDiscoveredTests = false
 }
