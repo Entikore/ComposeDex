@@ -219,11 +219,9 @@ class PokemonViewModel @Inject constructor(
         }
     }
 
-    private fun switchTheme(typeName: String) {
-        if (lastThemeType != typeName) {
-            lastThemeType = typeName
-            viewModelScope.launch { changeThemeUseCase(typeName) }
-        }
+    fun switchTheme(typeName: String) {
+        lastThemeType = typeName
+        viewModelScope.launch { changeThemeUseCase(typeName) }
     }
 
     private fun updateInitialSelection(pokemon: Pokemon) {
