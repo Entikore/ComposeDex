@@ -129,6 +129,9 @@ class PokemonViewModelTest {
             viewModel.lookUpPokemon(searchQuery)
 
             stateResult = awaitItem()
+            assertThat(stateResult).isInstanceOf(PokemonScreenState.Loading::class.java)
+
+            stateResult = awaitItem()
             assertThat(stateResult).isInstanceOf(PokemonScreenState.Success::class.java)
             assertThat(stateResult).isEqualTo(
                 expectedState,
@@ -157,6 +160,9 @@ class PokemonViewModelTest {
             assertThat(stateResult).isInstanceOf(PokemonScreenState.NoPokemonSelected::class.java)
 
             viewModel.lookUpPokemon(POKEMON_GLOOM_NAME)
+
+            stateResult = awaitItem()
+            assertThat(stateResult).isInstanceOf(PokemonScreenState.Loading::class.java)
 
             stateResult = awaitItem()
             assertThat(stateResult).isInstanceOf(PokemonScreenState.Error::class.java)

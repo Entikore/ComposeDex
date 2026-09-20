@@ -44,6 +44,7 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -76,9 +77,9 @@ class PokemonViewModel @Inject constructor(
                 if (pokemonParameter == null) {
                     flowOf(PokemonScreenState.NoPokemonSelected)
                 } else {
-                    getPokemonUseCase(pokemonParameter).flatMapLatest {
-                        handlePokemonResult(it, pokemonParameter)
-                    }
+                    getPokemonUseCase(pokemonParameter)
+                        .flatMapLatest { handlePokemonResult(it, pokemonParameter) }
+                        .onStart { emit(PokemonScreenState.Loading) }
                 }
             }
             .onEach {
