@@ -102,6 +102,7 @@ The data layer is designed with an offline-first approach in mind. There exists 
 
 - [Androidx Arch Core](https://developer.android.com/jetpack/androidx/releases/arch-core): Helper for other arch dependencies, including JUnit test rules that can be used with LiveData.
 - [Androidx Test](https://developer.android.com/jetpack/androidx/releases/test): A collection of Android libraries that provide a framework for writing and running UI and instrumentation tests for Android applications.
+- [dependency-analysis](https://github.com/autonomousapps/dependency-analysis-android-gradle-plugin): A Gradle plugin for analyzing dependency usage and health.
 - [detekt](https://github.com/detekt/detekt): A static code analysis tool for Kotlin to identify code smells and style violations.
 - [Hilt Android Compiler](https://mvnrepository.com/artifact/com.google.dagger/hilt-android-compiler): Responsible for generating the code necessary for dependency injection. 
 - [Hilt Android Testing](https://mvnrepository.com/artifact/com.google.dagger/hilt-android-testing): Provides utilities and annotations for writing and running tests with Hilt dependency injection. 

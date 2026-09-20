@@ -6,8 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- Add `com.autonomousapps.dependency-analysis` Gradle plugin to monitor and analyze dependency health.
+
 ### Changed
 - Migrate navigation layer to AndroidX Navigation3 library (`NavDisplay`, `entryProvider`, and type-safe destinations).
+- Explicitly declare transitive dependencies in version catalog (`libs.versions.toml`) and module build scripts.
 - Refactor domain UseCases to standard `BaseFetchUseCase` pattern.
 - Improve UI screen state building and state management across screens.
 - Replace `LaunchedEffect` with `DisposableEffect` for non-suspending handlers.
