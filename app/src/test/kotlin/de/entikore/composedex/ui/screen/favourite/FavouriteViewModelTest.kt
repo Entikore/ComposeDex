@@ -30,13 +30,18 @@ import de.entikore.sharedtestcode.POKEMON_LAPRAS_ID
 import de.entikore.sharedtestcode.POKEMON_LAPRAS_NAME
 import de.entikore.sharedtestcode.TestModelFactory.Companion.getPokemonInfoRemote
 import de.entikore.sharedtestcode.TestModelFactory.Companion.getTestModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 
+@OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(MainCoroutineRule::class)
 class FavouriteViewModelTest {
+
+    private val testDispatcher = UnconfinedTestDispatcher()
 
     private lateinit var viewModel: FavouriteViewModel
 
@@ -49,7 +54,7 @@ class FavouriteViewModelTest {
     @BeforeEach
     fun setup() {
         fakeFavouriteRepository = FakeFavouriteRepository()
-        getFavouritesUseCase = FetchFavouritesUseCase(fakeFavouriteRepository)
+        getFavouritesUseCase = FetchFavouritesUseCase(fakeFavouriteRepository, testDispatcher)
         setAsFavouriteUseCase = SetAsFavouriteUseCase(fakeFavouriteRepository)
         fakeSaveRemoteImageUseCase = FakeSaveRemoteImageUseCase()
     }
