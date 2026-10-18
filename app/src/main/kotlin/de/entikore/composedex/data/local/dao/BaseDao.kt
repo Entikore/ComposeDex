@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Entikore
+ * Copyright 2024-2026 Entikore
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,6 +38,14 @@ interface BaseDao<T> {
      */
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insert(vararg obj: T)
+
+    /**
+     * Insert a list of objects to the database.
+     *
+     * @param objs the objects to be inserted
+     */
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    fun insert(objs: List<T>)
 
     /**
      * Update an object from the database.

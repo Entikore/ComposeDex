@@ -48,6 +48,14 @@ interface PokemonDao : BaseDao<PokemonEntity> {
     suspend fun insertTypeCrossRef(crossRef: PokemonTypeCrossRef)
 
     /**
+     * Insert a list of relation object between [PokemonEntity] and [TypeEntity] into the database.
+     *
+     * @param crossRefs with the [PokemonEntity] ids and [TypeEntity] ids that belong together.
+     */
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insertTypeCrossRefs(crossRefs: List<PokemonTypeCrossRef>)
+
+    /**
      * Insert a relation object between [PokemonEntity] and [SpeciesEntity] into the database.
      *
      * @param crossRef with the [PokemonEntity] id and [SpeciesEntity] id that belong together.
@@ -62,6 +70,14 @@ interface PokemonDao : BaseDao<PokemonEntity> {
      */
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertVarietyCrossRef(crossRef: PokemonVarietyCrossRef)
+
+    /**
+     * Insert a list of relation object between [PokemonEntity] and [VarietyEntity] into the database.
+     *
+     * @param crossRefs with the [PokemonEntity] ids and [VarietyEntity] ids that belong together.
+     */
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insertVarietyCrossRefs(crossRefs: List<PokemonVarietyCrossRef>)
 
     /**
      * Update the localArtwork of a [PokemonEntity].

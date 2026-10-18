@@ -89,25 +89,25 @@ abstract class ComposeDexDatabase :
         types: List<TypeEntity>,
         varieties: List<VarietyEntity>,
     ) {
-        varieties.forEach { variety ->
-            varietyDao().insert(variety)
-            pokemonDao().insertVarietyCrossRef(
+        varietyDao().insert(varieties)
+        pokemonDao().insertVarietyCrossRefs(
+            varieties.map { variety ->
                 PokemonVarietyCrossRef(
                     pokemon.pokemonId,
                     variety.varietyName,
-                ),
-            )
-        }
+                )
+            },
+        )
 
-        types.forEach { type ->
-            typeDao().insert(type)
-            pokemonDao().insertTypeCrossRef(
+        typeDao().insert(types)
+        pokemonDao().insertTypeCrossRefs(
+            types.map { type ->
                 PokemonTypeCrossRef(
                     pokemon.pokemonId,
                     type.typeId,
-                ),
-            )
-        }
+                )
+            },
+        )
 
         speciesDao().insert(species)
         pokemonDao().insertSpeciesCrossRef(
