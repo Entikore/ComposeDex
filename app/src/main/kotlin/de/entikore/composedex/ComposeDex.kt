@@ -16,7 +16,13 @@
 package de.entikore.composedex
 
 import android.app.Application
+import coil3.ImageLoader
+import coil3.PlatformContext
+import coil3.SingletonImageLoader
+import coil3.disk.DiskCache
+import coil3.memory.MemoryCache
 import dagger.hilt.android.HiltAndroidApp
+import okio.Path.Companion.toPath
 import timber.log.Timber
 import timber.log.Timber.Forest.plant
 
@@ -24,7 +30,9 @@ import timber.log.Timber.Forest.plant
  * Custom application class.
  */
 @HiltAndroidApp
-class ComposeDex : Application() {
+class ComposeDex :
+    Application(),
+    SingletonImageLoader.Factory {
 
     @Override
     override fun onCreate() {
@@ -33,5 +41,27 @@ class ComposeDex : Application() {
         if (BuildConfig.DEBUG) {
             plant(Timber.DebugTree())
         }
+    }
+
+    override fun newImageLoader(context: PlatformContext): ImageLoader = ImageLoader.Builder(context)
+        .memoryCache {
+            MemoryCache.Builder()
+                .maxSizePercent(context, RAM_PERCENTAGE)
+                .build()
+        }
+        .diskCache {
+            DiskCache.Builder()
+                .directory(context.cacheDir.resolve(CACHE_NAME).absolutePath.toPath())
+                .maxSizeBytes(MB_AMOUNT * BINARY_PREFIX * BINARY_PREFIX)
+                .build()
+        }
+        .build()
+
+    companion object {
+        const val BINARY_PREFIX = 1024L
+        const val CACHE_NAME = "image_cache"
+        const val MB_AMOUNT = 50L
+
+        const val RAM_PERCENTAGE = 0.25
     }
 }
