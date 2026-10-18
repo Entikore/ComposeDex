@@ -34,12 +34,11 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.integerResource
 import androidx.compose.ui.res.painterResource
@@ -52,13 +51,20 @@ import de.entikore.composedex.domain.model.pokemon.Pokemon
 @Composable
 fun PokemonColumnItem(
     pokemon: Pokemon,
-    backgroundBrush: Brush,
-    borderBrush: Brush,
-    textColor: Color,
     navigateToPokemon: (String) -> Unit,
     updateFavourite: (id: Int, isFavourite: Boolean) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val backgroundBrush = remember(pokemon.types) {
+        createGradientBrush(pokemon.types.map { getTypeBackgroundColor(it.name) })
+    }
+    val borderBrush = remember(pokemon.types) {
+        createGradientBrush(pokemon.types.map { getTypeBorderColor(it.name) })
+    }
+    val textColor = remember(pokemon.types) {
+        getTypePrimaryColor(pokemon.types.first().name)
+    }
+
     Row(
         horizontalArrangement = Arrangement.Start,
         verticalAlignment = Alignment.CenterVertically,
