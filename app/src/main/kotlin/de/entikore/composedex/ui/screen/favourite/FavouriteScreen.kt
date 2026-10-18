@@ -45,10 +45,6 @@ import de.entikore.composedex.ui.component.LoadingAnimation
 import de.entikore.composedex.ui.component.PokemonColumnItem
 import de.entikore.composedex.ui.component.TopBarWithFilter
 import de.entikore.composedex.ui.component.asCheckBoxItems
-import de.entikore.composedex.ui.component.createGradientBrush
-import de.entikore.composedex.ui.component.getTypeBackgroundColor
-import de.entikore.composedex.ui.component.getTypeBorderColor
-import de.entikore.composedex.ui.component.getTypePrimaryColor
 import de.entikore.composedex.ui.screen.shared.PokemonFilterOptions
 import de.entikore.composedex.ui.screen.shared.PokemonUiState
 
@@ -139,17 +135,6 @@ fun FavouriteScreenContent(
                     items(screenState.pokemon, key = { it.id }) {
                         PokemonColumnItem(
                             pokemon = it,
-                            backgroundBrush = createGradientBrush(
-                                it.types.map { type ->
-                                    getTypeBackgroundColor(type.name)
-                                },
-                            ),
-                            borderBrush = createGradientBrush(
-                                it.types.map { type ->
-                                    getTypeBorderColor(type.name)
-                                },
-                            ),
-                            textColor = getTypePrimaryColor(it.types.first().name),
                             navigateToPokemon = navigateToPokemon,
                             updateFavourite = updateFavourite,
                             modifier = Modifier
