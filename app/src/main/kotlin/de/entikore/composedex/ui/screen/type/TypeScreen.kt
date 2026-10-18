@@ -211,7 +211,7 @@ private fun TypeOverview(types: List<Type>, searchType: (String) -> Unit, modifi
         verticalArrangement = Arrangement.SpaceEvenly,
         modifier = modifier.fillMaxSize(),
     ) {
-        items(types) {
+        items(types, key = { it.name }) {
             ClickableColumnItemWithIcon(
                 text = it.name,
                 backgroundColor = getTypeBackgroundColor(it.name),
@@ -362,7 +362,7 @@ private fun PokemonTypeHeader(type: Type, searchType: (String) -> Unit, modifier
                     dimensionResource(id = R.dimen.standard_padding),
                 ),
         ) {
-            items(list) {
+            items(list, key = { it.first }) {
                 if (it.second.isNotEmpty()) {
                     LazyTypeRowWithTopLabel(
                         typeNames = it.second,
@@ -393,7 +393,7 @@ private fun PokemonTypeBody(
                     stringResource(R.string.test_tag_typescreen_success_detail_sucess_pokemon_success),
                 ),
             ) {
-                items(gridData) {
+                items(gridData, key = { it.id }) {
                     TypePokemonEntry(
                         pokemon = it,
                         selectedType = type.name,

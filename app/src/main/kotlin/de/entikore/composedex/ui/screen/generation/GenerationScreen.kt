@@ -191,7 +191,7 @@ private fun GenerationOverview(
         verticalArrangement = Arrangement.SpaceEvenly,
         modifier = modifier.fillMaxSize(),
     ) {
-        items(generations) { generation ->
+        items(generations, key = { it.id }) { generation ->
             ClickableColumnItem(
                 text = generation.name.replaceFirstChar { it.uppercaseChar() },
                 backgroundColor = TYPE_TCG_COLORLESS_BACKGROUND,
@@ -305,7 +305,7 @@ private fun GenerationBody(
                     stringResource(R.string.test_tag_generation_detail_pokemon_success),
                 ),
             ) {
-                items(pokemonState.pokemon) {
+                items(pokemonState.pokemon, key = { it.id }) {
                     PokemonColumnItem(
                         pokemon = it,
                         backgroundBrush = createGradientBrush(

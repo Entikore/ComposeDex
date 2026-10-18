@@ -136,7 +136,7 @@ fun FavouriteScreenContent(
                         stringResource(R.string.test_tag_favourite_screen_success),
                     ),
                 ) {
-                    items(screenState.pokemon) {
+                    items(screenState.pokemon, key = { it.id }) {
                         PokemonColumnItem(
                             pokemon = it,
                             backgroundBrush = createGradientBrush(
